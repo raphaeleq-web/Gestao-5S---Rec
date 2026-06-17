@@ -555,14 +555,14 @@ async function dRegistrar(){
   finally{btn.disabled=false;btn.textContent='Registrar Desvio';}
 }
 function dReset(){
-  ['d-nome','d-mat','d-obs'].forEach(id=>document.getElementById(id).value='');
-  // input inline, sem ID fixo
-  document.getElementById('d-foto-prev').style.display='none';
-  document.getElementById('d-foto-prev').src='';
-  document.getElementById('d-foto-ph').style.display='block';
+  ['d-nome','d-obs'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  const prev=document.getElementById('d-foto-prev');
+  if(prev){prev.style.display='none';prev.src='';}
   dFoto='';dTipo='';
-  document.getElementById('d-t-org').className='tipo-btn';
-  document.getElementById('d-t-limp').className='tipo-btn';
+  const to=document.getElementById('d-t-org');
+  const tl=document.getElementById('d-t-limp');
+  if(to)to.className='tipo-btn';
+  if(tl)tl.className='tipo-btn';
 }
 function dFSt(s,el){dFiltSt=s;document.querySelectorAll('#d-f-st .f-btn').forEach(b=>b.classList.remove('av'));el.classList.add('av');renderDLista();}
 function dFAr(a,el){dFiltAr=a;document.querySelectorAll('#d-f-ar .f-btn').forEach(b=>b.classList.remove('av'));el.classList.add('av');renderDLista();}
@@ -654,11 +654,9 @@ async function cRegistrar(){
   finally{btn.disabled=false;btn.textContent='Registrar Contribuição';}
 }
 function cReset(){
-  ['c-nome','c-mat','c-desc'].forEach(id=>document.getElementById(id).value='');
-  // input inline, sem ID fixo
-  document.getElementById('c-foto-prev').style.display='none';
-  document.getElementById('c-foto-prev').src='';
-  document.getElementById('c-foto-ph').style.display='block';
+  ['c-nome','c-desc'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  const prev=document.getElementById('c-foto-prev');
+  if(prev){prev.style.display='none';prev.src='';}
   cFoto='';cCat='';
   document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('sel'));
 }
