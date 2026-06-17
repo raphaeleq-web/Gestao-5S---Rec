@@ -443,10 +443,21 @@ input[type=file]{display:none;}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 const AREAS={'piso0-cr3':'Piso 0 CR3','piso1-cr3':'Piso 1 CR3','piso2-cr3':'Piso 2 CR3'};
-function getD(){return JSON.parse(localStorage.getItem('desvios')||'[]');}
-function getC(){return JSON.parse(localStorage.getItem('contribs')||'[]');}
-function saveD(d){localStorage.setItem('desvios',JSON.stringify(d));}
-function saveC(c){localStorage.setItem('contribs',JSON.stringify(c));}
+const SB_URL='https://uivzwjcqvupvxjueaojd.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVpdnp3amNxdnVwdnhqdWVhb2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MDkxNTYsImV4cCI6MjA5NzI4NTE1Nn0.4l_bzUXw1v-ngK7poJSezXe02BRHtcgU--stcLuV2vk';
+
+function sbH(){return {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'};}
+async function sbGet(path){return fetch(SB_URL+path,{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});}
+async function sbPost(path,body){return fetch(SB_URL+path,{method:'POST',headers:sbH(),body:JSON.stringify(body)});}
+async function sbPatch(path,body){return fetch(SB_URL+path,{method:'PATCH',headers:{...sbH(),'Prefer':'return=minimal'},body:JSON.stringify(body)});}
+async function uploadFoto(b64,prefix){
+  const res=await fetch(b64);const blob=await res.blob();
+  const ext=blob.type.split('/')[1]||'jpg';
+  const name=prefix+'-'+Date.now()+'.'+ext;
+  const up=await fetch(SB_URL+'/storage/v1/object/fotos/'+name,{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':blob.type},body:blob});
+  if(up.ok) return SB_URL+'/storage/v1/object/public/fotos/'+name;
+  return b64; // fallback base64
+}
 
 let dArea='',dTipo='',dFoto='';
 let cArea='',cCat='',cFoto='';
@@ -526,15 +537,22 @@ function dOnFoto(inp){
     prev.src=dFoto; prev.style.display='block';
   };r.readAsDataURL(inp.files[0]);
 }
-function dRegistrar(){
+async function dRegistrar(){
   const nome=document.getElementById('d-nome').value.trim();
   const obs=document.getElementById('d-obs').value.trim();
   if(!nome){toast('Informe seu nome','err');return;}
   if(!dTipo){toast('Selecione o tipo de desvio','err');return;}
   if(!dFoto){toast('Tire uma foto do desvio','err');return;}
-  const d=getD();
-  d.unshift({id:Date.now().toString(),area:dArea,tipo:dTipo,status:'aberto',nome,obs,foto:dFoto,created:new Date().toISOString()});
-  saveD(d);toast('Desvio registrado!','ok');dReset();
+  const btn=document.querySelector('#d-reg .btn-verde');
+  btn.disabled=true;btn.textContent='Enviando...';
+  try{
+    const fotoUrl=await uploadFoto(dFoto,'desvio');
+    const id=Date.now().toString();
+    const res=await sbPost('/rest/v1/desvios',{id,area:dArea,tipo:dTipo,status:'aberto',nome,obs:obs||null,foto:fotoUrl});
+    if(!res.ok)throw new Error(await res.text());
+    toast('Desvio registrado!','ok');dReset();
+  }catch(e){toast('Erro: '+e.message,'err');}
+  finally{btn.disabled=false;btn.textContent='Registrar Desvio';}
 }
 function dReset(){
   ['d-nome','d-mat','d-obs'].forEach(id=>document.getElementById(id).value='');
@@ -548,11 +566,17 @@ function dReset(){
 }
 function dFSt(s,el){dFiltSt=s;document.querySelectorAll('#d-f-st .f-btn').forEach(b=>b.classList.remove('av'));el.classList.add('av');renderDLista();}
 function dFAr(a,el){dFiltAr=a;document.querySelectorAll('#d-f-ar .f-btn').forEach(b=>b.classList.remove('av'));el.classList.add('av');renderDLista();}
-function renderDLista(){
-  let d=getD();
-  if(dFiltSt!=='todos')d=d.filter(x=>x.status===dFiltSt);
-  if(dFiltAr!=='todas')d=d.filter(x=>x.area===dFiltAr);
-  document.getElementById('d-lista-out').innerHTML=d.length?d.map(dCardHTML).join(''):'<div class="empty"><div class="ico">✅</div><p>Nenhum desvio encontrado</p></div>';
+async function renderDLista(){
+  const el=document.getElementById('d-lista-out');
+  el.innerHTML='<div class="empty"><div class="ico">⏳</div><p>Carregando...</p></div>';
+  try{
+    let url='/rest/v1/desvios?order=created.desc&limit=100';
+    if(dFiltSt!=='todos')url+=`&status=eq.${dFiltSt}`;
+    if(dFiltAr!=='todas')url+=`&area=eq.${dFiltAr}`;
+    const res=await sbGet(url);
+    const d=await res.json();
+    el.innerHTML=d.length?d.map(dCardHTML).join(''):'<div class="empty"><div class="ico">✅</div><p>Nenhum desvio encontrado</p></div>';
+  }catch(e){el.innerHTML='<div class="empty"><div class="ico">⚠️</div><p>Erro ao carregar</p></div>';}
 }
 function dCardHTML(x){
   const sMap={aberto:'🔴 Aberto',andamento:'🟡 Em andamento',tratado:'🟢 Tratado'};
@@ -574,10 +598,14 @@ function dCardHTML(x){
     </div>
   </div>`;
 }
-function avancar(id,ns){
-  const d=getD(),i=d.findIndex(x=>x.id===id);
-  if(i<0)return;d[i].status=ns;saveD(d);toast('Status atualizado!','ok');
-  renderDLista();if(document.getElementById('p-d-out').innerHTML)renderPDesvios();
+async function avancar(id,ns){
+  try{
+    const res=await sbPatch('/rest/v1/desvios?id=eq.'+id,{status:ns});
+    if(!res.ok)throw new Error(await res.text());
+    toast('Status atualizado!','ok');
+    renderDLista();
+    if(document.getElementById('p-d-out').innerHTML)renderPDesvios();
+  }catch(e){toast('Erro: '+e.message,'err');}
 }
 
 /* CONTRIB */
@@ -607,16 +635,23 @@ function cOnFoto(inp){
     prev.src=cFoto; prev.style.display='block';
   };r.readAsDataURL(inp.files[0]);
 }
-function cRegistrar(){
+async function cRegistrar(){
   const nome=document.getElementById('c-nome').value.trim();
   const desc=document.getElementById('c-desc').value.trim();
   if(!nome){toast('Informe seu nome','err');return;}
   if(!cCat){toast('Selecione a categoria','err');return;}
   if(!desc){toast('Descreva a ação realizada','err');return;}
   if(!cFoto){toast('Tire uma foto da melhoria','err');return;}
-  const c=getC();
-  c.unshift({id:Date.now().toString(),area:cArea,categoria:cCat,nome,desc,foto:cFoto,created:new Date().toISOString()});
-  saveC(c);toast('Contribuição registrada!','ok2');cReset();
+  const btn=document.querySelector('#c-reg .btn-roxo');
+  btn.disabled=true;btn.textContent='Enviando...';
+  try{
+    const fotoUrl=await uploadFoto(cFoto,'contrib');
+    const id=Date.now().toString();
+    const res=await sbPost('/rest/v1/contribs',{id,area:cArea,categoria:cCat,nome,descricao:desc,foto:fotoUrl});
+    if(!res.ok)throw new Error(await res.text());
+    toast('Contribuição registrada!','ok2');cReset();
+  }catch(e){toast('Erro: '+e.message,'err');}
+  finally{btn.disabled=false;btn.textContent='Registrar Contribuição';}
 }
 function cReset(){
   ['c-nome','c-mat','c-desc'].forEach(id=>document.getElementById(id).value='');
@@ -628,10 +663,16 @@ function cReset(){
   document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('sel'));
 }
 function cFAr(a,el){cFiltAr=a;document.querySelectorAll('#c-f-ar .f-btn').forEach(b=>b.classList.remove('ar'));el.classList.add('ar');renderCLista();}
-function renderCLista(){
-  let c=getC();
-  if(cFiltAr!=='todas')c=c.filter(x=>x.area===cFiltAr);
-  document.getElementById('c-lista-out').innerHTML=c.length?c.map(cCardHTML).join(''):'<div class="empty"><div class="ico">⭐</div><p>Nenhuma contribuição ainda</p></div>';
+async function renderCLista(){
+  const el=document.getElementById('c-lista-out');
+  el.innerHTML='<div class="empty"><div class="ico">⏳</div><p>Carregando...</p></div>';
+  try{
+    let url='/rest/v1/contribs?order=created.desc&limit=100';
+    if(cFiltAr!=='todas')url+=`&area=eq.${cFiltAr}`;
+    const res=await sbGet(url);
+    const c=await res.json();
+    el.innerHTML=c.length?c.map(cCardHTML).join(''):'<div class="empty"><div class="ico">⭐</div><p>Nenhuma contribuição ainda</p></div>';
+  }catch(e){el.innerHTML='<div class="empty"><div class="ico">⚠️</div><p>Erro ao carregar</p></div>';}
 }
 function cCardHTML(x){
   const dt=new Date(x.created).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
@@ -640,40 +681,57 @@ function cCardHTML(x){
       <div><div class="ccard-area">${AREAS[x.area]||x.area}</div><div class="ccard-meta">${x.nome} · ${dt}</div></div>
       <span class="cat-tag">${x.categoria}</span>
     </div>
-    <div class="ccard-desc">${x.desc}</div>
+    <div class="ccard-desc">${x.descricao||x.desc||''}</div>
     ${x.foto?`<img class="ccard-foto" src="${x.foto}">`:''}
   </div>`;
 }
 
 /* PAINEL */
-function renderPainel(){
-  const d=getD(),c=getC();
-  const hoje=new Date().toDateString();
-  document.getElementById('p-d-tot').textContent=d.length;
-  document.getElementById('p-d-ab').textContent=d.filter(x=>x.status==='aberto').length;
-  document.getElementById('p-d-and').textContent=d.filter(x=>x.status==='andamento').length;
-  document.getElementById('p-d-tr').textContent=d.filter(x=>x.status==='tratado').length;
-  document.getElementById('p-c-tot').textContent=c.length;
-  document.getElementById('p-c-hj').textContent=c.filter(x=>new Date(x.created).toDateString()===hoje).length;
-  const totD=d.length||1,totC=c.length||1;
-  document.getElementById('p-areas-d').innerHTML=Object.entries(AREAS).map(([k,v])=>{
-    const n=d.filter(x=>x.area===k).length;
-    return `<div class="bar-row"><div class="bar-label"><span>${v}</span><span>${n}</span></div><div class="bar-bg"><div class="bar-fill" style="width:${Math.round(n/totD*100)}%;background:var(--sz-green)"></div></div></div>`;
-  }).join('');
-  document.getElementById('p-areas-c').innerHTML=Object.entries(AREAS).map(([k,v])=>{
-    const n=c.filter(x=>x.area===k).length;
-    return `<div class="bar-row"><div class="bar-label"><span>${v}</span><span>${n}</span></div><div class="bar-bg"><div class="bar-fill" style="width:${Math.round(n/totC*100)}%;background:var(--roxo)"></div></div></div>`;
-  }).join('');
+async function renderPainel(){
+  try{
+    const [rd,rc]=await Promise.all([
+      sbGet('/rest/v1/desvios?select=area,status'),
+      sbGet('/rest/v1/contribs?select=area,created')
+    ]);
+    const d=await rd.json(), c=await rc.json();
+    const hoje=new Date().toDateString();
+    document.getElementById('p-d-tot').textContent=d.length;
+    document.getElementById('p-d-ab').textContent=d.filter(x=>x.status==='aberto').length;
+    document.getElementById('p-d-and').textContent=d.filter(x=>x.status==='andamento').length;
+    document.getElementById('p-d-tr').textContent=d.filter(x=>x.status==='tratado').length;
+    document.getElementById('p-c-tot').textContent=c.length;
+    document.getElementById('p-c-hj').textContent=c.filter(x=>new Date(x.created).toDateString()===hoje).length;
+    const totD=d.length||1,totC=c.length||1;
+    document.getElementById('p-areas-d').innerHTML=Object.entries(AREAS).map(([k,v])=>{
+      const n=d.filter(x=>x.area===k).length;
+      return `<div class="bar-row"><div class="bar-label"><span>${v}</span><span>${n}</span></div><div class="bar-bg"><div class="bar-fill" style="width:${Math.round(n/totD*100)}%;background:var(--sz-green)"></div></div></div>`;
+    }).join('');
+    document.getElementById('p-areas-c').innerHTML=Object.entries(AREAS).map(([k,v])=>{
+      const n=c.filter(x=>x.area===k).length;
+      return `<div class="bar-row"><div class="bar-label"><span>${v}</span><span>${n}</span></div><div class="bar-bg"><div class="bar-fill" style="width:${Math.round(n/totC*100)}%;background:var(--roxo)"></div></div></div>`;
+    }).join('');
+  }catch(e){console.error(e);}
 }
 function pdFSt(s,el){pdFiltSt=s;document.querySelectorAll('#p-d-f-st .f-btn').forEach(b=>b.classList.remove('av'));el.classList.add('av');renderPDesvios();}
-function renderPDesvios(){
-  let d=getD();
-  if(pdFiltSt!=='todos')d=d.filter(x=>x.status===pdFiltSt);
-  document.getElementById('p-d-out').innerHTML=d.length?d.map(dCardHTML).join(''):'<div class="empty"><div class="ico">✅</div><p>Nenhum desvio</p></div>';
+async function renderPDesvios(){
+  const el=document.getElementById('p-d-out');
+  el.innerHTML='<div class="empty"><div class="ico">⏳</div><p>Carregando...</p></div>';
+  try{
+    let url='/rest/v1/desvios?order=created.desc&limit=100';
+    if(pdFiltSt!=='todos')url+=`&status=eq.${pdFiltSt}`;
+    const res=await sbGet(url);
+    const d=await res.json();
+    el.innerHTML=d.length?d.map(dCardHTML).join(''):'<div class="empty"><div class="ico">✅</div><p>Nenhum desvio</p></div>';
+  }catch(e){el.innerHTML='<div class="empty"><div class="ico">⚠️</div><p>Erro ao carregar</p></div>';}
 }
-function renderPContrib(){
-  const c=getC();
-  document.getElementById('p-c-out').innerHTML=c.length?c.map(cCardHTML).join(''):'<div class="empty"><div class="ico">⭐</div><p>Nenhuma contribuição</p></div>';
+async function renderPContrib(){
+  const el=document.getElementById('p-c-out');
+  el.innerHTML='<div class="empty"><div class="ico">⏳</div><p>Carregando...</p></div>';
+  try{
+    const res=await sbGet('/rest/v1/contribs?order=created.desc&limit=100');
+    const c=await res.json();
+    el.innerHTML=c.length?c.map(cCardHTML).join(''):'<div class="empty"><div class="ico">⭐</div><p>Nenhuma contribuição</p></div>';
+  }catch(e){el.innerHTML='<div class="empty"><div class="ico">⚠️</div><p>Erro ao carregar</p></div>';}
 }
 
 /* QR */
