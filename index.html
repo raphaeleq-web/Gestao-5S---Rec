@@ -2,1092 +2,706 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>5S CR3 — Desvios</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>5S CR3 — Suzano Jacareí</title>
 <style>
-  :root {
-    --verde:    #1A6B3C;
-    --verde-cl: #2E8B57;
-    --verde-bg: #E8F5EE;
-    --cinza:    #1C1C1E;
-    --cinza-md: #6B7280;
-    --cinza-cl: #F2F4F6;
-    --branco:   #FFFFFF;
-    --amarelo:  #F59E0B;
-    --vermelho: #DC2626;
-    --azul:     #2563EB;
-    --radius:   12px;
-    --shadow:   0 2px 12px rgba(0,0,0,0.08);
-  }
+:root {
+  --sz-green:   #005B2E;
+  --sz-green2:  #007A3D;
+  --sz-green3:  #009A4E;
+  --sz-green-bg:#E6F2EC;
+  --sz-black:   #1A1A1A;
+  --sz-gray:    #6B7280;
+  --sz-gray-cl: #F4F6F4;
+  --sz-white:   #FFFFFF;
+  --amarelo:    #F59E0B;
+  --vermelho:   #DC2626;
+  --azul:       #1D4ED8;
+  --roxo:       #6D28D9;
+  --roxo-bg:    #F5F3FF;
+  --radius:     14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--sz-gray-cl);color:var(--sz-black);min-height:100vh;}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+/* ── TELAS ── */
+.tela{display:none;min-height:100vh;}
+.tela.ativa{display:block;}
 
-  body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: var(--cinza-cl);
-    color: var(--cinza);
-    min-height: 100vh;
-  }
+/* ── HEADER ── */
+.header{background:var(--sz-green);color:white;padding:12px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,0.25);}
+.header .back{font-size:22px;cursor:pointer;padding:2px 8px;border-radius:8px;background:rgba(255,255,255,0.15);line-height:1;}
+.header h1{font-size:15px;font-weight:700;flex:1;letter-spacing:-0.2px;}
+.header .badge{background:rgba(255,255,255,0.18);border-radius:20px;padding:4px 11px;font-size:12px;font-weight:600;white-space:nowrap;}
 
-  /* ── HEADER ── */
-  .app-header {
-    background: var(--verde);
-    color: var(--branco);
-    padding: 14px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  }
-  .app-header h1 { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; }
-  .app-header .area-badge {
-    background: rgba(255,255,255,0.2);
-    border-radius: 20px;
-    padding: 4px 12px;
-    font-size: 12px;
-    font-weight: 600;
-    white-space: nowrap;
-  }
+/* ── NAV TABS ── */
+.nav{display:flex;background:white;border-bottom:2px solid #E5E7EB;overflow-x:auto;scrollbar-width:none;}
+.nav::-webkit-scrollbar{display:none;}
+.nav-item{flex:1;min-width:72px;padding:11px 4px;text-align:center;font-size:12px;font-weight:600;color:var(--sz-gray);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;}
+.nav-item.active{color:var(--sz-green);border-bottom-color:var(--sz-green);}
+.nav-item.active.roxo{color:var(--roxo);border-bottom-color:var(--roxo);}
 
-  /* ── NAV TABS ── */
-  .nav-tabs {
-    display: flex;
-    background: var(--branco);
-    border-bottom: 1px solid #E5E7EB;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-  .nav-tabs::-webkit-scrollbar { display: none; }
-  .nav-tab {
-    flex: 1;
-    min-width: 100px;
-    padding: 12px 8px;
-    text-align: center;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--cinza-md);
-    cursor: pointer;
-    border-bottom: 3px solid transparent;
-    transition: all 0.2s;
-    white-space: nowrap;
-  }
-  .nav-tab.active {
-    color: var(--verde);
-    border-bottom-color: var(--verde);
-  }
+/* ── CONTEÚDO ── */
+.conteudo{padding:16px;max-width:480px;margin:0 auto;padding-bottom:40px;}
 
-  /* ── VIEWS ── */
-  .view { display: none; padding: 16px; max-width: 480px; margin: 0 auto; }
-  .view.active { display: block; }
+/* ══ HOME ══ */
+.home-wrap{min-height:100vh;display:flex;flex-direction:column;background:var(--sz-green);}
+.home-hero{padding:36px 24px 28px;text-align:center;color:white;}
+.home-logo-box{display:inline-flex;align-items:center;justify-content:center;background:white;border-radius:16px;padding:12px 20px;margin-bottom:20px;box-shadow:0 4px 20px rgba(0,0,0,0.2);}
+.home-logo-box svg{height:32px;width:auto;}
+.home-hero h2{font-size:15px;font-weight:600;opacity:0.85;margin-bottom:4px;}
+.home-hero p{font-size:13px;opacity:0.65;}
+.home-cards{background:var(--sz-gray-cl);border-radius:24px 24px 0 0;flex:1;padding:24px 18px;}
+.home-cards-title{font-size:12px;font-weight:700;color:var(--sz-gray);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:14px;}
 
-  /* ── CARDS ── */
-  .card {
-    background: var(--branco);
-    border-radius: var(--radius);
-    padding: 16px;
-    margin-bottom: 12px;
-    box-shadow: var(--shadow);
-  }
-  .card-label {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: var(--cinza-md);
-    margin-bottom: 6px;
-  }
+.home-btn{width:100%;padding:18px 16px;border-radius:var(--radius);border:none;display:flex;align-items:center;gap:14px;cursor:pointer;margin-bottom:12px;text-align:left;transition:transform 0.12s,box-shadow 0.12s;box-shadow:0 2px 12px rgba(0,0,0,0.07);background:white;}
+.home-btn:active{transform:scale(0.985);box-shadow:0 1px 6px rgba(0,0,0,0.1);}
+.home-btn .hico{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hico-desvio{background:#FEF2F2;}
+.hico-contrib{background:var(--roxo-bg);}
+.hico-painel{background:var(--sz-green-bg);}
+.home-btn .htxt strong{font-size:15px;font-weight:700;display:block;color:var(--sz-black);margin-bottom:2px;}
+.home-btn .htxt span{font-size:12px;color:var(--sz-gray);line-height:1.4;}
+.home-btn .harrow{font-size:20px;color:#D1D5DB;margin-left:auto;flex-shrink:0;}
 
-  /* ── FORMULÁRIO ── */
-  .form-group { margin-bottom: 16px; }
-  .form-group label {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--cinza-md);
-    margin-bottom: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  input[type="text"], select, textarea {
-    width: 100%;
-    padding: 12px 14px;
-    border: 2px solid #E5E7EB;
-    border-radius: 8px;
-    font-size: 15px;
-    color: var(--cinza);
-    background: var(--branco);
-    transition: border-color 0.2s;
-    -webkit-appearance: none;
-  }
-  input[type="text"]:focus, select:focus, textarea:focus {
-    outline: none;
-    border-color: var(--verde);
-  }
-  textarea { resize: none; height: 80px; }
+.home-divider{height:1px;background:#E5E7EB;margin:4px 0 12px;}
 
-  /* ── TIPO DESVIO (toggle) ── */
-  .tipo-toggle {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-  .tipo-btn {
-    padding: 14px 8px;
-    border: 2px solid #E5E7EB;
-    border-radius: 10px;
-    background: var(--branco);
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--cinza-md);
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.2s;
-  }
-  .tipo-btn .icon { font-size: 22px; display: block; margin-bottom: 4px; }
-  .tipo-btn.selected-org { border-color: var(--amarelo); color: #92400E; background: #FFFBEB; }
-  .tipo-btn.selected-limp { border-color: var(--azul); color: #1E40AF; background: #EFF6FF; }
+/* ── CARD ── */
+.card{background:white;border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:0 1px 8px rgba(0,0,0,0.06);}
+.card-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--sz-gray);margin-bottom:10px;}
 
-  /* ── FOTO ── */
-  .foto-area {
-    border: 2px dashed #D1D5DB;
-    border-radius: 10px;
-    padding: 24px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s;
-    background: var(--cinza-cl);
-    position: relative;
-  }
-  .foto-area:hover { border-color: var(--verde); background: var(--verde-bg); }
-  .foto-area input[type="file"] {
-    position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer;
-  }
-  .foto-area .foto-icon { font-size: 36px; margin-bottom: 8px; }
-  .foto-area p { font-size: 13px; color: var(--cinza-md); }
-  .foto-preview {
-    width: 100%;
-    max-height: 220px;
-    object-fit: cover;
-    border-radius: 8px;
-    display: none;
-    margin-top: 10px;
-  }
+/* ── SUBÁREA ── */
+.subarea-btn{width:100%;padding:14px 16px;border:2px solid #E5E7EB;border-radius:12px;background:white;display:flex;align-items:center;gap:14px;cursor:pointer;margin-bottom:10px;text-align:left;transition:all 0.15s;}
+.subarea-btn:active{border-color:var(--sz-green);background:var(--sz-green-bg);}
+.floor{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;flex-shrink:0;color:white;}
+.floor.v{background:var(--sz-green);}
+.floor.r{background:var(--roxo);}
+.subarea-btn strong{font-size:15px;font-weight:700;display:block;}
+.subarea-btn small{font-size:12px;color:var(--sz-gray);}
 
-  /* ── SUBÁREA SELECTOR ── */
-  .subarea-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-  .subarea-btn {
-    padding: 16px;
-    border: 2px solid #E5E7EB;
-    border-radius: 10px;
-    background: var(--branco);
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--cinza);
-    cursor: pointer;
-    text-align: left;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    transition: all 0.2s;
-  }
-  .subarea-btn:hover { border-color: var(--verde); background: var(--verde-bg); }
-  .subarea-btn .floor-badge {
-    background: var(--verde);
-    color: white;
-    border-radius: 8px;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    font-weight: 800;
-    flex-shrink: 0;
-  }
+/* ── FORM ── */
+.fg{margin-bottom:12px;}
+.fg label{display:block;font-size:11px;font-weight:700;color:var(--sz-gray);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.5px;}
+input[type=text],textarea{width:100%;padding:12px 14px;border:2px solid #E5E7EB;border-radius:10px;font-size:15px;color:var(--sz-black);background:white;-webkit-appearance:none;transition:border-color 0.2s;font-family:inherit;}
+input[type=text]:focus,textarea:focus{outline:none;border-color:var(--sz-green);}
+textarea{resize:none;height:80px;}
 
-  /* ── BOTÃO PRIMÁRIO ── */
-  .btn-primary {
-    width: 100%;
-    padding: 15px;
-    background: var(--verde);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background 0.2s;
-    letter-spacing: -0.2px;
-  }
-  .btn-primary:hover { background: var(--verde-cl); }
-  .btn-primary:disabled { background: #9CA3AF; cursor: not-allowed; }
+/* ── TIPO ── */
+.tipo-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.tipo-btn{padding:14px 8px;border:2px solid #E5E7EB;border-radius:12px;background:white;text-align:center;cursor:pointer;font-size:13px;font-weight:600;color:var(--sz-gray);transition:all 0.15s;}
+.tipo-btn .ico{font-size:24px;display:block;margin-bottom:5px;}
+.tipo-btn.sel-org{border-color:var(--amarelo);color:#92400E;background:#FFFBEB;}
+.tipo-btn.sel-limp{border-color:var(--azul);color:#1E40AF;background:#EFF6FF;}
 
-  .btn-secondary {
-    width: 100%;
-    padding: 13px;
-    background: transparent;
-    color: var(--verde);
-    border: 2px solid var(--verde);
-    border-radius: 10px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-top: 8px;
-  }
-  .btn-secondary:hover { background: var(--verde-bg); }
+/* ── CATEGORIAS ── */
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.cat-btn{padding:11px 8px;border:2px solid #E5E7EB;border-radius:10px;background:white;text-align:center;cursor:pointer;font-size:12px;font-weight:600;color:var(--sz-gray);transition:all 0.15s;}
+.cat-btn .ico{font-size:20px;display:block;margin-bottom:3px;}
+.cat-btn.sel{border-color:var(--roxo);color:#5B21B6;background:var(--roxo-bg);}
 
-  /* ── DESVIO CARD (lista) ── */
-  .desvio-card {
-    background: var(--branco);
-    border-radius: var(--radius);
-    padding: 14px;
-    margin-bottom: 10px;
-    box-shadow: var(--shadow);
-    border-left: 4px solid var(--cinza-cl);
-  }
-  .desvio-card.org { border-left-color: var(--amarelo); }
-  .desvio-card.limp { border-left-color: var(--azul); }
-  .desvio-card .dc-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 8px;
-    margin-bottom: 8px;
-  }
-  .desvio-card .dc-meta { font-size: 12px; color: var(--cinza-md); }
-  .desvio-card .dc-tipo {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding: 3px 8px;
-    border-radius: 20px;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  .dc-tipo.org { background: #FFFBEB; color: #92400E; }
-  .dc-tipo.limp { background: #EFF6FF; color: #1E40AF; }
+/* ── FOTO ── */
+input[type=file]{display:none;}
+.foto-label{display:block;border:2px dashed;border-radius:12px;cursor:pointer;overflow:hidden;}
+.foto-label.verde{border-color:var(--sz-green);background:var(--sz-green-bg);}
+.foto-label.roxo-cor{border-color:var(--roxo);background:var(--roxo-bg);}
+.foto-ph{padding:26px 16px;text-align:center;}
+.foto-ph .ico{font-size:32px;display:block;margin-bottom:6px;}
+.foto-ph p{font-size:14px;font-weight:600;}
+.foto-ph small{font-size:12px;color:var(--sz-gray);}
+.foto-ph.c-verde p{color:var(--sz-green);}
+.foto-ph.c-roxo p{color:var(--roxo);}
+.foto-img{width:100%;max-height:220px;object-fit:cover;display:none;}
 
-  .desvio-card .dc-area {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--verde);
-    margin-bottom: 2px;
-  }
-  .desvio-card .dc-obs { font-size: 13px; color: var(--cinza); margin-bottom: 8px; }
-  .desvio-card .dc-foto {
-    width: 100%;
-    max-height: 180px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    display: none;
-  }
-  .desvio-card .dc-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-  }
-  .status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 700;
-  }
-  .status-badge.aberto { background: #FEF2F2; color: var(--vermelho); }
-  .status-badge.andamento { background: #FFFBEB; color: #92400E; }
-  .status-badge.tratado { background: var(--verde-bg); color: var(--verde); }
+/* ── BOTÕES ── */
+.btn{width:100%;padding:15px;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;transition:opacity 0.15s;font-family:inherit;margin-top:4px;letter-spacing:-0.2px;}
+.btn:active{opacity:0.82;}
+.btn-verde{background:var(--sz-green);color:white;}
+.btn-roxo{background:var(--roxo);color:white;}
+.btn-outline-verde{background:white;color:var(--sz-green);border:2px solid var(--sz-green);}
+.btn-outline-roxo{background:white;color:var(--roxo);border:2px solid var(--roxo);}
 
-  .btn-avancar {
-    padding: 7px 14px;
-    border-radius: 8px;
-    border: none;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-    background: var(--cinza-cl);
-    color: var(--cinza);
-  }
-  .btn-avancar:hover { background: var(--verde-bg); color: var(--verde); }
-  .btn-avancar:disabled { opacity: 0.4; cursor: not-allowed; }
+/* ── FILTROS ── */
+.filtros{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;}
+.f-btn{padding:6px 12px;border-radius:20px;border:2px solid #E5E7EB;background:white;font-size:12px;font-weight:600;color:var(--sz-gray);cursor:pointer;white-space:nowrap;}
+.f-btn.av{background:var(--sz-green);border-color:var(--sz-green);color:white;}
+.f-btn.ar{background:var(--roxo);border-color:var(--roxo);color:white;}
 
-  /* ── FILTROS ── */
-  .filtros {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 14px;
-    flex-wrap: wrap;
-  }
-  .filtro-btn {
-    padding: 6px 14px;
-    border-radius: 20px;
-    border: 2px solid #E5E7EB;
-    background: white;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--cinza-md);
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .filtro-btn.active { background: var(--verde); border-color: var(--verde); color: white; }
+/* ── DESVIO CARD ── */
+.dcard{background:white;border-radius:var(--radius);padding:14px;margin-bottom:10px;box-shadow:0 1px 8px rgba(0,0,0,0.06);border-left:4px solid #E5E7EB;}
+.dcard.org{border-left-color:var(--amarelo);}
+.dcard.limp{border-left-color:var(--azul);}
+.dcard-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px;}
+.dcard-area{font-size:13px;font-weight:700;color:var(--sz-green);}
+.dcard-meta{font-size:11px;color:var(--sz-gray);margin-top:1px;}
+.tipo-tag{font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0;}
+.tipo-tag.org{background:#FFFBEB;color:#92400E;}
+.tipo-tag.limp{background:#EFF6FF;color:#1E40AF;}
+.dcard-obs{font-size:13px;color:var(--sz-black);margin-bottom:8px;}
+.dcard-foto{width:100%;max-height:160px;object-fit:cover;border-radius:8px;margin-bottom:8px;}
+.dcard-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.status{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:20px;font-size:12px;font-weight:700;}
+.status.aberto{background:#FEF2F2;color:var(--vermelho);}
+.status.andamento{background:#FFFBEB;color:#92400E;}
+.status.tratado{background:var(--sz-green-bg);color:var(--sz-green);}
+.btn-av{padding:7px 12px;border-radius:8px;border:none;font-size:12px;font-weight:700;background:var(--sz-gray-cl);color:var(--sz-black);cursor:pointer;font-family:inherit;}
+.btn-av:active{background:var(--sz-green-bg);color:var(--sz-green);}
 
-  /* ── DASHBOARD ── */
-  .stats-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 14px;
-  }
-  .stat-card {
-    background: var(--branco);
-    border-radius: var(--radius);
-    padding: 14px;
-    box-shadow: var(--shadow);
-    text-align: center;
-  }
-  .stat-card .stat-num {
-    font-size: 32px;
-    font-weight: 800;
-    color: var(--verde);
-    line-height: 1;
-  }
-  .stat-card .stat-label {
-    font-size: 11px;
-    color: var(--cinza-md);
-    margin-top: 4px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 600;
-  }
+/* ── CONTRIB CARD ── */
+.ccard{background:white;border-radius:var(--radius);padding:14px;margin-bottom:10px;box-shadow:0 1px 8px rgba(0,0,0,0.06);border-left:4px solid var(--roxo);}
+.ccard-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px;}
+.ccard-area{font-size:13px;font-weight:700;color:var(--roxo);}
+.ccard-meta{font-size:11px;color:var(--sz-gray);margin-top:1px;}
+.cat-tag{font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;background:var(--roxo-bg);color:#5B21B6;white-space:nowrap;flex-shrink:0;}
+.ccard-desc{font-size:13px;color:var(--sz-black);margin-bottom:8px;}
+.ccard-foto{width:100%;max-height:160px;object-fit:cover;border-radius:8px;}
 
-  /* ── QR PANEL ── */
-  .qr-grid { display: grid; gap: 16px; }
-  .qr-item {
-    background: var(--branco);
-    border-radius: var(--radius);
-    padding: 20px;
-    box-shadow: var(--shadow);
-    text-align: center;
-  }
-  .qr-item h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
-  .qr-item p { font-size: 12px; color: var(--cinza-md); margin-bottom: 14px; }
-  .qr-container { display: flex; justify-content: center; }
-  .qr-container canvas, .qr-container img { border-radius: 8px; }
+/* ── DASHBOARD ── */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.stat{background:white;border-radius:var(--radius);padding:14px;text-align:center;box-shadow:0 1px 8px rgba(0,0,0,0.06);}
+.stat-n{font-size:32px;font-weight:800;line-height:1;}
+.stat-l{font-size:11px;color:var(--sz-gray);margin-top:4px;text-transform:uppercase;letter-spacing:0.5px;font-weight:600;}
+.section-title{font-size:12px;font-weight:700;color:var(--sz-gray);text-transform:uppercase;letter-spacing:0.6px;margin:14px 0 8px;}
+.bar-row{margin-bottom:10px;}
+.bar-label{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:4px;}
+.bar-bg{background:#E5E7EB;border-radius:20px;height:8px;}
+.bar-fill{border-radius:20px;height:8px;transition:width 0.4s;}
 
-  /* ── TOAST ── */
-  .toast {
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%) translateY(80px);
-    background: var(--cinza);
-    color: white;
-    padding: 12px 24px;
-    border-radius: 30px;
-    font-size: 14px;
-    font-weight: 600;
-    z-index: 999;
-    transition: transform 0.3s ease;
-    white-space: nowrap;
-    max-width: 90vw;
-    text-align: center;
-  }
-  .toast.show { transform: translateX(-50%) translateY(0); }
-  .toast.success { background: var(--verde); }
-  .toast.error { background: var(--vermelho); }
+/* ── EMPTY ── */
+.empty{text-align:center;padding:48px 16px;color:var(--sz-gray);}
+.empty .ico{font-size:48px;margin-bottom:10px;}
+.empty p{font-size:14px;}
 
-  /* ── CONFIG ── */
-  .config-section { margin-bottom: 20px; }
-  .config-section h3 { font-size: 14px; font-weight: 700; color: var(--cinza-md); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--sz-black);color:white;padding:12px 22px;border-radius:30px;font-size:14px;font-weight:600;z-index:999;transition:transform 0.3s cubic-bezier(.34,1.4,.64,1);white-space:nowrap;max-width:90vw;text-align:center;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.toast.ok{background:var(--sz-green);}
+.toast.ok2{background:var(--roxo);}
+.toast.err{background:var(--vermelho);}
 
-  /* ── LOADING ── */
-  .loading { text-align: center; padding: 40px; color: var(--cinza-md); }
-  .spinner {
-    width: 32px; height: 32px;
-    border: 3px solid #E5E7EB;
-    border-top-color: var(--verde);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin: 0 auto 12px;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .empty-state { text-align: center; padding: 48px 16px; color: var(--cinza-md); }
-  .empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
-  .empty-state p { font-size: 14px; }
-
-  /* ── SETUP SCREEN ── */
-  #setup-screen {
-    position: fixed; inset: 0;
-    background: var(--cinza-cl);
-    z-index: 200;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-  }
-  .setup-box {
-    background: white;
-    border-radius: 16px;
-    padding: 28px;
-    width: 100%;
-    max-width: 400px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-  }
-  .setup-box .logo { font-size: 40px; text-align: center; margin-bottom: 8px; }
-  .setup-box h2 { font-size: 20px; font-weight: 800; text-align: center; margin-bottom: 4px; }
-  .setup-box p { font-size: 13px; color: var(--cinza-md); text-align: center; margin-bottom: 20px; }
-  .setup-box .setup-note {
-    background: #FEF3C7;
-    border-radius: 8px;
-    padding: 10px 12px;
-    font-size: 12px;
-    color: #92400E;
-    margin-bottom: 16px;
-  }
+/* ── QR ── */
+.qr-item{background:white;border-radius:var(--radius);padding:20px;margin-bottom:12px;text-align:center;box-shadow:0 1px 8px rgba(0,0,0,0.06);}
+.qr-item h3{font-size:14px;font-weight:700;margin-bottom:4px;}
+.qr-item .qr-tipo{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:10px;}
+.qr-tipo.d{background:#FEF2F2;color:var(--vermelho);}
+.qr-tipo.c{background:var(--roxo-bg);color:var(--roxo);}
+.qr-item p{font-size:10px;color:var(--sz-gray);margin-bottom:12px;word-break:break-all;}
+.qr-item img{border-radius:8px;width:180px;height:180px;}
 </style>
 </head>
 <body>
 
-<!-- ── SETUP SCREEN ── -->
-<div id="setup-screen">
-  <div class="setup-box">
-    <div class="logo">🏭</div>
-    <h2>5S CR3 — Desvios</h2>
-    <p>Configure a conexão com o Supabase para começar</p>
-    <div class="setup-note">
-      ⚠️ Cole as credenciais do seu projeto Supabase. Elas ficam salvas no navegador.
+<!-- ══ HOME ══ -->
+<div class="tela ativa" id="tela-home">
+  <div class="home-wrap">
+    <div class="home-hero">
+      <!-- Logo Suzano em SVG inline -->
+      <div class="home-logo-box">
+        <img src="data:image/png;base64,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" alt="Suzano" style="height:56px;width:auto;">
+      </div>
+      <h2>5S · Recuperação Química</h2>
+      <p>Unidade Jacareí</p>
     </div>
-    <div class="form-group">
-      <label>Supabase URL</label>
-      <input type="text" id="cfg-url" placeholder="https://xxxx.supabase.co">
+
+    <div class="home-cards">
+      <div class="home-cards-title">O que você quer fazer?</div>
+
+      <button class="home-btn" onclick="irPara('tela-desvio')">
+        <div class="hico hico-desvio">⚠️</div>
+        <div class="htxt">
+          <strong>Registrar Desvio</strong>
+          <span>Identifiquei um problema de organização ou limpeza</span>
+        </div>
+        <div class="harrow">›</div>
+      </button>
+
+      <button class="home-btn" onclick="irPara('tela-contrib')">
+        <div class="hico hico-contrib">⭐</div>
+        <div class="htxt">
+          <strong>Registrar Contribuição</strong>
+          <span>Fiz uma ação de melhoria 5S na minha área</span>
+        </div>
+        <div class="harrow">›</div>
+      </button>
+
+      <div class="home-divider"></div>
+
+      <button class="home-btn" onclick="irPara('tela-painel')">
+        <div class="hico hico-painel">📊</div>
+        <div class="htxt">
+          <strong>Painel Geral</strong>
+          <span>Desvios, contribuições e indicadores</span>
+        </div>
+        <div class="harrow">›</div>
+      </button>
     </div>
-    <div class="form-group">
-      <label>Anon Key</label>
-      <input type="text" id="cfg-key" placeholder="eyJhbGci...">
-    </div>
-    <button class="btn-primary" onclick="salvarConfig()">Conectar</button>
   </div>
 </div>
 
-<!-- ── APP SHELL ── -->
-<div id="app-shell" style="display:none;">
-  <header class="app-header">
-    <h1>🏭 5S CR3</h1>
-    <span class="area-badge" id="header-area">—</span>
-  </header>
-
-  <nav class="nav-tabs">
-    <div class="nav-tab active" onclick="showView('registrar')">＋ Registrar</div>
-    <div class="nav-tab" onclick="showView('lista')">📋 Desvios</div>
-    <div class="nav-tab" onclick="showView('dashboard')">📊 Painel</div>
-    <div class="nav-tab" onclick="showView('qrcodes')">QR Codes</div>
-    <div class="nav-tab" onclick="showView('config')">⚙️</div>
+<!-- ══ TELA DESVIO ══ -->
+<div class="tela" id="tela-desvio">
+  <div class="header">
+    <span class="back" onclick="irHome()">‹</span>
+    <h1>⚠️ Registrar Desvio</h1>
+    <span class="badge" id="d-badge-area">—</span>
+  </div>
+  <nav class="nav" id="d-nav">
+    <div class="nav-item active" data-tab="d-reg" onclick="dTab(this)">＋ Novo</div>
+    <div class="nav-item" data-tab="d-lista" onclick="dTab(this)">📋 Lista</div>
   </nav>
 
-  <!-- VIEW: REGISTRAR -->
-  <div class="view active" id="view-registrar">
-
-    <!-- Seleção de subárea (quando não vem por QR) -->
-    <div id="subarea-picker" style="display:none;">
+  <div id="d-reg" class="conteudo">
+    <div id="d-picker">
       <div class="card">
         <div class="card-label">Selecione a subárea</div>
-        <div class="subarea-grid">
-          <button class="subarea-btn" onclick="selecionarArea('piso0-cr3')">
-            <div class="floor-badge">0</div>
-            <div><div style="font-size:15px;font-weight:700;">Piso 0 CR3</div><div style="font-size:12px;color:var(--cinza-md);">Nível térreo</div></div>
-          </button>
-          <button class="subarea-btn" onclick="selecionarArea('piso1-cr3')">
-            <div class="floor-badge">1</div>
-            <div><div style="font-size:15px;font-weight:700;">Piso 1 CR3</div><div style="font-size:12px;color:var(--cinza-md);">Primeiro andar</div></div>
-          </button>
-          <button class="subarea-btn" onclick="selecionarArea('piso2-cr3')">
-            <div class="floor-badge">2</div>
-            <div><div style="font-size:15px;font-weight:700;">Piso 2 CR3</div><div style="font-size:12px;color:var(--cinza-md);">Segundo andar</div></div>
-          </button>
-        </div>
+        <button class="subarea-btn" onclick="dSelectArea('piso0-cr3')">
+          <div class="floor v">0</div><div><strong>Piso 0 CR3</strong><small>Nível térreo</small></div>
+        </button>
+        <button class="subarea-btn" onclick="dSelectArea('piso1-cr3')">
+          <div class="floor v">1</div><div><strong>Piso 1 CR3</strong><small>Primeiro andar</small></div>
+        </button>
+        <button class="subarea-btn" onclick="dSelectArea('piso2-cr3')">
+          <div class="floor v">2</div><div><strong>Piso 2 CR3</strong><small>Segundo andar</small></div>
+        </button>
       </div>
     </div>
-
-    <!-- Formulário principal -->
-    <div id="form-desvio" style="display:none;">
-
+    <div id="d-form" style="display:none">
       <div class="card">
         <div class="card-label">Responsável</div>
-        <div class="form-group" style="margin-bottom:10px;">
-          <label>Nome</label>
-          <input type="text" id="reg-nome" placeholder="Seu nome completo">
-        </div>
-        <div class="form-group" style="margin-bottom:0;">
-          <label>Matrícula</label>
-          <input type="text" id="reg-matricula" placeholder="Ex.: 123456">
-        </div>
+        <div class="fg"><label>Nome</label><input type="text" id="d-nome" placeholder="Seu nome completo"></div>
+        <div class="fg"><label>Matrícula</label><input type="text" id="d-mat" placeholder="Ex.: 123456"></div>
       </div>
-
       <div class="card">
         <div class="card-label">Tipo de Desvio</div>
-        <div class="tipo-toggle">
-          <button class="tipo-btn" id="btn-org" onclick="selectTipo('organizacao')">
-            <span class="icon">📦</span> Organização
-          </button>
-          <button class="tipo-btn" id="btn-limp" onclick="selectTipo('limpeza')">
-            <span class="icon">🧹</span> Limpeza
-          </button>
+        <div class="tipo-grid">
+          <div class="tipo-btn" id="d-t-org" onclick="dSelTipo('organizacao')"><span class="ico">📦</span>Organização</div>
+          <div class="tipo-btn" id="d-t-limp" onclick="dSelTipo('limpeza')"><span class="ico">🧹</span>Limpeza</div>
         </div>
       </div>
-
       <div class="card">
         <div class="card-label">Foto do Desvio</div>
-        <label style="display:block;background:var(--verde-bg);border:2px dashed var(--verde);border-radius:10px;padding:28px 16px;text-align:center;cursor:pointer;font-size:15px;font-weight:600;color:var(--verde);">
-          📷 &nbsp;Tirar foto / escolher da galeria
-          <input type="file" accept="image/*" onchange="previewFoto(this)" style="display:block;width:100%;margin-top:12px;">
+        <img id="d-foto-prev" style="display:none;width:100%;max-height:220px;object-fit:cover;border-radius:10px;margin-bottom:10px;">
+        <label for="d-foto-inp" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:16px;background:var(--sz-green-bg);border:2px dashed var(--sz-green);border-radius:10px;font-size:15px;font-weight:700;color:var(--sz-green);cursor:pointer;box-sizing:border-box;">
+          <span style="font-size:22px;">📷</span> Tirar foto / Galeria
+          <input type="file" id="d-foto-inp" accept="image/*" onchange="dOnFoto(this)" style="display:none;">
         </label>
-        <img class="foto-preview" id="foto-preview" alt="Preview">
       </div>
-
       <div class="card">
         <div class="card-label">Observação (opcional)</div>
-        <textarea id="reg-obs" placeholder="Descreva o desvio brevemente..."></textarea>
+        <textarea id="d-obs" placeholder="Descreva brevemente o desvio..."></textarea>
       </div>
-
-      <button class="btn-primary" id="btn-registrar" onclick="registrarDesvio()">Registrar Desvio</button>
-      <button class="btn-secondary" onclick="voltarSubarea()">← Trocar subárea</button>
-      <div style="height:24px;"></div>
+      <button class="btn btn-verde" onclick="dRegistrar()">Registrar Desvio</button>
+      <button class="btn btn-outline-verde" onclick="dVoltarPicker()" style="margin-top:10px;">← Trocar subárea</button>
+      <div style="height:24px"></div>
     </div>
   </div>
 
-  <!-- VIEW: LISTA -->
-  <div class="view" id="view-lista">
-    <div class="filtros">
-      <button class="filtro-btn active" onclick="setFiltro('todos',this)">Todos</button>
-      <button class="filtro-btn" onclick="setFiltro('aberto',this)">Abertos</button>
-      <button class="filtro-btn" onclick="setFiltro('andamento',this)">Em andamento</button>
-      <button class="filtro-btn" onclick="setFiltro('tratado',this)">Tratados</button>
+  <div id="d-lista" class="conteudo" style="display:none">
+    <div class="filtros" id="d-f-st">
+      <button class="f-btn av" onclick="dFSt('todos',this)">Todos</button>
+      <button class="f-btn" onclick="dFSt('aberto',this)">Abertos</button>
+      <button class="f-btn" onclick="dFSt('andamento',this)">Andamento</button>
+      <button class="f-btn" onclick="dFSt('tratado',this)">Tratados</button>
     </div>
-    <div class="filtros" style="margin-top:-6px;">
-      <button class="filtro-btn active" onclick="setFiltroArea('todas',this)">Todas as áreas</button>
-      <button class="filtro-btn" onclick="setFiltroArea('piso0-cr3',this)">Piso 0</button>
-      <button class="filtro-btn" onclick="setFiltroArea('piso1-cr3',this)">Piso 1</button>
-      <button class="filtro-btn" onclick="setFiltroArea('piso2-cr3',this)">Piso 2</button>
+    <div class="filtros" id="d-f-ar">
+      <button class="f-btn av" onclick="dFAr('todas',this)">Todas</button>
+      <button class="f-btn" onclick="dFAr('piso0-cr3',this)">Piso 0</button>
+      <button class="f-btn" onclick="dFAr('piso1-cr3',this)">Piso 1</button>
+      <button class="f-btn" onclick="dFAr('piso2-cr3',this)">Piso 2</button>
     </div>
-    <div id="lista-container">
-      <div class="loading"><div class="spinner"></div><p>Carregando...</p></div>
-    </div>
-  </div>
-
-  <!-- VIEW: DASHBOARD -->
-  <div class="view" id="view-dashboard">
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-num" id="stat-total">—</div>
-        <div class="stat-label">Total</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" id="stat-abertos" style="color:var(--vermelho);">—</div>
-        <div class="stat-label">Abertos</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" id="stat-andamento" style="color:var(--amarelo);">—</div>
-        <div class="stat-label">Em andamento</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" id="stat-tratados" style="color:var(--verde);">—</div>
-        <div class="stat-label">Tratados</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-label">Por subárea</div>
-      <div id="dash-areas"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-label">Por tipo</div>
-      <div id="dash-tipos"></div>
-    </div>
-  </div>
-
-  <!-- VIEW: QR CODES -->
-  <div class="view" id="view-qrcodes">
-    <div class="card" style="margin-bottom:14px;">
-      <div class="card-label">URL base</div>
-      <input type="text" id="qr-base-url" placeholder="https://seu-usuario.github.io/seu-repo" style="margin-bottom:8px;">
-      <button class="btn-primary" onclick="gerarQRs()">Gerar QR Codes</button>
-    </div>
-    <div class="qr-grid" id="qr-grid"></div>
-  </div>
-
-  <!-- VIEW: CONFIG -->
-  <div class="view" id="view-config">
-    <div class="config-section">
-      <h3>Conexão Supabase</h3>
-      <div class="card">
-        <div class="form-group" style="margin-bottom:10px;">
-          <label>URL</label>
-          <input type="text" id="cfg-url2" placeholder="https://xxxx.supabase.co">
-        </div>
-        <div class="form-group" style="margin-bottom:10px;">
-          <label>Anon Key</label>
-          <input type="text" id="cfg-key2" placeholder="eyJhbGci...">
-        </div>
-        <button class="btn-primary" onclick="salvarConfig2()">Salvar Credenciais</button>
-      </div>
-    </div>
-
-    <div class="config-section">
-      <h3>Banco de dados</h3>
-      <div class="card">
-        <p style="font-size:13px;color:var(--cinza-md);margin-bottom:12px;">Execute este SQL no Supabase SQL Editor para criar as tabelas necessárias:</p>
-        <textarea id="sql-script" style="font-family:monospace;font-size:11px;height:220px;background:#1C1C1E;color:#4ADE80;border:none;border-radius:8px;padding:12px;" readonly></textarea>
-        <button class="btn-secondary" onclick="copiarSQL()">Copiar SQL</button>
-      </div>
-    </div>
-
-    <div class="config-section">
-      <h3>Storage</h3>
-      <div class="card">
-        <p style="font-size:13px;color:var(--cinza-md);">Crie um bucket chamado <strong>fotos-desvios</strong> no Supabase Storage com acesso público habilitado.</p>
-      </div>
-    </div>
+    <div id="d-lista-out"></div>
   </div>
 </div>
 
-<!-- TOAST -->
+<!-- ══ TELA CONTRIB ══ -->
+<div class="tela" id="tela-contrib">
+  <div class="header" style="background:var(--roxo)">
+    <span class="back" onclick="irHome()">‹</span>
+    <h1>⭐ Registrar Contribuição</h1>
+    <span class="badge" id="c-badge-area">—</span>
+  </div>
+  <nav class="nav" id="c-nav">
+    <div class="nav-item active roxo" data-tab="c-reg" onclick="cTab(this)">＋ Nova</div>
+    <div class="nav-item" data-tab="c-lista" onclick="cTab(this)">⭐ Lista</div>
+  </nav>
+
+  <div id="c-reg" class="conteudo">
+    <div id="c-picker">
+      <div class="card">
+        <div class="card-label">Selecione a subárea</div>
+        <button class="subarea-btn" onclick="cSelectArea('piso0-cr3')">
+          <div class="floor r">0</div><div><strong>Piso 0 CR3</strong><small>Nível térreo</small></div>
+        </button>
+        <button class="subarea-btn" onclick="cSelectArea('piso1-cr3')">
+          <div class="floor r">1</div><div><strong>Piso 1 CR3</strong><small>Primeiro andar</small></div>
+        </button>
+        <button class="subarea-btn" onclick="cSelectArea('piso2-cr3')">
+          <div class="floor r">2</div><div><strong>Piso 2 CR3</strong><small>Segundo andar</small></div>
+        </button>
+      </div>
+    </div>
+    <div id="c-form" style="display:none">
+      <div class="card">
+        <div class="card-label">Responsável</div>
+        <div class="fg"><label>Nome</label><input type="text" id="c-nome" placeholder="Seu nome completo"></div>
+        <div class="fg"><label>Matrícula</label><input type="text" id="c-mat" placeholder="Ex.: 123456"></div>
+      </div>
+      <div class="card">
+        <div class="card-label">Categoria da Ação</div>
+        <div class="cat-grid">
+          <div class="cat-btn" onclick="cSelCat('Organização',this)"><span class="ico">📦</span>Organização</div>
+          <div class="cat-btn" onclick="cSelCat('Limpeza',this)"><span class="ico">🧹</span>Limpeza</div>
+          <div class="cat-btn" onclick="cSelCat('Identificação',this)"><span class="ico">🏷️</span>Identificação</div>
+          <div class="cat-btn" onclick="cSelCat('Descarte',this)"><span class="ico">🗑️</span>Descarte</div>
+          <div class="cat-btn" onclick="cSelCat('Padronização',this)"><span class="ico">📋</span>Padronização</div>
+          <div class="cat-btn" onclick="cSelCat('Outra',this)"><span class="ico">✨</span>Outra</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label">Descrição da ação realizada</div>
+        <textarea id="c-desc" placeholder="Ex.: Organizei as ferramentas da bancada e identifiquei cada posição..."></textarea>
+      </div>
+      <div class="card">
+        <div class="card-label">Foto da melhoria</div>
+        <img id="c-foto-prev" style="display:none;width:100%;max-height:220px;object-fit:cover;border-radius:10px;margin-bottom:10px;">
+        <label for="c-foto-inp" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:16px;background:var(--roxo-bg);border:2px dashed var(--roxo);border-radius:10px;font-size:15px;font-weight:700;color:var(--roxo);cursor:pointer;box-sizing:border-box;">
+          <span style="font-size:22px;">📷</span> Tirar foto / Galeria
+          <input type="file" id="c-foto-inp" accept="image/*" onchange="cOnFoto(this)" style="display:none;">
+        </label>
+      </div>
+      <button class="btn btn-roxo" onclick="cRegistrar()">Registrar Contribuição</button>
+      <button class="btn btn-outline-roxo" onclick="cVoltarPicker()" style="margin-top:10px;">← Trocar subárea</button>
+      <div style="height:24px"></div>
+    </div>
+  </div>
+
+  <div id="c-lista" class="conteudo" style="display:none">
+    <div class="filtros" id="c-f-ar">
+      <button class="f-btn ar" onclick="cFAr('todas',this)">Todas</button>
+      <button class="f-btn" onclick="cFAr('piso0-cr3',this)">Piso 0</button>
+      <button class="f-btn" onclick="cFAr('piso1-cr3',this)">Piso 1</button>
+      <button class="f-btn" onclick="cFAr('piso2-cr3',this)">Piso 2</button>
+    </div>
+    <div id="c-lista-out"></div>
+  </div>
+</div>
+
+<!-- ══ TELA PAINEL ══ -->
+<div class="tela" id="tela-painel">
+  <div class="header">
+    <span class="back" onclick="irHome()">‹</span>
+    <h1>📊 Painel Geral 5S</h1>
+  </div>
+  <nav class="nav" id="p-nav">
+    <div class="nav-item active" data-tab="p-geral"   onclick="pTab(this)">Geral</div>
+    <div class="nav-item"        data-tab="p-desvios" onclick="pTab(this)">⚠️ Desvios</div>
+    <div class="nav-item"        data-tab="p-contrib" onclick="pTab(this)">⭐ Contribuições</div>
+    <div class="nav-item"        data-tab="p-qr"      onclick="pTab(this)">QR Codes</div>
+  </nav>
+
+  <div id="p-geral" class="conteudo">
+    <div class="section-title">Desvios</div>
+    <div class="stats">
+      <div class="stat"><div class="stat-n" id="p-d-tot" style="color:var(--sz-black)">0</div><div class="stat-l">Total</div></div>
+      <div class="stat"><div class="stat-n" id="p-d-ab"  style="color:var(--vermelho)">0</div><div class="stat-l">Abertos</div></div>
+      <div class="stat"><div class="stat-n" id="p-d-and" style="color:var(--amarelo)">0</div><div class="stat-l">Andamento</div></div>
+      <div class="stat"><div class="stat-n" id="p-d-tr"  style="color:var(--sz-green)">0</div><div class="stat-l">Tratados</div></div>
+    </div>
+    <div class="section-title">Contribuições</div>
+    <div class="stats">
+      <div class="stat"><div class="stat-n" id="p-c-tot" style="color:var(--roxo)">0</div><div class="stat-l">Total</div></div>
+      <div class="stat"><div class="stat-n" id="p-c-hj"  style="color:var(--roxo)">0</div><div class="stat-l">Hoje</div></div>
+    </div>
+    <div class="card"><div class="card-label">Desvios por subárea</div><div id="p-areas-d"></div></div>
+    <div class="card"><div class="card-label">Contribuições por subárea</div><div id="p-areas-c"></div></div>
+  </div>
+
+  <div id="p-desvios" class="conteudo" style="display:none">
+    <div class="filtros" id="p-d-f-st">
+      <button class="f-btn av" onclick="pdFSt('todos',this)">Todos</button>
+      <button class="f-btn" onclick="pdFSt('aberto',this)">Abertos</button>
+      <button class="f-btn" onclick="pdFSt('andamento',this)">Andamento</button>
+      <button class="f-btn" onclick="pdFSt('tratado',this)">Tratados</button>
+    </div>
+    <div id="p-d-out"></div>
+  </div>
+
+  <div id="p-contrib" class="conteudo" style="display:none">
+    <div id="p-c-out"></div>
+  </div>
+
+  <div id="p-qr" class="conteudo" style="display:none">
+    <div class="card">
+      <div class="card-label">URL do app (GitHub Pages)</div>
+      <div class="fg"><input type="text" id="qr-url" placeholder="https://raphaeleq-web.github.io/Gestao-5S---Rec"></div>
+      <button class="btn btn-verde" onclick="gerarQR()">Gerar QR Codes</button>
+    </div>
+    <div id="qr-out"></div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
-// ══════════════════════════════════════════
-//  CONFIG & INIT
-// ══════════════════════════════════════════
-const SQL_SETUP = `-- Execute no SQL Editor do Supabase
+const AREAS={'piso0-cr3':'Piso 0 CR3','piso1-cr3':'Piso 1 CR3','piso2-cr3':'Piso 2 CR3'};
+function getD(){return JSON.parse(localStorage.getItem('desvios')||'[]');}
+function getC(){return JSON.parse(localStorage.getItem('contribs')||'[]');}
+function saveD(d){localStorage.setItem('desvios',JSON.stringify(d));}
+function saveC(c){localStorage.setItem('contribs',JSON.stringify(c));}
 
-create table if not exists desvios (
-  id          uuid primary key default gen_random_uuid(),
-  area        text not null,
-  tipo        text not null check (tipo in ('organizacao','limpeza')),
-  status      text not null default 'aberto' check (status in ('aberto','andamento','tratado')),
-  nome        text not null,
-  matricula   text not null,
-  observacao  text,
-  foto_url    text,
-  created_at  timestamptz default now(),
-  updated_at  timestamptz default now()
-);
+let dArea='',dTipo='',dFoto='';
+let cArea='',cCat='',cFoto='';
+let dFiltSt='todos',dFiltAr='todas',pdFiltSt='todos',cFiltAr='todas';
 
--- Habilitar RLS
-alter table desvios enable row level security;
-
--- Políticas abertas (acesso via QR, sem login)
-create policy "leitura publica" on desvios for select using (true);
-create policy "insercao publica" on desvios for insert with check (true);
-create policy "atualizacao publica" on desvios for update using (true);`;
-
-let SUPABASE_URL = '';
-let SUPABASE_KEY = '';
-let areaAtual = '';
-let tipoSelecionado = '';
-let filtroStatus = 'todos';
-let filtroArea = 'todas';
-let fotoFile = null;
-
-const AREAS = {
-  'piso0-cr3': 'Piso 0 CR3',
-  'piso1-cr3': 'Piso 1 CR3',
-  'piso2-cr3': 'Piso 2 CR3'
-};
-
-function init() {
-  SUPABASE_URL = localStorage.getItem('sb_url') || '';
-  SUPABASE_KEY = localStorage.getItem('sb_key') || '';
-
-  document.getElementById('sql-script').value = SQL_SETUP;
-
-  if (!SUPABASE_URL || !SUPABASE_KEY) {
-    document.getElementById('setup-screen').style.display = 'flex';
-    return;
+(function(){
+  const p=new URLSearchParams(location.search);
+  const a=p.get('area'),tipo=p.get('tipo');
+  if(a&&AREAS[a]){
+    if(tipo==='contrib'){irPara('tela-contrib');cSelectArea(a);}
+    else{irPara('tela-desvio');dSelectArea(a);}
   }
+  document.getElementById('qr-url').value=location.origin+location.pathname;
+})();
 
-  document.getElementById('setup-screen').style.display = 'none';
-  document.getElementById('app-shell').style.display = 'block';
-  document.getElementById('cfg-url2').value = SUPABASE_URL;
-  document.getElementById('cfg-key2').value = SUPABASE_KEY;
-
-  // QR code URL base
-  document.getElementById('qr-base-url').value = window.location.origin + window.location.pathname.replace('index.html','');
-
-  // Detectar subárea via URL param
-  const params = new URLSearchParams(window.location.search);
-  const areaParam = params.get('area');
-  if (areaParam && AREAS[areaParam]) {
-    areaAtual = areaParam;
-    atualizarHeaderArea();
-    mostrarFormulario();
-  } else {
-    document.getElementById('subarea-picker').style.display = 'block';
-    document.getElementById('form-desvio').style.display = 'none';
-  }
+function irPara(id){
+  document.querySelectorAll('.tela').forEach(t=>t.classList.remove('ativa'));
+  document.getElementById(id).classList.add('ativa');
+  window.scrollTo(0,0);
+  if(id==='tela-painel')renderPainel();
 }
+function irHome(){irPara('tela-home');}
 
-function salvarConfig() {
-  const url = document.getElementById('cfg-url').value.trim();
-  const key = document.getElementById('cfg-key').value.trim();
-  if (!url || !key) { toast('Preencha URL e Anon Key', 'error'); return; }
-  localStorage.setItem('sb_url', url);
-  localStorage.setItem('sb_key', key);
-  location.reload();
-}
-
-function salvarConfig2() {
-  const url = document.getElementById('cfg-url2').value.trim();
-  const key = document.getElementById('cfg-key2').value.trim();
-  if (!url || !key) { toast('Preencha URL e Anon Key', 'error'); return; }
-  localStorage.setItem('sb_url', url);
-  localStorage.setItem('sb_key', key);
-  SUPABASE_URL = url;
-  SUPABASE_KEY = key;
-  toast('Credenciais salvas!', 'success');
-}
-
-function copiarSQL() {
-  navigator.clipboard.writeText(SQL_SETUP).then(() => toast('SQL copiado!', 'success'));
-}
-
-// ══════════════════════════════════════════
-//  NAVEGAÇÃO
-// ══════════════════════════════════════════
-function showView(name) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('view-' + name).classList.add('active');
-  event.target.classList.add('active');
-
-  if (name === 'lista') carregarLista();
-  if (name === 'dashboard') carregarDashboard();
-}
-
-// ══════════════════════════════════════════
-//  SUBÁREA
-// ══════════════════════════════════════════
-function selecionarArea(area) {
-  areaAtual = area;
-  atualizarHeaderArea();
-  mostrarFormulario();
-}
-
-function atualizarHeaderArea() {
-  document.getElementById('header-area').textContent = AREAS[areaAtual] || '—';
-}
-
-function mostrarFormulario() {
-  document.getElementById('subarea-picker').style.display = 'none';
-  document.getElementById('form-desvio').style.display = 'block';
-}
-
-function voltarSubarea() {
-  areaAtual = '';
-  document.getElementById('header-area').textContent = '—';
-  document.getElementById('subarea-picker').style.display = 'block';
-  document.getElementById('form-desvio').style.display = 'none';
-  resetForm();
-}
-
-// ══════════════════════════════════════════
-//  FORMULÁRIO
-// ══════════════════════════════════════════
-function selectTipo(tipo) {
-  tipoSelecionado = tipo;
-  document.getElementById('btn-org').className = 'tipo-btn' + (tipo === 'organizacao' ? ' selected-org' : '');
-  document.getElementById('btn-limp').className = 'tipo-btn' + (tipo === 'limpeza' ? ' selected-limp' : '');
-}
-
-function previewFoto(input) {
-  if (!input.files || !input.files[0]) return;
-  fotoFile = input.files[0];
-  const reader = new FileReader();
-  reader.onload = e => {
-    const img = document.getElementById('foto-preview');
-    img.src = e.target.result;
-    img.style.display = 'block';
-  };
-  reader.readAsDataURL(fotoFile);
-}
-
-function resetForm() {
-  document.getElementById('reg-nome').value = '';
-  document.getElementById('reg-matricula').value = '';
-  document.getElementById('reg-obs').value = '';
-  const prev = document.getElementById('foto-preview');
-  prev.style.display = 'none';
-  prev.src = '';
-  // limpa todos os inputs de arquivo do formulário
-  document.querySelectorAll('#form-desvio input[type=file]').forEach(i => i.value = '');
-  fotoFile = null;
-  tipoSelecionado = '';
-  document.getElementById('btn-org').className = 'tipo-btn';
-  document.getElementById('btn-limp').className = 'tipo-btn';
-}
-
-async function registrarDesvio() {
-  const nome = document.getElementById('reg-nome').value.trim();
-  const matricula = document.getElementById('reg-matricula').value.trim();
-  const obs = document.getElementById('reg-obs').value.trim();
-
-  if (!nome) { toast('Informe seu nome', 'error'); return; }
-  if (!matricula) { toast('Informe sua matrícula', 'error'); return; }
-  if (!tipoSelecionado) { toast('Selecione o tipo de desvio', 'error'); return; }
-  if (!fotoFile) { toast('Tire uma foto do desvio', 'error'); return; }
-
-  const btn = document.getElementById('btn-registrar');
-  btn.disabled = true;
-  btn.textContent = 'Enviando...';
-
-  try {
-    // 1. Upload da foto
-    const ext = fotoFile.name.split('.').pop() || 'jpg';
-    const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-    const uploadRes = await fetch(`${SUPABASE_URL}/storage/v1/object/fotos-desvios/${fileName}`, {
-      method: 'POST',
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`,
-        'Content-Type': fotoFile.type,
-        'x-upsert': 'false'
-      },
-      body: fotoFile
-    });
-
-    let foto_url = null;
-    if (uploadRes.ok) {
-      foto_url = `${SUPABASE_URL}/storage/v1/object/public/fotos-desvios/${fileName}`;
-    }
-
-    // 2. Inserir desvio
-    const body = { area: areaAtual, tipo: tipoSelecionado, status: 'aberto', nome, matricula, observacao: obs || null, foto_url };
-    const res = await sbPost('/rest/v1/desvios', body);
-
-    if (!res.ok) throw new Error(await res.text());
-
-    toast('Desvio registrado!', 'success');
-    resetForm();
-
-  } catch (e) {
-    toast('Erro ao registrar: ' + e.message, 'error');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Registrar Desvio';
-  }
-}
-
-// ══════════════════════════════════════════
-//  LISTA
-// ══════════════════════════════════════════
-function setFiltro(status, el) {
-  filtroStatus = status;
-  document.querySelectorAll('.filtros')[0].querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('active'));
+function dTab(el){
+  document.querySelectorAll('#d-nav .nav-item').forEach(n=>n.classList.remove('active'));
   el.classList.add('active');
-  carregarLista();
+  ['d-reg','d-lista'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById(el.dataset.tab).style.display='block';
+  if(el.dataset.tab==='d-lista')renderDLista();
 }
-
-function setFiltroArea(area, el) {
-  filtroArea = area;
-  document.querySelectorAll('.filtros')[1].querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('active'));
+function cTab(el){
+  document.querySelectorAll('#c-nav .nav-item').forEach(n=>n.classList.remove('active'));
   el.classList.add('active');
-  carregarLista();
+  ['c-reg','c-lista'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById(el.dataset.tab).style.display='block';
+  if(el.dataset.tab==='c-lista')renderCLista();
+}
+function pTab(el){
+  document.querySelectorAll('#p-nav .nav-item').forEach(n=>n.classList.remove('active'));
+  el.classList.add('active');
+  ['p-geral','p-desvios','p-contrib','p-qr'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById(el.dataset.tab).style.display='block';
+  if(el.dataset.tab==='p-desvios')renderPDesvios();
+  if(el.dataset.tab==='p-contrib')renderPContrib();
 }
 
-async function carregarLista() {
-  const container = document.getElementById('lista-container');
-  container.innerHTML = '<div class="loading"><div class="spinner"></div><p>Carregando...</p></div>';
-
-  try {
-    let url = `${SUPABASE_URL}/rest/v1/desvios?order=created_at.desc&limit=100`;
-    if (filtroStatus !== 'todos') url += `&status=eq.${filtroStatus}`;
-    if (filtroArea !== 'todas') url += `&area=eq.${filtroArea}`;
-
-    const res = await sbGet(url);
-    const dados = await res.json();
-
-    if (!dados.length) {
-      container.innerHTML = '<div class="empty-state"><div class="empty-icon">✅</div><p>Nenhum desvio encontrado</p></div>';
-      return;
-    }
-
-    container.innerHTML = dados.map(d => renderDesvioCard(d)).join('');
-  } catch (e) {
-    container.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><p>Erro: ${e.message}</p></div>`;
-  }
+/* DESVIO */
+function dSelectArea(a){
+  dArea=a;
+  document.getElementById('d-badge-area').textContent=AREAS[a]||'—';
+  document.getElementById('d-picker').style.display='none';
+  document.getElementById('d-form').style.display='block';
 }
-
-function renderDesvioCard(d) {
-  const statusMap = {
-    aberto:    { label: '🔴 Aberto',        cls: 'aberto' },
-    andamento: { label: '🟡 Em andamento',  cls: 'andamento' },
-    tratado:   { label: '🟢 Tratado',       cls: 'tratado' }
-  };
-  const s = statusMap[d.status];
-  const tipoLabel = d.tipo === 'organizacao' ? '📦 Organização' : '🧹 Limpeza';
-  const tipoCls   = d.tipo === 'organizacao' ? 'org' : 'limp';
-  const data = new Date(d.created_at).toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
-
-  const proximoStatus = d.status === 'aberto' ? 'andamento' : d.status === 'andamento' ? 'tratado' : null;
-  const btnLabel = d.status === 'aberto' ? 'Iniciar tratamento' : d.status === 'andamento' ? 'Marcar tratado' : '';
-
-  return `
-  <div class="desvio-card ${tipoCls}" id="card-${d.id}">
-    <div class="dc-top">
-      <div>
-        <div class="dc-area">${AREAS[d.area] || d.area}</div>
-        <div class="dc-meta">${d.nome} · ${d.matricula} · ${data}</div>
-      </div>
-      <span class="dc-tipo ${tipoCls}">${tipoLabel}</span>
+function dVoltarPicker(){
+  dArea='';dTipo='';dFoto='';
+  document.getElementById('d-badge-area').textContent='—';
+  document.getElementById('d-picker').style.display='block';
+  document.getElementById('d-form').style.display='none';
+  dReset();
+}
+function dSelTipo(t){
+  dTipo=t;
+  document.getElementById('d-t-org').className='tipo-btn'+(t==='organizacao'?' sel-org':'');
+  document.getElementById('d-t-limp').className='tipo-btn'+(t==='limpeza'?' sel-limp':'');
+}
+function dOnFoto(inp){
+  if(!inp.files||!inp.files[0])return;
+  const r=new FileReader();r.onload=e=>{
+    dFoto=e.target.result;
+    const prev=document.getElementById('d-foto-prev');
+    prev.src=dFoto; prev.style.display='block';
+  };r.readAsDataURL(inp.files[0]);
+}
+function dRegistrar(){
+  const nome=document.getElementById('d-nome').value.trim();
+  const mat=document.getElementById('d-mat').value.trim();
+  const obs=document.getElementById('d-obs').value.trim();
+  if(!nome){toast('Informe seu nome','err');return;}
+  if(!mat){toast('Informe sua matrícula','err');return;}
+  if(!dTipo){toast('Selecione o tipo de desvio','err');return;}
+  if(!dFoto){toast('Tire uma foto do desvio','err');return;}
+  const d=getD();
+  d.unshift({id:Date.now().toString(),area:dArea,tipo:dTipo,status:'aberto',nome,matricula:mat,obs,foto:dFoto,created:new Date().toISOString()});
+  saveD(d);toast('Desvio registrado!','ok');dReset();
+}
+function dReset(){
+  ['d-nome','d-mat','d-obs'].forEach(id=>document.getElementById(id).value='');
+  // input inline, sem ID fixo
+  document.getElementById('d-foto-prev').style.display='none';
+  document.getElementById('d-foto-prev').src='';
+  document.getElementById('d-foto-ph').style.display='block';
+  dFoto='';dTipo='';
+  document.getElementById('d-t-org').className='tipo-btn';
+  document.getElementById('d-t-limp').className='tipo-btn';
+}
+function dFSt(s,el){dFiltSt=s;document.querySelectorAll('#d-f-st .f-btn').forEach(b=>b.classList.remove('av'));el.classList.add('av');renderDLista();}
+function dFAr(a,el){dFiltAr=a;document.querySelectorAll('#d-f-ar .f-btn').forEach(b=>b.classList.remove('av'));el.classList.add('av');renderDLista();}
+function renderDLista(){
+  let d=getD();
+  if(dFiltSt!=='todos')d=d.filter(x=>x.status===dFiltSt);
+  if(dFiltAr!=='todas')d=d.filter(x=>x.area===dFiltAr);
+  document.getElementById('d-lista-out').innerHTML=d.length?d.map(dCardHTML).join(''):'<div class="empty"><div class="ico">✅</div><p>Nenhum desvio encontrado</p></div>';
+}
+function dCardHTML(x){
+  const sMap={aberto:'🔴 Aberto',andamento:'🟡 Em andamento',tratado:'🟢 Tratado'};
+  const prox=x.status==='aberto'?'andamento':x.status==='andamento'?'tratado':null;
+  const btnTxt=x.status==='aberto'?'Iniciar':x.status==='andamento'?'Tratar':'';
+  const dt=new Date(x.created).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+  const tc=x.tipo==='organizacao'?'org':'limp';
+  const tl=x.tipo==='organizacao'?'📦 Org':'🧹 Limp';
+  return `<div class="dcard ${tc}">
+    <div class="dcard-top">
+      <div><div class="dcard-area">${AREAS[x.area]||x.area}</div><div class="dcard-meta">${x.nome} · ${x.matricula} · ${dt}</div></div>
+      <span class="tipo-tag ${tc}">${tl}</span>
     </div>
-    ${d.observacao ? `<div class="dc-obs">${d.observacao}</div>` : ''}
-    ${d.foto_url ? `<img class="dc-foto" src="${d.foto_url}" style="display:block;" alt="foto desvio" onerror="this.style.display='none'">` : ''}
-    <div class="dc-footer">
-      <span class="status-badge ${s.cls}">${s.label}</span>
-      ${proximoStatus ? `<button class="btn-avancar" onclick="avancarStatus('${d.id}','${proximoStatus}',this)">${btnLabel}</button>` : ''}
+    ${x.obs?`<div class="dcard-obs">${x.obs}</div>`:''}
+    ${x.foto?`<img class="dcard-foto" src="${x.foto}">`:''}
+    <div class="dcard-footer">
+      <span class="status ${x.status}">${sMap[x.status]}</span>
+      ${prox?`<button class="btn-av" onclick="avancar('${x.id}','${prox}')">${btnTxt}</button>`:''}
     </div>
   </div>`;
 }
-
-async function avancarStatus(id, novoStatus, btn) {
-  btn.disabled = true;
-  btn.textContent = '...';
-  try {
-    const res = await sbPatch(`/rest/v1/desvios?id=eq.${id}`, { status: novoStatus, updated_at: new Date().toISOString() });
-    if (!res.ok) throw new Error(await res.text());
-    toast('Status atualizado!', 'success');
-    carregarLista();
-  } catch(e) {
-    toast('Erro: ' + e.message, 'error');
-    btn.disabled = false;
-  }
+function avancar(id,ns){
+  const d=getD(),i=d.findIndex(x=>x.id===id);
+  if(i<0)return;d[i].status=ns;saveD(d);toast('Status atualizado!','ok');
+  renderDLista();if(document.getElementById('p-d-out').innerHTML)renderPDesvios();
 }
 
-// ══════════════════════════════════════════
-//  DASHBOARD
-// ══════════════════════════════════════════
-async function carregarDashboard() {
-  try {
-    const res = await sbGet(`${SUPABASE_URL}/rest/v1/desvios?select=area,tipo,status`);
-    const dados = await res.json();
-
-    document.getElementById('stat-total').textContent = dados.length;
-    document.getElementById('stat-abertos').textContent = dados.filter(d => d.status === 'aberto').length;
-    document.getElementById('stat-andamento').textContent = dados.filter(d => d.status === 'andamento').length;
-    document.getElementById('stat-tratados').textContent = dados.filter(d => d.status === 'tratado').length;
-
-    // Por área
-    const porArea = {};
-    dados.forEach(d => { porArea[d.area] = (porArea[d.area] || 0) + 1; });
-    document.getElementById('dash-areas').innerHTML = Object.entries(AREAS).map(([k, v]) => {
-      const n = porArea[k] || 0;
-      const pct = dados.length ? Math.round(n / dados.length * 100) : 0;
-      return `<div style="margin-bottom:10px;">
-        <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:4px;"><span>${v}</span><span>${n}</span></div>
-        <div style="background:#E5E7EB;border-radius:20px;height:8px;"><div style="background:var(--verde);border-radius:20px;height:8px;width:${pct}%;transition:width 0.4s;"></div></div>
-      </div>`;
-    }).join('');
-
-    // Por tipo
-    const nOrg = dados.filter(d => d.tipo === 'organizacao').length;
-    const nLimp = dados.filter(d => d.tipo === 'limpeza').length;
-    const total = nOrg + nLimp || 1;
-    document.getElementById('dash-tipos').innerHTML = `
-      <div style="margin-bottom:10px;">
-        <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:4px;"><span>📦 Organização</span><span>${nOrg}</span></div>
-        <div style="background:#E5E7EB;border-radius:20px;height:8px;"><div style="background:var(--amarelo);border-radius:20px;height:8px;width:${Math.round(nOrg/total*100)}%;"></div></div>
-      </div>
-      <div>
-        <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:4px;"><span>🧹 Limpeza</span><span>${nLimp}</span></div>
-        <div style="background:#E5E7EB;border-radius:20px;height:8px;"><div style="background:var(--azul);border-radius:20px;height:8px;width:${Math.round(nLimp/total*100)}%;"></div></div>
-      </div>`;
-
-  } catch(e) {
-    console.error(e);
-  }
+/* CONTRIB */
+function cSelectArea(a){
+  cArea=a;
+  document.getElementById('c-badge-area').textContent=AREAS[a]||'—';
+  document.getElementById('c-picker').style.display='none';
+  document.getElementById('c-form').style.display='block';
+}
+function cVoltarPicker(){
+  cArea='';cCat='';cFoto='';
+  document.getElementById('c-badge-area').textContent='—';
+  document.getElementById('c-picker').style.display='block';
+  document.getElementById('c-form').style.display='none';
+  cReset();
+}
+function cSelCat(cat,el){
+  cCat=cat;
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+}
+function cOnFoto(inp){
+  if(!inp.files||!inp.files[0])return;
+  const r=new FileReader();r.onload=e=>{
+    cFoto=e.target.result;
+    const prev=document.getElementById('c-foto-prev');
+    prev.src=cFoto; prev.style.display='block';
+  };r.readAsDataURL(inp.files[0]);
+}
+function cRegistrar(){
+  const nome=document.getElementById('c-nome').value.trim();
+  const mat=document.getElementById('c-mat').value.trim();
+  const desc=document.getElementById('c-desc').value.trim();
+  if(!nome){toast('Informe seu nome','err');return;}
+  if(!mat){toast('Informe sua matrícula','err');return;}
+  if(!cCat){toast('Selecione a categoria','err');return;}
+  if(!desc){toast('Descreva a ação realizada','err');return;}
+  if(!cFoto){toast('Tire uma foto da melhoria','err');return;}
+  const c=getC();
+  c.unshift({id:Date.now().toString(),area:cArea,categoria:cCat,nome,matricula:mat,desc,foto:cFoto,created:new Date().toISOString()});
+  saveC(c);toast('Contribuição registrada!','ok2');cReset();
+}
+function cReset(){
+  ['c-nome','c-mat','c-desc'].forEach(id=>document.getElementById(id).value='');
+  // input inline, sem ID fixo
+  document.getElementById('c-foto-prev').style.display='none';
+  document.getElementById('c-foto-prev').src='';
+  document.getElementById('c-foto-ph').style.display='block';
+  cFoto='';cCat='';
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('sel'));
+}
+function cFAr(a,el){cFiltAr=a;document.querySelectorAll('#c-f-ar .f-btn').forEach(b=>b.classList.remove('ar'));el.classList.add('ar');renderCLista();}
+function renderCLista(){
+  let c=getC();
+  if(cFiltAr!=='todas')c=c.filter(x=>x.area===cFiltAr);
+  document.getElementById('c-lista-out').innerHTML=c.length?c.map(cCardHTML).join(''):'<div class="empty"><div class="ico">⭐</div><p>Nenhuma contribuição ainda</p></div>';
+}
+function cCardHTML(x){
+  const dt=new Date(x.created).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+  return `<div class="ccard">
+    <div class="ccard-top">
+      <div><div class="ccard-area">${AREAS[x.area]||x.area}</div><div class="ccard-meta">${x.nome} · ${x.matricula} · ${dt}</div></div>
+      <span class="cat-tag">${x.categoria}</span>
+    </div>
+    <div class="ccard-desc">${x.desc}</div>
+    ${x.foto?`<img class="ccard-foto" src="${x.foto}">`:''}
+  </div>`;
 }
 
-// ══════════════════════════════════════════
-//  QR CODES
-// ══════════════════════════════════════════
-function gerarQRs() {
-  const base = document.getElementById('qr-base-url').value.trim().replace(/\/$/, '');
-  if (!base) { toast('Informe a URL base', 'error'); return; }
+/* PAINEL */
+function renderPainel(){
+  const d=getD(),c=getC();
+  const hoje=new Date().toDateString();
+  document.getElementById('p-d-tot').textContent=d.length;
+  document.getElementById('p-d-ab').textContent=d.filter(x=>x.status==='aberto').length;
+  document.getElementById('p-d-and').textContent=d.filter(x=>x.status==='andamento').length;
+  document.getElementById('p-d-tr').textContent=d.filter(x=>x.status==='tratado').length;
+  document.getElementById('p-c-tot').textContent=c.length;
+  document.getElementById('p-c-hj').textContent=c.filter(x=>new Date(x.created).toDateString()===hoje).length;
+  const totD=d.length||1,totC=c.length||1;
+  document.getElementById('p-areas-d').innerHTML=Object.entries(AREAS).map(([k,v])=>{
+    const n=d.filter(x=>x.area===k).length;
+    return `<div class="bar-row"><div class="bar-label"><span>${v}</span><span>${n}</span></div><div class="bar-bg"><div class="bar-fill" style="width:${Math.round(n/totD*100)}%;background:var(--sz-green)"></div></div></div>`;
+  }).join('');
+  document.getElementById('p-areas-c').innerHTML=Object.entries(AREAS).map(([k,v])=>{
+    const n=c.filter(x=>x.area===k).length;
+    return `<div class="bar-row"><div class="bar-label"><span>${v}</span><span>${n}</span></div><div class="bar-bg"><div class="bar-fill" style="width:${Math.round(n/totC*100)}%;background:var(--roxo)"></div></div></div>`;
+  }).join('');
+}
+function pdFSt(s,el){pdFiltSt=s;document.querySelectorAll('#p-d-f-st .f-btn').forEach(b=>b.classList.remove('av'));el.classList.add('av');renderPDesvios();}
+function renderPDesvios(){
+  let d=getD();
+  if(pdFiltSt!=='todos')d=d.filter(x=>x.status===pdFiltSt);
+  document.getElementById('p-d-out').innerHTML=d.length?d.map(dCardHTML).join(''):'<div class="empty"><div class="ico">✅</div><p>Nenhum desvio</p></div>';
+}
+function renderPContrib(){
+  const c=getC();
+  document.getElementById('p-c-out').innerHTML=c.length?c.map(cCardHTML).join(''):'<div class="empty"><div class="ico">⭐</div><p>Nenhuma contribuição</p></div>';
+}
 
-  const grid = document.getElementById('qr-grid');
-  grid.innerHTML = '';
-
-  Object.entries(AREAS).forEach(([key, label]) => {
-    const url = `${base}?area=${key}`;
-    const item = document.createElement('div');
-    item.className = 'qr-item';
-    item.innerHTML = `<h3>${label}</h3><p>${url}</p><div class="qr-container" id="qr-${key}"></div>`;
-    grid.appendChild(item);
-
-    setTimeout(() => {
-      new QRCode(document.getElementById(`qr-${key}`), {
-        text: url, width: 200, height: 200,
-        colorDark: '#1A6B3C', colorLight: '#ffffff',
-        correctLevel: QRCode.CorrectLevel.M
-      });
-    }, 50);
+/* QR */
+function gerarQR(){
+  const base=document.getElementById('qr-url').value.trim().replace(/\/$/,'');
+  if(!base){toast('Informe a URL do app','err');return;}
+  const out=document.getElementById('qr-out');out.innerHTML='';
+  const items=[
+    {label:'Piso 0 CR3',tipo:'Desvios',cls:'d',url:`${base}?area=piso0-cr3`},
+    {label:'Piso 1 CR3',tipo:'Desvios',cls:'d',url:`${base}?area=piso1-cr3`},
+    {label:'Piso 2 CR3',tipo:'Desvios',cls:'d',url:`${base}?area=piso2-cr3`},
+    {label:'Piso 0 CR3',tipo:'Contribuições',cls:'c',url:`${base}?area=piso0-cr3&tipo=contrib`},
+    {label:'Piso 1 CR3',tipo:'Contribuições',cls:'c',url:`${base}?area=piso1-cr3&tipo=contrib`},
+    {label:'Piso 2 CR3',tipo:'Contribuições',cls:'c',url:`${base}?area=piso2-cr3&tipo=contrib`},
+  ];
+  items.forEach(({label,tipo,cls,url})=>{
+    const div=document.createElement('div');
+    div.className='qr-item';
+    div.innerHTML=`<h3>${label}</h3><span class="qr-tipo ${cls}">${tipo}</span><p>${url}</p><img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(url)}&color=005B2E" loading="lazy">`;
+    out.appendChild(div);
   });
 }
 
-// ══════════════════════════════════════════
-//  SUPABASE HELPERS
-// ══════════════════════════════════════════
-function sbHeaders() {
-  return {
-    'apikey': SUPABASE_KEY,
-    'Authorization': `Bearer ${SUPABASE_KEY}`,
-    'Content-Type': 'application/json',
-    'Prefer': 'return=minimal'
-  };
+let tT;
+function toast(msg,type=''){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.className=`toast ${type} show`;
+  clearTimeout(tT);tT=setTimeout(()=>el.classList.remove('show'),2800);
 }
-
-function sbGet(url) {
-  const fullUrl = url.startsWith('http') ? url : SUPABASE_URL + url;
-  return fetch(fullUrl, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } });
-}
-
-function sbPost(path, body) {
-  return fetch(SUPABASE_URL + path, { method: 'POST', headers: sbHeaders(), body: JSON.stringify(body) });
-}
-
-function sbPatch(path, body) {
-  return fetch(SUPABASE_URL + path, { method: 'PATCH', headers: sbHeaders(), body: JSON.stringify(body) });
-}
-
-// ══════════════════════════════════════════
-//  TOAST
-// ══════════════════════════════════════════
-let toastTimer;
-function toast(msg, type = '') {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.className = `toast ${type} show`;
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { el.classList.remove('show'); }, 2800);
-}
-
-// ── START ──
-init();
 </script>
 </body>
 </html>
+
