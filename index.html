@@ -658,26 +658,31 @@ function dCardHTML(x, modo){
   const tc=x.tipo==='organizacao'?'org':'limp';
   const tl=x.tipo==='organizacao'?'📦 Org':'🧹 Limp';
   const prox=x.status==='aberto'?'andamento':x.status==='andamento'?'concluido':null;
-  const clickable = (modo==='execucao' && prox) ? `style="cursor:pointer;" onclick="abrirModal('${x.id}','${prox}')"` : '';
+  const isExecucao = modo==='execucao';
+  const clicavel = isExecucao && prox;
 
-  return `<div class="dcard ${tc}" ${clickable}>
+  const cardAttr = clicavel
+    ? `class="dcard ${tc}" data-id="${x.id}" data-prox="${prox}" data-modo="execucao" style="cursor:pointer;"`
+    : `class="dcard ${tc}"`;
+
+  return `<div ${cardAttr}>
     <div class="dcard-top">
-      <div>
-        <div class="dcard-area">${x.area?x.area.replace("|"," · "):""}</div>
-        ${modo!=='execucao'?`<div class="dcard-meta">${x.nome}</div>`:''}
+      <div style="flex:1;min-width:0;">
+        <div class="dcard-area">${x.area?x.area.replace('|',' · '):''}</div>
+        ${!isExecucao?`<div class="dcard-meta">${x.nome||''}</div>`:''}
         <div style="display:flex;flex-direction:column;gap:2px;margin-top:4px;">
           <span style="font-size:12px;color:var(--sz-green);font-weight:600;">📅 Aberto: ${dtCriacao}</span>
           ${dtUpdate?`<span style="font-size:12px;color:var(--amarelo);font-weight:600;">🔄 Atualizado: ${dtUpdate}</span>`:''}
           ${x.letra_exec?`<span style="font-size:12px;color:var(--sz-gray);">Turma: <strong>${x.letra_exec}</strong>${x.nomes_exec?' · '+x.nomes_exec:''}</span>`:''}
         </div>
       </div>
-      <span class="tipo-tag ${tc}">${tl}</span>
+      <span class="tipo-tag ${tc}" style="flex-shrink:0;">${tl}</span>
     </div>
     ${x.obs?`<div class="dcard-obs">${x.obs}</div>`:''}
     ${x.foto?`<img class="dcard-foto" src="${x.foto}">`:''}
-    <div class="dcard-footer">
+    <div class="dcard-footer" style="margin-top:8px;">
       <span class="status ${x.status}">${sMap[x.status]}</span>
-      ${prox&&modo==='execucao'?`<span style="font-size:12px;color:var(--sz-gray);">Toque para atualizar ›</span>`:''}
+      ${clicavel?`<span style="font-size:12px;color:var(--sz-green);font-weight:600;">Atualizar →</span>`:''}
     </div>
   </div>`;
 }
@@ -685,6 +690,19 @@ function dCardHTML(x, modo){
 let modalDesvioId = '';
 let modalNovoStatus = '';
 let modalFotoB64 = '';
+
+// Event delegation - captura clique em qualquer card de execução
+document.addEventListener('click', function(e){
+  const card = e.target.closest('[data-modo="execucao"]');
+  if(card){
+    const id = card.getAttribute('data-id');
+    const prox = card.getAttribute('data-prox');
+    if(id && prox) abrirModal(id, prox);
+    return;
+  }
+  const overlay = document.getElementById('modal-overlay');
+  if(overlay && e.target === overlay) fecharModal();
+});
 
 function abrirModal(id, novoStatus){
   modalDesvioId = id;
@@ -741,11 +759,7 @@ async function confirmarAvancar(){
   finally{btn.disabled=false;btn.textContent='Confirmar';}
 }
 
-// Fechar modal ao clicar fora
-document.addEventListener('click', function(e){
-  const overlay=document.getElementById('modal-overlay');
-  if(e.target===overlay) fecharModal();
-});
+// event delegation unificado acima
 
 function previewAvancar(id, inp){
   if(!inp.files||!inp.files[0])return;
