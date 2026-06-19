@@ -649,6 +649,12 @@ async function renderDLista(){
     const res=await sbGet(url);
     const d=await res.json();
     el.innerHTML=d.length?d.map(x=>dCardHTML(x,'execucao')).join(''):'<div class="empty"><div class="ico">✅</div><p>Nenhum desvio encontrado</p></div>';
+    // Vincular botões após renderização
+    el.querySelectorAll('.btn-avancar-status').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        abrirModal(this.getAttribute('data-id'), this.getAttribute('data-prox'));
+      });
+    });
   }catch(e){el.innerHTML='<div class="empty"><div class="ico">⚠️</div><p>Erro ao carregar</p></div>';}
 }
 function dCardHTML(x, modo){
@@ -663,8 +669,10 @@ function dCardHTML(x, modo){
 
   const btnAtualizar = (modo==='execucao' && prox) ? `
     <button
+      class="btn-avancar-status"
+      data-id="${x.id}"
+      data-prox="${prox}"
       style="margin-top:12px;width:100%;padding:13px;background:${btnColor};color:white;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;"
-      onclick="window._abrirModal('${x.id}','${prox}')"
     >${btnLabel}</button>` : '';
 
   return `<div class="dcard ${tc}">
@@ -711,7 +719,6 @@ document.addEventListener('DOMContentLoaded', function(){
   });
 });
 
-window._abrirModal = function(id, novoStatus){ abrirModal(id, novoStatus); };
 function abrirModal(id, novoStatus){
   modalDesvioId = id;
   modalNovoStatus = novoStatus;
