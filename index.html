@@ -649,12 +649,6 @@ async function renderDLista(){
     const res=await sbGet(url);
     const d=await res.json();
     el.innerHTML=d.length?d.map(x=>dCardHTML(x,'execucao')).join(''):'<div class="empty"><div class="ico">✅</div><p>Nenhum desvio encontrado</p></div>';
-    // Vincular botões após renderização
-    el.querySelectorAll('.btn-avancar-status').forEach(function(btn){
-      btn.addEventListener('click', function(){
-        abrirModal(this.getAttribute('data-id'), this.getAttribute('data-prox'));
-      });
-    });
   }catch(e){el.innerHTML='<div class="empty"><div class="ico">⚠️</div><p>Erro ao carregar</p></div>';}
 }
 function dCardHTML(x, modo){
@@ -1021,7 +1015,14 @@ async function renderBacklog(){
       el.innerHTML='<div class="empty"><div class="ico">✅</div><p>Nenhum desvio encontrado</p></div>';
       return;
     }
-    el.innerHTML=d.map(dCardHTML).join('');
+    el.innerHTML=d.map(x=>dCardHTML(x,'execucao')).join('');
+    // Vincular botões após renderização
+    el.querySelectorAll('.btn-avancar-status').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        abrirModal(this.getAttribute('data-id'), this.getAttribute('data-prox'));
+      });
+    });
   }catch(e){
     el.innerHTML='<div class="empty"><div class="ico">⚠️</div><p>Erro ao carregar</p></div>';
   }
