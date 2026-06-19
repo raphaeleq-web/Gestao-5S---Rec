@@ -691,17 +691,22 @@ let modalDesvioId = '';
 let modalNovoStatus = '';
 let modalFotoB64 = '';
 
-// Event delegation - captura clique em qualquer card de execução
-document.addEventListener('click', function(e){
-  const card = e.target.closest('[data-modo="execucao"]');
-  if(card){
-    const id = card.getAttribute('data-id');
-    const prox = card.getAttribute('data-prox');
-    if(id && prox) abrirModal(id, prox);
-    return;
-  }
-  const overlay = document.getElementById('modal-overlay');
-  if(overlay && e.target === overlay) fecharModal();
+// Event delegation registrado após DOM pronto
+document.addEventListener('DOMContentLoaded', function(){
+  document.body.addEventListener('click', function(e){
+    // Clique no card de execução
+    const card = e.target.closest('[data-modo="execucao"]');
+    if(card){
+      e.stopPropagation();
+      const id = card.getAttribute('data-id');
+      const prox = card.getAttribute('data-prox');
+      if(id && prox) abrirModal(id, prox);
+      return;
+    }
+    // Clique fora do modal fecha
+    const overlay = document.getElementById('modal-overlay');
+    if(overlay && e.target === overlay) fecharModal();
+  });
 });
 
 function abrirModal(id, novoStatus){
