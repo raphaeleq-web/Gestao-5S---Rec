@@ -398,6 +398,40 @@ input[type=file]{display:none;}
   </div>
 </div>
 
+<!-- ══ MODAL ATUALIZAR STATUS ══ -->
+<div id="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;align-items:flex-end;justify-content:center;">
+  <div style="background:white;border-radius:24px 24px 0 0;padding:24px 20px 40px;width:100%;max-width:480px;box-shadow:0 -8px 32px rgba(0,0,0,0.15);">
+    <div style="width:40px;height:4px;background:#E5E7EB;border-radius:2px;margin:0 auto 20px;"></div>
+    <h3 style="font-size:17px;font-weight:700;margin-bottom:4px;" id="modal-titulo">Atualizar Status</h3>
+    <p style="font-size:13px;color:var(--sz-gray);margin-bottom:18px;" id="modal-sub"></p>
+
+    <div class="fg" style="margin-bottom:12px;">
+      <label style="font-size:11px;font-weight:700;color:var(--sz-gray);text-transform:uppercase;letter-spacing:0.4px;display:block;margin-bottom:5px;">Turma executante</label>
+      <select id="modal-letra" style="width:100%;padding:12px 14px;border:2px solid #E5E7EB;border-radius:10px;font-size:15px;-webkit-appearance:none;background:white;">
+        <option value="">Selecione...</option>
+        <option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>Adm</option>
+      </select>
+    </div>
+
+    <div class="fg" style="margin-bottom:12px;">
+      <label style="font-size:11px;font-weight:700;color:var(--sz-gray);text-transform:uppercase;letter-spacing:0.4px;display:block;margin-bottom:5px;">Executante(s) — opcional</label>
+      <input type="text" id="modal-nomes" placeholder="Nome(s) de quem executou..." style="width:100%;padding:12px 14px;border:2px solid #E5E7EB;border-radius:10px;font-size:15px;">
+    </div>
+
+    <div class="fg" style="margin-bottom:16px;">
+      <label style="font-size:11px;font-weight:700;color:var(--sz-gray);text-transform:uppercase;letter-spacing:0.4px;display:block;margin-bottom:5px;">Foto obrigatória</label>
+      <label for="modal-foto" style="display:flex;align-items:center;justify-content:center;gap:10px;background:var(--sz-green-bg);border:2px dashed var(--sz-green);border-radius:10px;padding:14px;cursor:pointer;font-size:14px;font-weight:600;color:var(--sz-green);">
+        📷 Tirar foto / Galeria
+        <input type="file" id="modal-foto" accept="image/*" style="display:none;" onchange="modalPreviewFoto(this)">
+      </label>
+      <img id="modal-foto-prev" style="display:none;width:100%;max-height:180px;object-fit:cover;border-radius:10px;margin-top:8px;">
+    </div>
+
+    <button id="modal-btn-confirmar" class="btn btn-verde" onclick="confirmarAvancar()" style="margin-bottom:10px;">Confirmar</button>
+    <button class="btn btn-outline-verde" onclick="fecharModal()">Cancelar</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -618,51 +652,24 @@ async function renderDLista(){
   }catch(e){el.innerHTML='<div class="empty"><div class="ico">⚠️</div><p>Erro ao carregar</p></div>';}
 }
 function dCardHTML(x, modo){
-  // modo: 'gestao' ou 'execucao'
   const sMap={aberto:'🔴 A iniciar',andamento:'🟡 Em andamento',concluido:'🟢 Concluído',tratado:'🟢 Concluído'};
-  const prox=x.status==='aberto'?'andamento':x.status==='andamento'?'concluido':null;
-  const btnTxt=x.status==='aberto'?'Iniciar':'Concluir';
   const dtCriacao=new Date(x.created).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'});
   const dtUpdate=x.updated_at?new Date(x.updated_at).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'}):null;
   const tc=x.tipo==='organizacao'?'org':'limp';
   const tl=x.tipo==='organizacao'?'📦 Org':'🧹 Limp';
+  const prox=x.status==='aberto'?'andamento':x.status==='andamento'?'concluido':null;
+  const clickable = (modo==='execucao' && prox) ? `style="cursor:pointer;" onclick="abrirModal('${x.id}','${prox}')"` : '';
 
-  const datasHtml=`
-    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;">
-      <span style="font-size:12px;color:var(--sz-green);font-weight:600;">📅 Aberto: ${dtCriacao}</span>
-      ${dtUpdate?`<span style="font-size:12px;color:var(--amarelo);font-weight:600;">🔄 Atualizado: ${dtUpdate}</span>`:''}
-    </div>`;
-
-  const letraExec=x.letra_exec?`<span style="font-size:12px;color:var(--sz-gray);margin-top:4px;display:block;">Turma: <strong>${x.letra_exec}</strong>${x.nomes_exec?' · '+x.nomes_exec:''}</span>`:'';
-
-  const fotoAvancar = (modo==='execucao' && prox) ? `
-    <div style="margin-top:10px;border-top:1px solid #E5E7EB;padding-top:10px;">
-      <div class="fg" style="margin-bottom:8px;">
-        <label style="font-size:11px;font-weight:700;color:var(--sz-gray);text-transform:uppercase;letter-spacing:0.4px;display:block;margin-bottom:5px;">Turma executante</label>
-        <select id="letra-av-${x.id}" style="width:100%;padding:10px 12px;border:2px solid #E5E7EB;border-radius:8px;font-size:14px;-webkit-appearance:none;background:white;">
-          <option value="">Selecione...</option>
-          <option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>Adm</option>
-        </select>
-      </div>
-      <div class="fg" style="margin-bottom:8px;">
-        <label style="font-size:11px;font-weight:700;color:var(--sz-gray);text-transform:uppercase;letter-spacing:0.4px;display:block;margin-bottom:5px;">Executantes (opcional)</label>
-        <input type="text" id="nomes-av-${x.id}" placeholder="Nomes dos executantes..." style="width:100%;padding:10px 12px;border:2px solid #E5E7EB;border-radius:8px;font-size:14px;">
-      </div>
-      <label style="display:flex;align-items:center;gap:8px;background:var(--sz-green-bg);border:2px dashed var(--sz-green);border-radius:8px;padding:10px 12px;cursor:pointer;font-size:13px;font-weight:600;color:var(--sz-green);">
-        📷 Foto obrigatória para avançar
-        <input type="file" accept="image/*" id="foto-av-${x.id}" style="display:none;" onchange="previewAvancar('${x.id}',this)">
-      </label>
-      <img id="prev-av-${x.id}" style="display:none;width:100%;max-height:140px;object-fit:cover;border-radius:8px;margin-top:8px;">
-      <button class="btn-av" style="margin-top:8px;width:100%;padding:10px;" onclick="avancar('${x.id}','${prox}')">${btnTxt}</button>
-    </div>` : '';
-
-  return `<div class="dcard ${tc}">
+  return `<div class="dcard ${tc}" ${clickable}>
     <div class="dcard-top">
       <div>
         <div class="dcard-area">${x.area?x.area.replace("|"," · "):""}</div>
         ${modo!=='execucao'?`<div class="dcard-meta">${x.nome}</div>`:''}
-        ${datasHtml}
-        ${letraExec}
+        <div style="display:flex;flex-direction:column;gap:2px;margin-top:4px;">
+          <span style="font-size:12px;color:var(--sz-green);font-weight:600;">📅 Aberto: ${dtCriacao}</span>
+          ${dtUpdate?`<span style="font-size:12px;color:var(--amarelo);font-weight:600;">🔄 Atualizado: ${dtUpdate}</span>`:''}
+          ${x.letra_exec?`<span style="font-size:12px;color:var(--sz-gray);">Turma: <strong>${x.letra_exec}</strong>${x.nomes_exec?' · '+x.nomes_exec:''}</span>`:''}
+        </div>
       </div>
       <span class="tipo-tag ${tc}">${tl}</span>
     </div>
@@ -670,10 +677,76 @@ function dCardHTML(x, modo){
     ${x.foto?`<img class="dcard-foto" src="${x.foto}">`:''}
     <div class="dcard-footer">
       <span class="status ${x.status}">${sMap[x.status]}</span>
+      ${prox&&modo==='execucao'?`<span style="font-size:12px;color:var(--sz-gray);">Toque para atualizar ›</span>`:''}
     </div>
-    ${fotoAvancar}
   </div>`;
 }
+// ── MODAL ──
+let modalDesvioId = '';
+let modalNovoStatus = '';
+let modalFotoB64 = '';
+
+function abrirModal(id, novoStatus){
+  modalDesvioId = id;
+  modalNovoStatus = novoStatus;
+  modalFotoB64 = '';
+  document.getElementById('modal-letra').value = '';
+  document.getElementById('modal-nomes').value = '';
+  document.getElementById('modal-foto').value = '';
+  document.getElementById('modal-foto-prev').style.display = 'none';
+  document.getElementById('modal-foto-prev').src = '';
+  const titulo = novoStatus === 'andamento' ? 'Iniciar tratamento' : 'Concluir desvio';
+  const sub = novoStatus === 'andamento' ? 'Marcar como Em andamento' : 'Marcar como Concluído';
+  document.getElementById('modal-titulo').textContent = titulo;
+  document.getElementById('modal-sub').textContent = sub;
+  const overlay = document.getElementById('modal-overlay');
+  overlay.style.display = 'flex';
+}
+
+function fecharModal(){
+  document.getElementById('modal-overlay').style.display = 'none';
+  modalDesvioId = '';
+  modalNovoStatus = '';
+  modalFotoB64 = '';
+}
+
+function modalPreviewFoto(inp){
+  if(!inp.files||!inp.files[0])return;
+  const r=new FileReader();
+  r.onload=e=>{
+    modalFotoB64=e.target.result;
+    const prev=document.getElementById('modal-foto-prev');
+    prev.src=modalFotoB64;prev.style.display='block';
+  };
+  r.readAsDataURL(inp.files[0]);
+}
+
+async function confirmarAvancar(){
+  if(!modalFotoB64){toast('Necessário anexar foto para atualizar','err');return;}
+  const letra=document.getElementById('modal-letra').value;
+  const nomes=document.getElementById('modal-nomes').value.trim();
+  const btn=document.getElementById('modal-btn-confirmar');
+  btn.disabled=true;btn.textContent='Enviando...';
+  try{
+    const fotoUrl=await uploadFoto(modalFotoB64,'status');
+    const payload={status:modalNovoStatus,foto:fotoUrl,updated_at:new Date().toISOString()};
+    if(letra) payload.letra_exec=letra;
+    if(nomes) payload.nomes_exec=nomes;
+    const res=await sbPatch('/rest/v1/desvios?id=eq.'+modalDesvioId,payload);
+    if(!res.ok)throw new Error(await res.text());
+    toast('Status atualizado!','ok');
+    fecharModal();
+    renderBacklog();
+  }catch(e){toast('Erro: '+e.message,'err');}
+  finally{btn.disabled=false;btn.textContent='Confirmar';}
+}
+
+// Fechar modal ao clicar fora
+document.addEventListener('click', function(e){
+  const overlay=document.getElementById('modal-overlay');
+  if(e.target===overlay) fecharModal();
+});
+
 function previewAvancar(id, inp){
   if(!inp.files||!inp.files[0])return;
   const r=new FileReader();
