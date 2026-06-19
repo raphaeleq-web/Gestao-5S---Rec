@@ -345,13 +345,9 @@ input[type=file]{display:none;}
   </div>
 
   <!-- QR CODES -->
-  <div id="gest-qr" style="display:none;padding:16px;">
-    <div class="card" style="margin-bottom:14px;">
-      <div class="card-label">URL do App</div>
-      <input type="text" id="qr-url" style="margin-bottom:10px;" placeholder="https://raphaeleq-web.github.io/Gestao-5S---Rec">
-      <button class="btn btn-verde" onclick="gerarQR()">Gerar QR Codes</button>
-    </div>
-    <div id="qr-out" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;"></div>
+  <div id="gest-qr" style="display:none;position:fixed;top:100px;left:0;right:0;bottom:0;overflow:hidden;display:none;flex-direction:column;align-items:center;justify-content:center;padding:16px;gap:16px;box-sizing:border-box;background:var(--sz-gray-cl);">
+    <div id="qr-out" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%;max-width:480px;"></div>
+    <button class="btn btn-verde" onclick="gerarQR()" style="width:100%;max-width:480px;margin:0;">↺ Regenerar QR Codes</button>
   </div>
 
 </div>
@@ -506,7 +502,7 @@ function gestTab(el){
   });
   const tab=el.dataset.tab;
   const target=document.getElementById(tab);
-  if(target){ target.style.display=(tab==='gest-indicadores')?'flex':'block'; }
+  if(target){ target.style.display=(tab==='gest-indicadores'||tab==='gest-qr')?'flex':'block'; }
   if(tab==='gest-indicadores') renderPainel();
   if(tab==='gest-qr'){
     const qrEl=document.getElementById('qr-url');
@@ -855,26 +851,25 @@ async function renderPContrib(){
 
 /* QR */
 function gerarQR(){
-  const base=document.getElementById('qr-url').value.trim().replace(/\/$/,'');
-  if(!base){toast('Informe a URL do app','err');return;}
+  const qrEl=document.getElementById('qr-url');
+  const base=(qrEl?qrEl.value.trim():'') || (location.origin+location.pathname.replace(/\/$/,''));
+  if(!base){toast('URL não disponível','err');return;}
   const out=document.getElementById('qr-out');
   const perfis=[
     {label:'QR — Gestão',sub:'Inserir desvios e acompanhar indicadores',url:base+'?perfil=gestao',cor:'#005B2E'},
     {label:'QR — Execução',sub:'Visualizar e tratar desvios do backlog',url:base+'?perfil=execucao',cor:'#6D28D9'}
   ];
-  out.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:12px;';
+  // grid já definido no HTML
   out.innerHTML=perfis.map((p,i)=>`
-    <div class="qr-item">
-      <h3>${p.label}</h3>
-      <p style="font-size:12px;color:var(--sz-gray);margin-bottom:4px;">${p.sub}</p>
-      <p style="font-size:10px;color:var(--sz-gray);margin-bottom:12px;word-break:break-all;">${p.url}</p>
+    <div class="qr-item" style="padding:14px;">
+      <h3 style="font-size:13px;">${p.label}</h3>
+      <p style="font-size:11px;color:var(--sz-gray);margin-bottom:10px;">${p.sub}</p>
       <div id="qr-wrap-${i}" style="display:flex;justify-content:center;"></div>
-      <p style="margin-top:10px;font-size:11px;color:var(--sz-gray);">Suzano · Jacareí</p>
     </div>`).join('');
   if(typeof QRCode !== 'undefined'){
     perfis.forEach((p,i)=>{
       new QRCode(document.getElementById('qr-wrap-'+i),{
-        text:p.url, width:200, height:200,
+        text:p.url, width:150, height:150,
         colorDark:p.cor, colorLight:'#ffffff',
         correctLevel:QRCode.CorrectLevel.M
       });
