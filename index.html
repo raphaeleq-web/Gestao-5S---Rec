@@ -402,8 +402,16 @@ input[type=file]{display:none;}
 <div id="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;align-items:flex-end;justify-content:center;">
   <div style="background:white;border-radius:24px 24px 0 0;padding:24px 20px 40px;width:100%;max-width:480px;box-shadow:0 -8px 32px rgba(0,0,0,0.15);">
     <div style="width:40px;height:4px;background:#E5E7EB;border-radius:2px;margin:0 auto 20px;"></div>
-    <h3 style="font-size:17px;font-weight:700;margin-bottom:4px;" id="modal-titulo">Atualizar Status</h3>
-    <p style="font-size:13px;color:var(--sz-gray);margin-bottom:18px;" id="modal-sub"></p>
+    <h3 style="font-size:17px;font-weight:700;margin-bottom:16px;">Atualizar Status</h3>
+
+    <div class="fg" style="margin-bottom:12px;">
+      <label style="font-size:11px;font-weight:700;color:var(--sz-gray);text-transform:uppercase;letter-spacing:0.4px;display:block;margin-bottom:5px;">Novo status</label>
+      <select id="modal-status" style="width:100%;padding:12px 14px;border:2px solid #E5E7EB;border-radius:10px;font-size:15px;-webkit-appearance:none;background:white;">
+        <option value="">Selecione...</option>
+        <option value="andamento">🟡 Em andamento</option>
+        <option value="concluido">🟢 Concluído</option>
+      </select>
+    </div>
 
     <div class="fg" style="margin-bottom:12px;">
       <label style="font-size:11px;font-weight:700;color:var(--sz-gray);text-transform:uppercase;letter-spacing:0.4px;display:block;margin-bottom:5px;">Turma executante</label>
@@ -658,8 +666,8 @@ function dCardHTML(x, modo){
   const tc=x.tipo==='organizacao'?'org':'limp';
   const tl=x.tipo==='organizacao'?'📦 Org':'🧹 Limp';
   const prox=x.status==='aberto'?'andamento':x.status==='andamento'?'concluido':null;
-  const btnLabel=x.status==='aberto'?'▶ Iniciar tratamento':'✔ Concluir desvio';
-  const btnColor=x.status==='aberto'?'var(--amarelo)':'var(--sz-green)';
+  const btnLabel='✏️ Atualizar status';
+  const btnColor='var(--sz-green)';
 
   const btnAtualizar = (modo==='execucao' && prox) ? `
     <button
@@ -715,17 +723,14 @@ document.addEventListener('DOMContentLoaded', function(){
 
 function abrirModal(id, novoStatus){
   modalDesvioId = id;
-  modalNovoStatus = novoStatus;
+  modalNovoStatus = '';
   modalFotoB64 = '';
+  document.getElementById('modal-status').value = novoStatus || '';
   document.getElementById('modal-letra').value = '';
   document.getElementById('modal-nomes').value = '';
   document.getElementById('modal-foto').value = '';
   document.getElementById('modal-foto-prev').style.display = 'none';
   document.getElementById('modal-foto-prev').src = '';
-  const titulo = novoStatus === 'andamento' ? 'Iniciar tratamento' : 'Concluir desvio';
-  const sub = novoStatus === 'andamento' ? 'Marcar como Em andamento' : 'Marcar como Concluído';
-  document.getElementById('modal-titulo').textContent = titulo;
-  document.getElementById('modal-sub').textContent = sub;
   const overlay = document.getElementById('modal-overlay');
   overlay.style.display = 'flex';
 }
@@ -749,7 +754,10 @@ function modalPreviewFoto(inp){
 }
 
 async function confirmarAvancar(){
+  const novoStatus=document.getElementById('modal-status').value;
+  if(!novoStatus){toast('Selecione o novo status','err');return;}
   if(!modalFotoB64){toast('Necessário anexar foto para atualizar','err');return;}
+  modalNovoStatus=novoStatus;
   const letra=document.getElementById('modal-letra').value;
   const nomes=document.getElementById('modal-nomes').value.trim();
   const btn=document.getElementById('modal-btn-confirmar');
