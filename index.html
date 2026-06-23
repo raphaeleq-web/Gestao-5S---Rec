@@ -318,7 +318,7 @@ input[type=file]{display:none;}
   </div>
 
   <!-- INDICADORES -->
-  <div id="gest-indicadores" style="display:none;overflow-y:auto;-webkit-overflow-scrolling:touch;height:calc(100vh - 100px);">
+  <div id="gest-indicadores" style="display:none;">
     <div style="padding:16px;">
 
       <!-- FILTROS -->
@@ -407,7 +407,7 @@ input[type=file]{display:none;}
   </div>
 
   <!-- QR CODES -->
-  <div id="gest-qr" style="display:none;position:fixed;top:100px;left:0;right:0;bottom:0;overflow:hidden;display:none;flex-direction:column;align-items:center;justify-content:center;padding:16px;gap:16px;box-sizing:border-box;background:var(--sz-gray-cl);">
+  <div id="gest-qr" style="display:none;padding:16px;">
     <div id="qr-out" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%;max-width:480px;"></div>
     <button class="btn btn-verde" onclick="gerarQR()" style="width:100%;max-width:480px;margin:0;">↺ Regenerar QR Codes</button>
   </div>
@@ -604,7 +604,7 @@ function gestTab(el){
   });
   const tab=el.dataset.tab;
   const target=document.getElementById(tab);
-  if(target){ target.style.display=(tab==='gest-indicadores'||tab==='gest-qr')?'flex':'block'; }
+  if(target) target.style.display='block';
   if(tab==='gest-indicadores'){ setTimeout(renderPainel, 100); }
   if(tab==='gest-qr'){
     const qrEl=document.getElementById('qr-url');
@@ -1164,32 +1164,84 @@ async function exportarPDF(){
       const dt = new Date(x.created).toLocaleDateString('pt-BR');
       const area = (x.area||'').replace('|',' - ');
       const turma = x.letra_exec || '-';
+      const nomes = x.nomes_exec || '-';
       const status = sMap[x.status] || x.status;
-      const bg = i%2 ? '#f9fafb' : 'white';
-      return '<tr style="background:'+bg+'">'
+      return '<tr>'
         +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:11px;">'+area+'</td>'
         +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:11px;">'+(x.tipo==='organizacao'?'Organizacao':'Limpeza')+'</td>'
         +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:11px;">'+status+'</td>'
         +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:11px;">'+dt+'</td>'
         +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:11px;">'+turma+'</td>'
+        +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:11px;">'+nomes+'</td>'
         +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:11px;">'+(x.obs||'-')+'</td>'
         +'</tr>';
     }).join('');
 
+
+    // Taxa de conclusão por área
+    const taxaAreaRows = AREAS_LIST.map(function(a){
+      const tot = d.filter(function(x){return x.area&&(x.area.startsWith(a+'|')||x.area===a);}).length;
+      const con = d.filter(function(x){return (x.area&&(x.area.startsWith(a+'|')||x.area===a))&&(x.status==='concluido'||x.status==='tratado');}).length;
+      if(!tot) return '';
+      const pct = Math.round(con/tot*100);
+      const cor = pct>=80?'#005B2E':pct>=50?'#F59E0B':'#DC2626';
+      return '<tr><td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:12px;font-weight:600;">'+a+'</td>'
+        +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:12px;">'+tot+'</td>'
+        +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:12px;">'+con+'</td>'
+        +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:12px;color:'+cor+';font-weight:700;">'+pct+'%</td></tr>';
+    }).join('');
+
+    // Tempo médio de resolução
+    const tempos = d.filter(function(x){return (x.status==='concluido'||x.status==='tratado')&&x.updated_at;})
+      .map(function(x){return (new Date(x.updated_at)-new Date(x.created))/(1000*60*60*24);});
+    const tempoMedio = tempos.length ? (tempos.reduce(function(a,b){return a+b;},0)/tempos.length).toFixed(1) : 'N/A';
+
+    // Ranking de turmas
+    const turmasMap = {};
+    d.filter(function(x){return x.letra_exec;}).forEach(function(x){turmasMap[x.letra_exec]=(turmasMap[x.letra_exec]||0)+1;});
+    const turmasSorted = Object.entries(turmasMap).sort(function(a,b){return b[1]-a[1];});
+    const rankingRows = turmasSorted.map(function(t,i){
+      return '<tr><td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:12px;">'+(i===0?'🥇':i===1?'🥈':i===2?'🥉':'')+' Turma '+t[0]+'</td>'
+        +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:12px;font-weight:700;">'+t[1]+' tratamentos</td></tr>';
+    }).join('');
+
+    // % Conclusão por turma
+    const letrasAll = ['A','B','C','D','E','Adm'];
+    const concLetraRows = letrasAll.map(function(l){
+      const tot = d.filter(function(x){return x.letra_exec===l;}).length;
+      const con = d.filter(function(x){return x.letra_exec===l&&(x.status==='concluido'||x.status==='tratado');}).length;
+      if(!tot) return '';
+      const pct = Math.round(con/tot*100);
+      const cor = pct>=80?'#005B2E':pct>=50?'#F59E0B':'#DC2626';
+      return '<tr><td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:12px;font-weight:600;">Turma '+l+'</td>'
+        +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:12px;">'+tot+'</td>'
+        +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:12px;">'+con+'</td>'
+        +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:12px;color:'+cor+';font-weight:700;">'+pct+'%</td></tr>';
+    }).join('');
+
     const html = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">'
       +'<title>Relatorio 5S</title>'
-      +'<style>body{font-family:Arial,sans-serif;padding:24px;color:#1C1C1E;}'
-      +'h1{color:#005B2E;font-size:20px;margin-bottom:4px;}'
+      +'<style>'
+      +'body{font-family:Arial,sans-serif;padding:24px;color:#1C1C1E;font-size:13px;}'
+      +'h1{color:#005B2E;font-size:22px;margin-bottom:4px;}'
+      +'h2{color:#005B2E;font-size:15px;margin:20px 0 8px;border-bottom:2px solid #005B2E;padding-bottom:4px;}'
       +'.sub{color:#6B7280;font-size:12px;margin-bottom:20px;}'
-      +'.stats{display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap;}'
+      +'.stats{display:flex;gap:12px;margin-bottom:8px;flex-wrap:wrap;}'
       +'.stat-box{background:#f3f4f6;border-radius:8px;padding:12px 16px;text-align:center;min-width:80px;}'
-      +'.stat-n{font-size:28px;font-weight:800;}'
+      +'.stat-n{font-size:26px;font-weight:800;}'
       +'.stat-l{font-size:10px;color:#6B7280;text-transform:uppercase;letter-spacing:0.5px;}'
-      +'table{width:100%;border-collapse:collapse;margin-top:16px;}'
+      +'.tempo{background:#E8F5EE;border-radius:8px;padding:12px 16px;display:inline-block;margin-bottom:8px;}'
+      +'.tempo-n{font-size:28px;font-weight:800;color:#005B2E;}'
+      +'.tempo-l{font-size:11px;color:#6B7280;}'
+      +'table{width:100%;border-collapse:collapse;margin-bottom:16px;}'
       +'th{background:#005B2E;color:white;padding:8px;font-size:11px;text-align:left;}'
-      +'@media print{body{padding:0;}}</style></head><body>'
-      +'<h1>Relatorio 5S - Recuperacao Quimica</h1>'
-      +'<div class="sub">Gerado em: '+agora+'</div>'
+      +'tr:nth-child(even){background:#f9fafb;}'
+      +'@media print{body{padding:0;} h2{page-break-before:auto;}}'
+      +'</style></head><body>'
+      +'<h1>Relatorio 5S — Recuperacao Quimica</h1>'
+      +'<div class="sub">Gerado em: '+agora+' &nbsp;|&nbsp; Área: '+(filtArea==='todas'?'Todas':filtArea)+'</div>'
+
+      +'<h2>Indicadores Gerais</h2>'
       +'<div class="stats">'
       +'<div class="stat-box"><div class="stat-n">'+d.length+'</div><div class="stat-l">Total</div></div>'
       +'<div class="stat-box"><div class="stat-n" style="color:#DC2626">'+d.filter(function(x){return x.status==='aberto';}).length+'</div><div class="stat-l">A iniciar</div></div>'
@@ -1197,9 +1249,19 @@ async function exportarPDF(){
       +'<div class="stat-box"><div class="stat-n" style="color:#005B2E">'+conc+'</div><div class="stat-l">Concluidos</div></div>'
       +'<div class="stat-box"><div class="stat-n" style="color:#005B2E">'+pctGeral+'%</div><div class="stat-l">Conclusao</div></div>'
       +'</div>'
-      +'<table><thead><tr>'
-      +'<th>Area</th><th>Tipo</th><th>Status</th><th>Abertura</th><th>Turma</th><th>Observacao</th>'
-      +'</tr></thead><tbody>'+linhas+'</tbody></table>'
+      +'<div class="tempo"><div class="tempo-n">'+tempoMedio+'</div><div class="tempo-l">dias — tempo medio de resolucao</div></div>'
+
+      +'<h2>Taxa de Conclusao por Area</h2>'
+      +'<table><thead><tr><th>Area</th><th>Total</th><th>Concluidos</th><th>% Conclusao</th></tr></thead><tbody>'+taxaAreaRows+'</tbody></table>'
+
+      +'<h2>Ranking de Turmas — Tratamentos Realizados</h2>'
+      +'<table><thead><tr><th>Turma</th><th>Quantidade</th></tr></thead><tbody>'+(rankingRows||'<tr><td colspan="2" style="padding:8px;color:#6B7280;">Sem dados</td></tr>')+'</tbody></table>'
+
+      +'<h2>% Conclusao por Turma</h2>'
+      +'<table><thead><tr><th>Turma</th><th>Total</th><th>Concluidos</th><th>% Conclusao</th></tr></thead><tbody>'+(concLetraRows||'<tr><td colspan="4" style="padding:8px;color:#6B7280;">Sem dados</td></tr>')+'</tbody></table>'
+
+      +'<h2>Listagem Completa de Desvios</h2>'
+      +'<table><thead><tr><th>Area</th><th>Tipo</th><th>Status</th><th>Abertura</th><th>Turma</th><th>Executante</th><th>Observacao</th></tr></thead><tbody>'+linhas+'</tbody></table>'
       +'<script>window.onload=function(){window.print();}<\/script>'
       +'</body></html>';
 
