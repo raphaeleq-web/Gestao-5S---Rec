@@ -565,25 +565,7 @@ let dArea='',dTipo='',dFoto='';
 let cArea='',cCat='',cFoto='';
 let dFiltSt='todos',dFiltAr='todas',pdFiltSt='todos',cFiltAr='todas';
 
-(function(){
-  const p=new URLSearchParams(location.search);
-  const perfil=p.get('perfil');
-  if(perfil==='gestao') irPara('tela-gestao');
-  else if(perfil==='execucao') irPara('tela-backlog');
-  else irPara('tela-home');
-  const qrEl=document.getElementById('qr-url');
-  if(qrEl) qrEl.value=location.origin+location.pathname;
 
-  // Inicializar datas do filtro personalizado com mês atual
-  const hoje = new Date();
-  const ini = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
-  const fim = hoje;
-  const fmt = d => d.toISOString().split('T')[0];
-  const iniEl = document.getElementById('p-data-ini');
-  const fimEl = document.getElementById('p-data-fim');
-  if(iniEl) iniEl.value = fmt(ini);
-  if(fimEl) fimEl.value = fmt(fim);
-})();
 
 const _perfilAtual = new URLSearchParams(location.search).get('perfil');
 
@@ -1169,62 +1151,57 @@ async function exportarPDF(){
   try{
     const filtArea = document.getElementById('p-filtro-area')?.value || 'todas';
     let url = '/rest/v1/desvios?select=*&order=created.asc&limit=1000';
-    if(filtArea !== 'todas') url += `&area=like.${filtArea}|*`;
+    if(filtArea !== 'todas') url += '&area=like.'+filtArea+'|*';
     const res = await sbGet(url);
     const d = await res.json();
 
-    const sMap = {aberto:'A iniciar', andamento:'Em andamento', concluido:'Concluído', tratado:'Concluído'};
-    const areaFiltro = filtArea === 'todas' ? 'Todas as áreas' : filtArea;
+    const sMap = {aberto:'A iniciar', andamento:'Em andamento', concluido:'Concluido', tratado:'Concluido'};
     const agora = new Date().toLocaleString('pt-BR');
-    const conc = d.filter(x=>x.status==='concluido'||x.status==='tratado').length;
+    const conc = d.filter(function(x){return x.status==='concluido'||x.status==='tratado';}).length;
     const pctGeral = d.length ? Math.round(conc/d.length*100) : 0;
 
-    const linhas = d.map((x,i) => {
+    const linhas = d.map(function(x,i){
       const dt = new Date(x.created).toLocaleDateString('pt-BR');
-      const area = (x.area||'').replace('|',' · ');
-      const turma = x.letra_exec || '—';
+      const area = (x.area||'').replace('|',' - ');
+      const turma = x.letra_exec || '-';
       const status = sMap[x.status] || x.status;
-      return `<tr style="background:${i%2?'#f9fafb':'white'}">
-        <td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:11px;">${area}</td>
-        <td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:11px;">${x.tipo==='organizacao'?'Organização':'Limpeza'}</td>
-        <td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:11px;">${status}</td>
-        <td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:11px;">${dt}</td>
-        <td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:11px;">${turma}</td>
-        <td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:11px;">${x.obs||'—'}</td>
-      </tr>`;
+      const bg = i%2 ? '#f9fafb' : 'white';
+      return '<tr style="background:'+bg+'">'
+        +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:11px;">'+area+'</td>'
+        +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:11px;">'+(x.tipo==='organizacao'?'Organizacao':'Limpeza')+'</td>'
+        +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:11px;">'+status+'</td>'
+        +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:11px;">'+dt+'</td>'
+        +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:11px;">'+turma+'</td>'
+        +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:11px;">'+(x.obs||'-')+'</td>'
+        +'</tr>';
     }).join('');
 
-    const html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
-    <title>Relatório 5S - Recuperação Química</title>
-    <style>
-      body{font-family:Arial,sans-serif;padding:24px;color:#1C1C1E;}
-      h1{color:#005B2E;font-size:20px;margin-bottom:4px;}
-      .sub{color:#6B7280;font-size:12px;margin-bottom:20px;}
-      .stats{display:flex;gap:16px;margin-bottom:20px;}
-      .stat-box{background:#f3f4f6;border-radius:8px;padding:12px 16px;text-align:center;min-width:80px;}
-      .stat-n{font-size:28px;font-weight:800;}
-      .stat-l{font-size:10px;color:#6B7280;text-transform:uppercase;letter-spacing:0.5px;}
-      table{width:100%;border-collapse:collapse;margin-top:16px;}
-      th{background:#005B2E;color:white;padding:8px;font-size:11px;text-align:left;}
-      @media print{body{padding:0;}}
-    </style></head><body>
-    <h1>📋 Relatório 5S — Recuperação Química</h1>
-    <div class="sub">Área: ${areaFiltro} · Gerado em: ${agora}</div>
-    <div class="stats">
-      <div class="stat-box"><div class="stat-n">${d.length}</div><div class="stat-l">Total</div></div>
-      <div class="stat-box"><div class="stat-n" style="color:#DC2626">${d.filter(x=>x.status==='aberto').length}</div><div class="stat-l">A iniciar</div></div>
-      <div class="stat-box"><div class="stat-n" style="color:#F59E0B">${d.filter(x=>x.status==='andamento').length}</div><div class="stat-l">Andamento</div></div>
-      <div class="stat-box"><div class="stat-n" style="color:#005B2E">${conc}</div><div class="stat-l">Concluídos</div></div>
-      <div class="stat-box"><div class="stat-n" style="color:#005B2E">${pctGeral}%</div><div class="stat-l">Conclusão</div></div>
-    </div>
-    <table>
-      <thead><tr>
-        <th>Área · Subárea</th><th>Tipo</th><th>Status</th><th>Abertura</th><th>Turma</th><th>Observação</th>
-      </tr></thead>
-      <tbody>${linhas}</tbody>
-    </table>
-    <scr\ipt>window.onload=function(){window.print();}</scr\ipt>
-    </body></html>`;
+    const html = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">'
+      +'<title>Relatorio 5S</title>'
+      +'<style>body{font-family:Arial,sans-serif;padding:24px;color:#1C1C1E;}'
+      +'h1{color:#005B2E;font-size:20px;margin-bottom:4px;}'
+      +'.sub{color:#6B7280;font-size:12px;margin-bottom:20px;}'
+      +'.stats{display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap;}'
+      +'.stat-box{background:#f3f4f6;border-radius:8px;padding:12px 16px;text-align:center;min-width:80px;}'
+      +'.stat-n{font-size:28px;font-weight:800;}'
+      +'.stat-l{font-size:10px;color:#6B7280;text-transform:uppercase;letter-spacing:0.5px;}'
+      +'table{width:100%;border-collapse:collapse;margin-top:16px;}'
+      +'th{background:#005B2E;color:white;padding:8px;font-size:11px;text-align:left;}'
+      +'@media print{body{padding:0;}}</style></head><body>'
+      +'<h1>Relatorio 5S - Recuperacao Quimica</h1>'
+      +'<div class="sub">Gerado em: '+agora+'</div>'
+      +'<div class="stats">'
+      +'<div class="stat-box"><div class="stat-n">'+d.length+'</div><div class="stat-l">Total</div></div>'
+      +'<div class="stat-box"><div class="stat-n" style="color:#DC2626">'+d.filter(function(x){return x.status==='aberto';}).length+'</div><div class="stat-l">A iniciar</div></div>'
+      +'<div class="stat-box"><div class="stat-n" style="color:#F59E0B">'+d.filter(function(x){return x.status==='andamento';}).length+'</div><div class="stat-l">Andamento</div></div>'
+      +'<div class="stat-box"><div class="stat-n" style="color:#005B2E">'+conc+'</div><div class="stat-l">Concluidos</div></div>'
+      +'<div class="stat-box"><div class="stat-n" style="color:#005B2E">'+pctGeral+'%</div><div class="stat-l">Conclusao</div></div>'
+      +'</div>'
+      +'<table><thead><tr>'
+      +'<th>Area</th><th>Tipo</th><th>Status</th><th>Abertura</th><th>Turma</th><th>Observacao</th>'
+      +'</tr></thead><tbody>'+linhas+'</tbody></table>'
+      +'<script>window.onload=function(){window.print();}<\/script>'
+      +'</body></html>';
 
     const blob = new Blob([html], {type:'text/html'});
     const url2 = URL.createObjectURL(blob);
@@ -1233,62 +1210,8 @@ async function exportarPDF(){
   }catch(e){ toast('Erro ao exportar: '+e.message,'err'); }
 }
 
-function pdFSt(s,el){pdFiltSt=s;document.querySelectorAll('#p-d-f-st .f-btn').forEach(b=>b.classList.remove('av'));el.classList.add('av');renderPDesvios();}
-async function renderPDesvios(){
-  const el=document.getElementById('p-d-out');
-  el.innerHTML='<div class="empty"><div class="ico">⏳</div><p>Carregando...</p></div>';
-  try{
-    let url='/rest/v1/desvios?order=created.desc&limit=100';
-    if(pdFiltSt!=='todos')url+=`&status=eq.${pdFiltSt}`;
-    const res=await sbGet(url);
-    const d=await res.json();
-    el.innerHTML=d.length?d.map(x=>dCardHTML(x,'execucao')).join(''):'<div class="empty"><div class="ico">✅</div><p>Nenhum desvio</p></div>';
-  }catch(e){el.innerHTML='<div class="empty"><div class="ico">⚠️</div><p>Erro ao carregar</p></div>';}
-}
-async function renderPContrib(){
-  const el=document.getElementById('p-c-out');
-  el.innerHTML='<div class="empty"><div class="ico">⏳</div><p>Carregando...</p></div>';
-  try{
-    const res=await sbGet('/rest/v1/contribs?order=created.desc&limit=100');
-    const c=await res.json();
-    el.innerHTML=c.length?c.map(cCardHTML).join(''):'<div class="empty"><div class="ico">⭐</div><p>Nenhuma contribuição</p></div>';
-  }catch(e){el.innerHTML='<div class="empty"><div class="ico">⚠️</div><p>Erro ao carregar</p></div>';}
-}
 
-/* QR */
-function gerarQR(){
-  const qrEl=document.getElementById('qr-url');
-  const base=(qrEl?qrEl.value.trim():'').replace(/\/$/,'') || (location.origin+location.pathname.replace(/\/$/,''));
-  if(!base){toast('URL não disponível','err');return;}
-  const out=document.getElementById('qr-out');
-  const perfis=[
-    {label:'QR Gestão',sub:'Inserir desvios · Painel de indicadores',url:base+'?perfil=gestao',cor:'#005B2E'},
-    {label:'QR Execução',sub:'Tratar desvios do backlog',url:base+'?perfil=execucao',cor:'#6D28D9'}
-  ];
-  out.innerHTML = '';
-  out.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:12px;';
-  perfis.forEach(function(p,i){
-    const div = document.createElement('div');
-    div.style.cssText = 'background:white;border-radius:14px;padding:14px;text-align:center;box-shadow:0 1px 8px rgba(0,0,0,0.07);border-top:4px solid '+p.cor+';';
-    div.innerHTML =
-      '<div style="font-size:13px;font-weight:700;color:'+p.cor+';margin-bottom:2px;">'+p.label+'</div>'+
-      '<div style="font-size:10px;color:var(--sz-gray);margin-bottom:10px;">'+p.sub+'</div>'+
-      '<div id="qr-wrap-'+i+'" style="display:flex;justify-content:center;margin-bottom:8px;"></div>'+
-      '<div style="font-size:9px;color:var(--sz-gray);word-break:break-all;">'+p.url+'</div>';
-    out.appendChild(div);
-    if(typeof QRCode !== 'undefined'){
-      setTimeout(function(){
-        new QRCode(document.getElementById('qr-wrap-'+i),{
-          text:p.url, width:130, height:130,
-          colorDark:p.cor, colorLight:'#ffffff',
-          correctLevel:QRCode.CorrectLevel.M
-        });
-      }, 150*i);
-    }
-  });
-}
-
-/* BACKLOG */
+/* ── BACKLOG ── */
 let blFiltAr='todas', blFiltSt='aberto';
 
 function blUpdateSub(){
@@ -1296,12 +1219,13 @@ function blUpdateSub(){
   const sub=document.getElementById('bl-sel-sub');
   sub.innerHTML='<option value="todas">Todas</option>';
   if(area!=='todas' && AREAS_MAP[area]){
-    AREAS_MAP[area].forEach(s=>{
+    AREAS_MAP[area].forEach(function(s){
       const o=document.createElement('option');o.value=s;o.textContent=s;sub.appendChild(o);
     });
   }
   blFiltrar();
 }
+
 function blFiltrar(){
   const area=document.getElementById('bl-sel-area').value;
   const sub=document.getElementById('bl-sel-sub').value;
@@ -1314,34 +1238,88 @@ function blFiltrar(){
 
 async function renderBacklog(){
   const el=document.getElementById('bl-out');
+  if(!el) return;
   el.innerHTML='<div class="empty"><div class="ico">⏳</div><p>Carregando...</p></div>';
   try{
     const ord=document.getElementById('bl-sel-ord')?document.getElementById('bl-sel-ord').value:'asc';
-    let url=`/rest/v1/desvios?select=*&order=created.${ord}&limit=200`;
+    let url='/rest/v1/desvios?select=*&order=created.'+ord+'&limit=200';
     if(blFiltAr!=='todas'){
-      if(!blFiltAr.includes('|')) url+=`&area=like.${blFiltAr}|*`;
-      else url+=`&area=eq.${blFiltAr}`;
+      if(!blFiltAr.includes('|')) url+='&area=like.'+blFiltAr+'|*';
+      else url+='&area=eq.'+blFiltAr;
     }
-    if(blFiltSt==='aberto,andamento') url+=`&status=in.(aberto,andamento)`;
-    else if(blFiltSt!=='todos') url+=`&status=eq.${blFiltSt}`;
+    if(blFiltSt!=='todos') url+='&status=eq.'+blFiltSt;
     const res=await sbGet(url);
     const d=await res.json();
-    if(!d.length){
-      el.innerHTML='<div class="empty"><div class="ico">✅</div><p>Nenhum desvio encontrado</p></div>';
-      return;
-    }
-    el.innerHTML=d.map(x=>dCardHTML(x,'execucao')).join('');
-    // Vincular botões após renderização
+    el.innerHTML=d.length?d.map(function(x){return dCardHTML(x,'execucao');}).join(''):'<div class="empty"><div class="ico">✅</div><p>Nenhum desvio encontrado</p></div>';
     el.querySelectorAll('.btn-avancar-status').forEach(function(btn){
-      btn.addEventListener('click', function(e){
+      btn.addEventListener('click',function(e){
         e.stopPropagation();
-        abrirModal(this.getAttribute('data-id'), this.getAttribute('data-prox'));
+        abrirModal(this.getAttribute('data-id'),this.getAttribute('data-prox'));
       });
     });
   }catch(e){
     el.innerHTML='<div class="empty"><div class="ico">⚠️</div><p>Erro ao carregar</p></div>';
   }
 }
+
+/* ── QR ── */
+function gerarQR(){
+  const qrEl=document.getElementById('qr-url');
+  const base=(qrEl?qrEl.value.trim():'').replace(/\/$/,'') || (location.origin+location.pathname.replace(/\/$/,''));
+  if(!base){toast('URL não disponível','err');return;}
+  const out=document.getElementById('qr-out');
+  if(!out) return;
+  const perfis=[
+    {label:'QR Gestão',sub:'Inserir desvios · Painel de indicadores',url:base+'?perfil=gestao',cor:'#005B2E'},
+    {label:'QR Execução',sub:'Tratar desvios do backlog',url:base+'?perfil=execucao',cor:'#6D28D9'}
+  ];
+  out.innerHTML='';
+  out.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:12px;';
+  perfis.forEach(function(p,i){
+    const div=document.createElement('div');
+    div.style.cssText='background:white;border-radius:14px;padding:14px;text-align:center;box-shadow:0 1px 8px rgba(0,0,0,0.07);border-top:4px solid '+p.cor+';';
+    div.innerHTML='<div style="font-size:13px;font-weight:700;color:'+p.cor+';margin-bottom:2px;">'+p.label+'</div>'
+      +'<div style="font-size:10px;color:var(--sz-gray);margin-bottom:10px;">'+p.sub+'</div>'
+      +'<div id="qr-wrap-'+i+'" style="display:flex;justify-content:center;margin-bottom:8px;"></div>'
+      +'<div style="font-size:9px;color:var(--sz-gray);word-break:break-all;">'+p.url+'</div>';
+    out.appendChild(div);
+    if(typeof QRCode!=='undefined'){
+      setTimeout(function(){
+        new QRCode(document.getElementById('qr-wrap-'+i),{
+          text:p.url,width:130,height:130,
+          colorDark:p.cor,colorLight:'#ffffff',
+          correctLevel:QRCode.CorrectLevel.M
+        });
+      },150*i);
+    }
+  });
+}
+
+function pdFSt(s,el){
+  var btns=document.querySelectorAll('#p-d-f-st .f-btn');
+  if(btns) btns.forEach(function(b){b.classList.remove('av');});
+  if(el) el.classList.add('av');
+}
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', function(){
+  const p = new URLSearchParams(location.search);
+  const perfil = p.get('perfil');
+  if(perfil==='gestao') irPara('tela-gestao');
+  else if(perfil==='execucao') irPara('tela-backlog');
+  else irPara('tela-home');
+
+  const qrEl = document.getElementById('qr-url');
+  if(qrEl) qrEl.value = location.origin + location.pathname.replace(/\/$/, '');
+
+  const hoje = new Date();
+  const ini = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+  const fmt = d => d.toISOString().split('T')[0];
+  const iniEl = document.getElementById('p-data-ini');
+  const fimEl = document.getElementById('p-data-fim');
+  if(iniEl) iniEl.value = fmt(ini);
+  if(fimEl) fimEl.value = fmt(hoje);
+});
 
 let tT;
 function toast(msg,type=''){
