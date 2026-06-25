@@ -535,7 +535,9 @@ function dOnFoto(inp){
   const r=new FileReader();r.onload=e=>{
     dFoto=e.target.result;
     const prev=document.getElementById('d-foto-prev');
+    const ph=document.getElementById('d-foto-ph');
     prev.src=dFoto; prev.style.display='block';
+    if(ph) ph.style.display='none';
   };r.readAsDataURL(inp.files[0]);
 }
 async function dRegistrar(){
@@ -544,8 +546,8 @@ async function dRegistrar(){
   if(!nome){toast('Informe seu nome','err');return;}
   if(!dTipo){toast('Selecione o tipo de desvio','err');return;}
   if(!dFoto){toast('Tire uma foto do desvio','err');return;}
-  const btn=document.querySelector('#d-reg .btn-verde');
-  btn.disabled=true;btn.textContent='Enviando...';
+  const btn=document.getElementById('btn-registrar');
+  if(btn){btn.disabled=true;btn.textContent='Enviando...';}
   try{
     const fotoUrl=await uploadFoto(dFoto,'desvio');
     const id=Date.now().toString();
@@ -553,12 +555,16 @@ async function dRegistrar(){
     if(!res.ok)throw new Error(await res.text());
     toast('Desvio inserido no backlog!','ok');dReset();
   }catch(e){toast('Erro: '+e.message,'err');}
-  finally{btn.disabled=false;btn.textContent='Inserir no backlog';}
+  finally{if(btn){btn.disabled=false;btn.textContent='✓ Registrar Desvio';}}
 }
 function dReset(){
   ['d-nome','d-obs'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   const prev=document.getElementById('d-foto-prev');
   if(prev){prev.style.display='none';prev.src='';}
+  const ph=document.getElementById('d-foto-ph');
+  if(ph) ph.style.display='block';
+  const fi=document.getElementById('d-foto-inp');
+  if(fi) fi.value='';
   dFoto='';dTipo='';
   const to=document.getElementById('d-t-org');
   const tl=document.getElementById('d-t-limp');
