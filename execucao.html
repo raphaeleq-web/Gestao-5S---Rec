@@ -14,9 +14,14 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--gray-cl);color:var(--black);}
 
+/* ── HEADER ── */
 .app-header{
-  background:var(--green);padding:0 16px;height:60px;
-  display:flex;align-items:center;gap:12px;
+  background:var(--green);
+  padding:0 16px;
+  height:60px;
+  display:flex;
+  align-items:center;
+  gap:12px;
   position:sticky;top:0;z-index:200;
   box-shadow:0 2px 12px rgba(0,0,0,0.2);
 }
@@ -24,73 +29,113 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .app-header-text h1{font-size:13px;font-weight:700;color:white;line-height:1.2;}
 .app-header-text p{font-size:10px;color:rgba(255,255,255,0.65);font-weight:500;}
 
+/* ── NAV ── */
+.app-nav{
+  background:white;
+  display:flex;
+  border-bottom:1px solid #E5E7EB;
+  position:sticky;top:60px;z-index:199;
+  box-shadow:0 1px 4px rgba(0,0,0,0.06);
+}
+.nav-tab{
+  flex:1;padding:0 4px;height:46px;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  font-size:12px;font-weight:600;color:var(--gray);
+  border-bottom:3px solid transparent;cursor:pointer;
+  white-space:nowrap;transition:all 0.2s;
+}
+.nav-tab.active{color:var(--green);border-bottom-color:var(--green);}
+.nav-tab .tab-icon{font-size:15px;}
+
+/* ── CONTENT ── */
+.tab-content{display:none;padding:12px 16px 32px;max-width:520px;margin:0 auto;}
+
+
+
+/* ── SECTION HEADER ── */
 .section-head{
   background:linear-gradient(135deg,var(--green),var(--green2));
-  border-radius:var(--radius);padding:16px 18px;margin-bottom:16px;color:white;
+  border-radius:var(--radius);
+  padding:16px 18px;
+  margin-bottom:16px;
+  color:white;
 }
 .section-head h2{font-size:16px;font-weight:700;margin-bottom:2px;}
 .section-head p{font-size:12px;opacity:0.75;}
 
-/* FILTROS */
-.filtros-card{
-  background:white;border-radius:var(--radius);
-  padding:14px 16px;margin-bottom:12px;
-  box-shadow:0 1px 8px rgba(0,0,0,0.06);
-}
-.filtros-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
-.filtro-label{font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;}
-select{
-  width:100%;padding:10px 12px;border:2px solid #E5E7EB;border-radius:10px;
-  font-size:14px;-webkit-appearance:none;background:white;
-  font-family:inherit;color:var(--black);
-}
-select:focus{outline:none;border-color:var(--green);}
-input[type=date]{
-  width:100%;padding:10px 12px;border:2px solid #E5E7EB;border-radius:10px;
-  font-size:13px;background:white;font-family:inherit;
-}
+/* ── CARD ── */
+.card{background:white;border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:0 1px 8px rgba(0,0,0,0.06);}
+.card-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--gray);margin-bottom:10px;}
 
-/* LISTA */
-.lista-wrap{padding:0 16px 32px;max-width:520px;margin:0 auto;}
-
-/* CARD DESVIO */
-.dcard{
-  background:white;border-radius:var(--radius);padding:14px;
-  margin-bottom:10px;box-shadow:0 1px 8px rgba(0,0,0,0.06);
-  border-left:4px solid #E5E7EB;
+/* ── FORM ── */
+.fg{margin-bottom:12px;}
+.fg label{display:block;font-size:11px;font-weight:700;color:var(--gray);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.4px;}
+input[type=text],textarea,select{
+  width:100%;padding:12px 14px;border:2px solid #E5E7EB;border-radius:10px;
+  font-size:15px;color:var(--black);background:white;-webkit-appearance:none;
+  transition:border-color 0.2s;font-family:inherit;
 }
-.dcard.org{border-left-color:var(--yellow);}
-.dcard.limp{border-left-color:var(--blue);}
-.dcard-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px;}
-.dcard-area{font-size:14px;font-weight:700;color:var(--green);}
-.dcard-meta{font-size:11px;color:var(--gray);margin-top:2px;}
-.tipo-tag{font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0;}
-.tipo-tag.org{background:#FFFBEB;color:#92400E;}
-.tipo-tag.limp{background:#EFF6FF;color:#1E40AF;}
-.dcard-obs{font-size:13px;color:var(--black);margin-bottom:8px;}
-.dcard-foto{width:100%;max-height:180px;object-fit:cover;border-radius:10px;margin-bottom:10px;}
-.dcard-footer{display:flex;align-items:center;justify-content:space-between;margin-top:8px;}
-.status{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:20px;font-size:12px;font-weight:700;}
-.status.aberto{background:#FEF2F2;color:var(--red);}
-.status.andamento{background:#FFFBEB;color:#92400E;}
-.status.concluido,.status.tratado{background:var(--green-bg);color:var(--green);}
-.dcard-dates{display:flex;flex-direction:column;gap:2px;margin-top:4px;}
-.dcard-dates span{font-size:12px;font-weight:600;}
+input[type=text]:focus,textarea:focus,select:focus{outline:none;border-color:var(--green);}
+textarea{resize:none;height:80px;}
 
-/* BOTÃO ATUALIZAR */
-.btn-atualizar{
-  margin-top:12px;width:100%;padding:13px;
-  background:var(--green);color:white;border:none;
-  border-radius:10px;font-size:15px;font-weight:700;
-  cursor:pointer;font-family:inherit;
+/* ── TIPO ── */
+.tipo-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.tipo-btn{
+  padding:14px 8px;border:2px solid #E5E7EB;border-radius:12px;
+  background:white;text-align:center;cursor:pointer;
+  font-size:13px;font-weight:600;color:var(--gray);transition:all 0.15s;
 }
-.btn-atualizar:active{opacity:0.82;}
-.btn-avancar-status{display:none;} /* alias */
+.tipo-btn .ico{font-size:24px;display:block;margin-bottom:5px;}
+.tipo-btn.sel-org{border-color:var(--yellow);color:#92400E;background:#FFFBEB;}
+.tipo-btn.sel-limp{border-color:var(--blue);color:#1E40AF;background:#EFF6FF;}
 
-/* MODAL */
+/* ── SUBAREA DROPDOWNS ── */
+.dropdown-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+/* ── FOTO ── */
+input[type=file]{display:none;}
+.foto-label{
+  display:block;border:2px dashed var(--green);border-radius:12px;
+  background:var(--green-bg);cursor:pointer;overflow:hidden;position:relative;
+}
+.foto-ph{padding:24px 16px;text-align:center;}
+.foto-ph .ico{font-size:30px;display:block;margin-bottom:6px;}
+.foto-ph p{font-size:14px;font-weight:600;color:var(--green);}
+.foto-ph small{font-size:12px;color:var(--gray);}
+.foto-img{width:100%;max-height:220px;object-fit:cover;display:none;}
+
+/* ── BTN ── */
+.btn{width:100%;padding:15px;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.15s;}
+.btn:active{opacity:0.82;}
+.btn-green{background:var(--green);color:white;}
+.btn-outline{background:white;color:var(--green);border:2px solid var(--green);margin-top:8px;}
+.btn:disabled{background:#9CA3AF;color:white;}
+
+/* ── STATS ── */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.stat-card{background:white;border-radius:var(--radius);padding:16px;text-align:center;box-shadow:0 1px 8px rgba(0,0,0,0.06);}
+.stat-n{font-size:36px;font-weight:800;line-height:1;}
+.stat-l{font-size:11px;color:var(--gray);margin-top:4px;text-transform:uppercase;letter-spacing:0.5px;font-weight:600;}
+
+/* ── BARRAS ── */
+.bar-row{margin-bottom:10px;}
+.bar-label{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:4px;}
+.bar-bg{background:#E5E7EB;border-radius:20px;height:8px;}
+.bar-fill{border-radius:20px;height:8px;transition:width 0.4s;}
+
+/* ── QR ── */
+.qr-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.qr-card{
+  background:white;border-radius:var(--radius);padding:16px;
+  text-align:center;box-shadow:0 1px 8px rgba(0,0,0,0.06);
+}
+.qr-card h3{font-size:13px;font-weight:700;margin-bottom:3px;}
+.qr-card p{font-size:10px;color:var(--gray);margin-bottom:12px;}
+
+/* ── MODAL ── */
 .modal-overlay{
   display:none;position:fixed;inset:0;
-  background:rgba(0,0,0,0.55);z-index:500;
+  background:rgba(0,0,0,0.5);z-index:500;
   align-items:flex-end;justify-content:center;
 }
 .modal-sheet{
@@ -99,30 +144,10 @@ input[type=date]{
   box-shadow:0 -8px 32px rgba(0,0,0,0.15);
 }
 .modal-handle{width:40px;height:4px;background:#E5E7EB;border-radius:2px;margin:0 auto 18px;}
-.fg{margin-bottom:12px;}
-.fg label{display:block;font-size:11px;font-weight:700;color:var(--gray);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.4px;}
-input[type=text]{
-  width:100%;padding:12px 14px;border:2px solid #E5E7EB;border-radius:10px;
-  font-size:15px;color:var(--black);background:white;font-family:inherit;
-}
-input[type=file]{display:none;}
-.foto-modal-label{
-  display:flex;align-items:center;justify-content:center;gap:10px;
-  background:var(--green-bg);border:2px dashed var(--green);
-  border-radius:10px;padding:14px;cursor:pointer;
-  font-size:14px;font-weight:600;color:var(--green);
-}
-.btn{width:100%;padding:15px;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.15s;}
-.btn:active{opacity:0.82;}
-.btn-green{background:var(--green);color:white;margin-bottom:10px;}
-.btn-outline{background:white;color:var(--green);border:2px solid var(--green);}
+.modal-title{font-size:18px;font-weight:700;margin-bottom:4px;}
+.modal-sub{font-size:13px;color:var(--gray);margin-bottom:18px;}
 
-/* EMPTY */
-.empty{text-align:center;padding:48px 16px;color:var(--gray);}
-.empty .ico{font-size:48px;margin-bottom:10px;}
-.empty p{font-size:14px;}
-
-/* TOAST */
+/* ── TOAST ── */
 .toast{
   position:fixed;bottom:24px;left:50%;
   transform:translateX(-50%) translateY(100px);
@@ -133,7 +158,11 @@ input[type=file]{display:none;}
 }
 .toast.show{transform:translateX(-50%) translateY(0);}
 .toast.ok{background:var(--green);}
+.toast.ok2{background:var(--purple);}
 .toast.err{background:var(--red);}
+
+/* ── EVOLUÇÃO ── */
+#p-chart-wrap{overflow-x:auto;}
 </style>
 </head>
 <body>
@@ -142,65 +171,181 @@ input[type=file]{display:none;}
 <div class="app-header">
   <img src="data:image/png;base64,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" alt="Suzano">
   <div class="app-header-text">
-    <h1>Backlog de 5S</h1>
-    <p>Recuperação Química · Jacareí</p>
+    <h1>Gestão de 5S</h1>
+    <p>Recuperação Química · Suzano Jacareí</p>
   </div>
 </div>
 
-<!-- FILTROS -->
-<div style="padding:16px 16px 0;max-width:520px;margin:0 auto;">
-  <div class="filtros-card">
-    <div class="filtros-grid">
+<!-- NAV -->
+<nav class="app-nav" id="gest-nav">
+  <div class="nav-tab active" data-tab="tab-desvio" onclick="gTab(this)">
+    <span class="tab-icon">⚠️</span> Inserir Desvio
+  </div>
+  <div class="nav-tab" data-tab="tab-indicadores" onclick="gTab(this)">
+    <span class="tab-icon">📊</span> Indicadores
+  </div>
+  <div class="nav-tab" data-tab="tab-qr" onclick="gTab(this)">
+    <span class="tab-icon">🔲</span> QR Codes
+  </div>
+</nav>
+
+<!-- ════ TAB: INSERIR DESVIO ════ -->
+<div class="tab-content active" id="tab-desvio">
+
+  <!-- Picker área -->
+  <div id="d-picker">
+    <div class="card">
+      <div class="card-label">Área e subárea</div>
+      <div class="dropdown-row" style="margin-bottom:10px;">
+        <div>
+          <label class="fg" style="margin-bottom:4px;font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;">Área</label>
+          <select id="d-sel-area" onchange="dUpdateSubarea()">
+            <option value="">Selecione...</option>
+            <option>CR3</option><option>CR4</option><option>EVA3</option>
+            <option>EVA4</option><option>CAUSTS</option><option>FORNOS</option>
+          </select>
+        </div>
+        <div id="d-sel-sub-wrap" style="display:none;">
+          <label class="fg" style="margin-bottom:4px;font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;">Subárea</label>
+          <select id="d-sel-sub" onchange="dConfirmArea()">
+            <option value="">Selecione...</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formulário -->
+  <div id="d-form" style="display:none;">
+    <div class="card">
+      <div class="card-label">Responsável</div>
+      <div class="fg"><label>Nome</label><input type="text" id="d-nome" placeholder="Seu nome completo"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Tipo de desvio</div>
+      <div class="tipo-grid">
+        <div class="tipo-btn" id="d-t-org" onclick="dSelTipo('organizacao')"><span class="ico">📦</span>Organização</div>
+        <div class="tipo-btn" id="d-t-limp" onclick="dSelTipo('limpeza')"><span class="ico">🧹</span>Limpeza</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Foto do desvio</div>
+      <label class="foto-label" for="d-foto-inp">
+        <div class="foto-ph" id="d-foto-ph">
+          <span class="ico">📷</span>
+          <p>Toque para tirar foto</p>
+          <small>ou escolher da galeria</small>
+        </div>
+        <img class="foto-img" id="d-foto-prev">
+      </label>
+      <input type="file" id="d-foto-inp" accept="image/*" onchange="dOnFoto(this)">
+    </div>
+
+    <div class="card">
+      <div class="card-label">Observação (opcional)</div>
+      <textarea id="d-obs" placeholder="Descreva brevemente o desvio..."></textarea>
+    </div>
+
+    <button class="btn btn-green" id="btn-registrar" onclick="dRegistrar()">✓ Registrar Desvio</button>
+    <button class="btn btn-outline" onclick="dVoltarPicker()">← Trocar área</button>
+    <div style="height:20px;"></div>
+  </div>
+</div>
+
+<!-- ════ TAB: INDICADORES ════ -->
+<div class="tab-content" id="tab-indicadores">
+
+  <div class="card" style="margin-bottom:12px;">
+    <div class="dropdown-row">
       <div>
-        <span class="filtro-label">Área</span>
-        <select id="bl-sel-area" onchange="blUpdateSub()">
+        <label style="font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;display:block;margin-bottom:5px;">Área</label>
+        <select id="p-filtro-area" onchange="renderPainel()" style="width:100%;padding:10px 12px;border:2px solid #E5E7EB;border-radius:10px;font-size:14px;-webkit-appearance:none;background:white;">
           <option value="todas">Todas</option>
           <option>CR3</option><option>CR4</option><option>EVA3</option>
           <option>EVA4</option><option>CAUSTS</option><option>FORNOS</option>
         </select>
       </div>
       <div>
-        <span class="filtro-label">Subárea</span>
-        <select id="bl-sel-sub" onchange="blFiltrar()">
-          <option value="todas">Todas</option>
-        </select>
-      </div>
-    </div>
-    <div class="filtros-grid">
-      <div>
-        <span class="filtro-label">Status</span>
-        <select id="bl-sel-st" onchange="blFiltrar()">
-          <option value="aberto">A iniciar</option>
-          <option value="andamento">Em andamento</option>
-          <option value="concluido">Concluído</option>
+        <label style="font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;display:block;margin-bottom:5px;">Período</label>
+        <select id="p-filtro-periodo" onchange="onPeriodoChange()" style="width:100%;padding:10px 12px;border:2px solid #E5E7EB;border-radius:10px;font-size:14px;-webkit-appearance:none;background:white;">
+          <option value="semana">Esta semana</option>
+          <option value="mes">Este mês</option>
+          <option value="custom" selected>Personalizado</option>
           <option value="todos">Todos</option>
         </select>
       </div>
+    </div>
+    <div id="p-custom-dates" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
       <div>
-        <span class="filtro-label">Ordenar por</span>
-        <select id="bl-sel-ord" onchange="blFiltrar()">
-          <option value="asc">Mais antigo</option>
-          <option value="desc">Mais recente</option>
-        </select>
+        <label style="font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;display:block;margin-bottom:4px;">De</label>
+        <input type="date" id="p-data-ini" onchange="renderPainel()" style="width:100%;padding:10px 12px;border:2px solid #E5E7EB;border-radius:10px;font-size:13px;">
+      </div>
+      <div>
+        <label style="font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;display:block;margin-bottom:4px;">Até</label>
+        <input type="date" id="p-data-fim" onchange="renderPainel()" style="width:100%;padding:10px 12px;border:2px solid #E5E7EB;border-radius:10px;font-size:13px;">
       </div>
     </div>
   </div>
+
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-n" id="p-d-tot" style="color:var(--black);">—</div><div class="stat-l">Total</div></div>
+    <div class="stat-card"><div class="stat-n" id="p-d-ab" style="color:var(--red);">—</div><div class="stat-l">A iniciar</div></div>
+    <div class="stat-card"><div class="stat-n" id="p-d-and" style="color:var(--yellow);">—</div><div class="stat-l">Andamento</div></div>
+    <div class="stat-card"><div class="stat-n" id="p-d-tr" style="color:var(--green);">—</div><div class="stat-l">Concluídos</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">⏱ Tempo médio de resolução</div>
+    <div style="text-align:center;padding:8px 0;">
+      <div style="font-size:40px;font-weight:800;color:var(--green);" id="p-tempo-val">—</div>
+      <div style="font-size:12px;color:var(--gray);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">dias em média</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">📍 Taxa de conclusão por área</div>
+    <div id="p-taxa-areas"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">🏆 Ranking de turmas</div>
+    <div id="p-ranking-turmas"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">📈 % Conclusão por turma</div>
+    <div id="p-conc-letra"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">📅 Evolução — Abertos vs Concluídos</div>
+    <div id="p-chart-wrap"><canvas id="p-chart" height="160"></canvas></div>
+  </div>
+
+  <button class="btn btn-green" onclick="exportarPDF()" style="margin-bottom:24px;">📄 Exportar Relatório PDF</button>
 </div>
 
-<!-- LISTA -->
-<div class="lista-wrap" id="bl-out">
-  <div class="empty"><div class="ico">⏳</div><p>Carregando...</p></div>
+<!-- ════ TAB: QR CODES ════ -->
+<div class="tab-content" id="tab-qr">
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-label">URL do app</div>
+    <input type="text" id="qr-url" placeholder="https://raphaeleq-web.github.io/Gestao-5S---Rec/gestao.html" style="margin-bottom:10px;">
+    <button class="btn btn-green" onclick="gerarQR()">↺ Gerar QR Codes</button>
+  </div>
+  <div class="qr-grid" id="qr-out"></div>
+  <div style="height:20px;"></div>
 </div>
 
-<!-- MODAL ATUALIZAR STATUS -->
-<div id="modal-overlay" class="modal-overlay">
-  <div class="modal-sheet">
-    <div class="modal-handle"></div>
-    <div style="font-size:18px;font-weight:700;margin-bottom:4px;" id="modal-titulo">Atualizar Status</div>
-    <div style="font-size:13px;color:var(--gray);margin-bottom:18px;" id="modal-sub"></div>
+<!-- ══ MODAL ATUALIZAR STATUS ══ -->
+<div id="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;align-items:flex-end;justify-content:center;">
+  <div style="background:white;border-radius:24px 24px 0 0;padding:24px 20px 40px;width:100%;max-width:480px;box-shadow:0 -8px 32px rgba(0,0,0,0.15);">
+    <div style="width:40px;height:4px;background:#E5E7EB;border-radius:2px;margin:0 auto 20px;"></div>
+    <h3 style="font-size:17px;font-weight:700;margin-bottom:16px;">Atualizar Status</h3>
 
-    <div class="fg">
-      <label>Novo status</label>
+    <div class="fg" style="margin-bottom:12px;">
+      <label style="font-size:11px;font-weight:700;color:var(--sz-gray);text-transform:uppercase;letter-spacing:0.4px;display:block;margin-bottom:5px;">Novo status</label>
       <select id="modal-status" style="width:100%;padding:12px 14px;border:2px solid #E5E7EB;border-radius:10px;font-size:15px;-webkit-appearance:none;background:white;">
         <option value="">Selecione...</option>
         <option value="andamento">🟡 Em andamento</option>
@@ -208,30 +353,30 @@ input[type=file]{display:none;}
       </select>
     </div>
 
-    <div class="fg">
-      <label>Turma executante</label>
+    <div class="fg" style="margin-bottom:12px;">
+      <label style="font-size:11px;font-weight:700;color:var(--sz-gray);text-transform:uppercase;letter-spacing:0.4px;display:block;margin-bottom:5px;">Turma executante</label>
       <select id="modal-letra" style="width:100%;padding:12px 14px;border:2px solid #E5E7EB;border-radius:10px;font-size:15px;-webkit-appearance:none;background:white;">
         <option value="">Selecione...</option>
         <option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>Adm</option>
       </select>
     </div>
 
-    <div class="fg">
-      <label>Executante(s) — opcional</label>
-      <input type="text" id="modal-nomes" placeholder="Nome(s) de quem executou...">
+    <div class="fg" style="margin-bottom:12px;">
+      <label style="font-size:11px;font-weight:700;color:var(--sz-gray);text-transform:uppercase;letter-spacing:0.4px;display:block;margin-bottom:5px;">Executante(s) — opcional</label>
+      <input type="text" id="modal-nomes" placeholder="Nome(s) de quem executou..." style="width:100%;padding:12px 14px;border:2px solid #E5E7EB;border-radius:10px;font-size:15px;">
     </div>
 
-    <div class="fg">
-      <label>Foto obrigatória</label>
-      <label for="modal-foto" class="foto-modal-label">
+    <div class="fg" style="margin-bottom:16px;">
+      <label style="font-size:11px;font-weight:700;color:var(--sz-gray);text-transform:uppercase;letter-spacing:0.4px;display:block;margin-bottom:5px;">Foto obrigatória</label>
+      <label for="modal-foto" style="display:flex;align-items:center;justify-content:center;gap:10px;background:var(--sz-green-bg);border:2px dashed var(--sz-green);border-radius:10px;padding:14px;cursor:pointer;font-size:14px;font-weight:600;color:var(--sz-green);">
         📷 Tirar foto / Galeria
-        <input type="file" id="modal-foto" accept="image/*" onchange="modalPreviewFoto(this)">
+        <input type="file" id="modal-foto" accept="image/*" style="display:none;" onchange="modalPreviewFoto(this)">
       </label>
       <img id="modal-foto-prev" style="display:none;width:100%;max-height:180px;object-fit:cover;border-radius:10px;margin-top:8px;">
     </div>
 
-    <button class="btn btn-green" id="modal-btn-confirmar" onclick="confirmarAvancar()">Confirmar</button>
-    <button class="btn btn-outline" onclick="fecharModal()">Cancelar</button>
+    <button id="modal-btn-confirmar" class="btn btn-verde" onclick="confirmarAvancar()" style="margin-bottom:10px;">Confirmar</button>
+    <button class="btn btn-outline-verde" onclick="fecharModal()">Cancelar</button>
   </div>
 </div>
 
@@ -300,7 +445,7 @@ let dFiltSt='todos',dFiltAr='todas',pdFiltSt='todos',cFiltAr='todas';
 
 
 
-// _perfilAtual definido no script de customização
+const _perfilAtual = new URLSearchParams(location.search).get('perfil') || 'gestao';
 
 function irPara(id){
   // No app gestao.html não há sistema de telas - ignorar
@@ -1124,78 +1269,55 @@ function toast(msg,type=''){
 }
 </script>
 
-
 <script>
-const _perfilAtual = 'execucao';
-function irPara(id){ return; }
-function irHome(){ return; }
-function gestTab(el){}
-function pTab(el){}
-function dTab(el){}
-function cTab(el){}
-
-// Reescrever dCardHTML para execucao
-function dCardHTML(x, modo){
-  var sMap={aberto:'🔴 A iniciar',andamento:'🟡 Em andamento',concluido:'🟢 Concluído',tratado:'🟢 Concluído'};
-  var dtC=new Date(x.created).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'});
-  var dtU=x.updated_at?new Date(x.updated_at).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'}):null;
-  var tc=x.tipo==='organizacao'?'org':'limp';
-  var tl=x.tipo==='organizacao'?'📦 Org':'🧹 Limp';
-  var prox=x.status==='aberto'?'andamento':x.status==='andamento'?'concluido':null;
-  var area=(x.area||'').replace('|',' · ');
-  var btn=prox?('<button class="btn-atualizar btn-avancar-status" data-id="'+x.id+'" data-prox="'+prox+'">✏️ Atualizar status</button>'):'';
-  return '<div class="dcard '+tc+'">'
-    +'<div class="dcard-top">'
-    +'<div style="flex:1;min-width:0;">'
-    +'<div class="dcard-area">'+area+'</div>'
-    +'<div class="dcard-dates">'
-    +'<span style="color:var(--green);">📅 Aberto: '+dtC+'</span>'
-    +(dtU?'<span style="color:var(--yellow);">🔄 Atualizado: '+dtU+'</span>':'')
-    +(x.letra_exec?'<span style="color:var(--gray);">Turma: <strong>'+x.letra_exec+'</strong>'+(x.nomes_exec?' · '+x.nomes_exec:'')+'</span>':'')
-    +'</div>'
-    +'</div>'
-    +'<span class="tipo-tag '+tc+'">'+tl+'</span>'
-    +'</div>'
-    +(x.obs?'<div class="dcard-obs">'+x.obs+'</div>':'')
-    +(x.foto?'<img class="dcard-foto" src="'+x.foto+'">':'')
-    +'<div class="dcard-footer">'
-    +'<span class="status '+x.status+'">'+sMap[x.status]+'</span>'
-    +'</div>'
-    +btn
-    +'</div>';
-}
-
-// renderBacklog para execucao
-async function renderBacklog(){
-  var el=document.getElementById('bl-out');
-  if(!el) return;
-  el.innerHTML='<div class="empty"><div class="ico">⏳</div><p>Carregando...</p></div>';
-  try{
-    var ord=document.getElementById('bl-sel-ord')?document.getElementById('bl-sel-ord').value:'asc';
-    var url='/rest/v1/desvios?select=*&order=created.'+ord+'&limit=200';
-    if(blFiltAr!=='todas'){
-      if(!blFiltAr.includes('|')) url+='&area=like.'+blFiltAr+'|*';
-      else url+='&area=eq.'+blFiltAr;
-    }
-    if(blFiltSt!=='todos') url+='&status=eq.'+blFiltSt;
-    var res=await sbGet(url);
-    var d=await res.json();
-    el.innerHTML=d.length?d.map(function(x){return dCardHTML(x,'execucao');}).join(''):'<div class="empty"><div class="ico">✅</div><p>Nenhum desvio encontrado</p></div>';
-    el.querySelectorAll('.btn-avancar-status').forEach(function(btn){
-      btn.style.display='block';
-      btn.addEventListener('click',function(e){
-        e.stopPropagation();
-        abrirModal(this.getAttribute('data-id'),this.getAttribute('data-prox'));
-      });
-    });
-  }catch(e){
-    el.innerHTML='<div class="empty"><div class="ico">⚠️</div><p>Erro ao carregar</p></div>';
+// ── GESTÃO: controle de abas ──
+function gTab(el) {
+  document.querySelectorAll('.nav-tab').forEach(function(n){n.classList.remove('active');});
+  el.classList.add('active');
+  document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active');});
+  var target = document.getElementById(el.dataset.tab);
+  if(target) target.classList.add('active');
+  if(el.dataset.tab === 'tab-indicadores') { setTimeout(renderPainel, 100); }
+  if(el.dataset.tab === 'tab-qr') {
+    var qrEl = document.getElementById('qr-url');
+    if(qrEl) qrEl.value = location.origin + location.pathname.replace(/\/index\.html$/,'').replace(/\/gestao\.html$/,'') + '/gestao.html';
+    setTimeout(gerarQR, 200);
   }
 }
 
-document.addEventListener('DOMContentLoaded', function(){
-  renderBacklog();
-});
+// Alias para funções que referenciam IDs antigos
+function dUpdateSubarea() {
+  var area = document.getElementById('d-sel-area').value;
+  var wrap = document.getElementById('d-sel-sub-wrap');
+  var sub = document.getElementById('d-sel-sub');
+  sub.innerHTML = '<option value="">Selecione...</option>';
+  if(area && AREAS_MAP[area]) {
+    AREAS_MAP[area].forEach(function(s){
+      var o=document.createElement('option');o.value=s;o.textContent=s;sub.appendChild(o);
+    });
+    wrap.style.display='block';
+  } else {
+    wrap.style.display='none';
+  }
+}
+function dConfirmArea() {
+  var area = document.getElementById('d-sel-area').value;
+  var sub = document.getElementById('d-sel-sub').value;
+  if(!area||!sub) return;
+  dArea = area+'|'+sub;
+  document.getElementById('d-picker').style.display='none';
+  document.getElementById('d-form').style.display='block';
+}
+function dVoltarPicker() {
+  dArea=''; dTipo=''; dFoto='';
+  document.getElementById('d-picker').style.display='block';
+  document.getElementById('d-form').style.display='none';
+  document.getElementById('d-sel-area').value='';
+  document.getElementById('d-sel-sub').innerHTML='<option value="">Selecione...</option>';
+  document.getElementById('d-sel-sub-wrap').style.display='none';
+  dReset();
+}
 </script>
+
 </body>
 </html>
