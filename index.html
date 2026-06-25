@@ -3,1392 +3,164 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Gestão de 5S — Recuperação Química</title>
+<title>Gestão de 5S — Recuperação Química Suzano Jacareí</title>
 <style>
-:root {
-  --sz-green:   #005B2E;
-  --sz-green2:  #007A3D;
-  --sz-green3:  #009A4E;
-  --sz-green-bg:#E6F2EC;
-  --sz-black:   #1A1A1A;
-  --sz-gray:    #6B7280;
-  --sz-gray-cl: #F4F6F4;
-  --sz-white:   #FFFFFF;
-  --amarelo:    #F59E0B;
-  --vermelho:   #DC2626;
-  --azul:       #1D4ED8;
-  --roxo:       #6D28D9;
-  --roxo-bg:    #F5F3FF;
-  --radius:     14px;
-}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--sz-gray-cl);color:var(--sz-black);min-height:100vh;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  background:linear-gradient(160deg,#003D1F 0%,#005B2E 55%,#007A3D 100%);
+  min-height:100vh;display:flex;flex-direction:column;
+}
 
-/* ── TELAS ── */
-.tela{display:none;min-height:100vh;}
-.tela.ativa{display:block;}
+.hero{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:40px 24px 24px;text-align:center;
+}
+.logo-wrap{
+  background:white;border-radius:20px;
+  padding:12px 18px;margin-bottom:20px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.25);
+}
+.logo-wrap img{height:44px;width:auto;display:block;}
+h1{color:white;font-size:28px;font-weight:800;letter-spacing:-0.5px;margin-bottom:6px;}
+.sub{color:rgba(255,255,255,0.65);font-size:13px;font-weight:500;}
 
-/* ── HEADER ── */
-.header{background:var(--sz-green);color:white;padding:12px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,0.25);}
-.header .back{font-size:22px;cursor:pointer;padding:2px 8px;border-radius:8px;background:rgba(255,255,255,0.15);line-height:1;}
-.header h1{font-size:15px;font-weight:700;flex:1;letter-spacing:-0.2px;}
-.header .badge{background:rgba(255,255,255,0.18);border-radius:20px;padding:4px 11px;font-size:12px;font-weight:600;white-space:nowrap;}
+.cards{
+  background:#F4F6F4;border-radius:28px 28px 0 0;
+  padding:24px 20px 48px;
+}
+.cards-label{
+  font-size:11px;font-weight:700;color:#6B7280;
+  text-transform:uppercase;letter-spacing:1px;
+  text-align:center;margin-bottom:16px;
+}
 
-/* ── NAV TABS ── */
-.nav{display:flex;background:white;border-bottom:2px solid #E5E7EB;overflow-x:auto;scrollbar-width:none;}
-.nav::-webkit-scrollbar{display:none;}
-.nav-item{flex:1;min-width:72px;padding:11px 4px;text-align:center;font-size:12px;font-weight:600;color:var(--sz-gray);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;}
-.nav-item.active{color:var(--sz-green);border-bottom-color:var(--sz-green);}
-.nav-item.active.roxo{color:var(--roxo);border-bottom-color:var(--roxo);}
+.app-card{
+  display:flex;align-items:center;gap:16px;
+  background:white;border-radius:18px;padding:16px;
+  margin-bottom:12px;text-decoration:none;
+  box-shadow:0 2px 16px rgba(0,0,0,0.07);
+  border:none;width:100%;cursor:pointer;
+  transition:transform 0.15s;
+}
+.app-card:active{transform:scale(0.97);}
 
-/* ── CONTEÚDO ── */
-.conteudo{padding:16px;max-width:480px;margin:0 auto;padding-bottom:40px;}
+.app-icon{
+  width:52px;height:52px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;flex-shrink:0;
+}
+.icon-green{
+  background:linear-gradient(135deg,#005B2E,#007A3D);
+  box-shadow:0 4px 12px rgba(0,91,46,0.35);
+}
+.icon-purple{
+  background:linear-gradient(135deg,#4F46E5,#6D28D9);
+  box-shadow:0 4px 12px rgba(109,40,217,0.35);
+}
 
-/* ══ HOME ══ */
-.home-wrap{min-height:100vh;display:flex;flex-direction:column;background:var(--sz-green);}
-.home-hero{padding:36px 24px 28px;text-align:center;color:white;}
-.home-logo-box{display:inline-flex;align-items:center;justify-content:center;background:white;border-radius:16px;padding:12px 20px;margin-bottom:20px;box-shadow:0 4px 20px rgba(0,0,0,0.2);}
-.home-logo-box svg{height:32px;width:auto;}
-.home-hero h2{font-size:15px;font-weight:600;opacity:0.85;margin-bottom:4px;}
-.home-hero p{font-size:13px;opacity:0.65;}
-.home-cards{background:var(--sz-gray-cl);border-radius:24px 24px 0 0;flex:1;padding:24px 18px;}
-.home-cards-title{font-size:12px;font-weight:700;color:var(--sz-gray);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:14px;}
+.app-text{flex:1;text-align:left;}
+.app-title{font-size:17px;font-weight:700;color:#1C1C1E;margin-bottom:3px;}
+.app-desc{font-size:13px;color:#6B7280;line-height:1.4;}
+.app-arrow{color:#D1D5DB;font-size:22px;flex-shrink:0;}
 
-.home-btn{width:100%;padding:18px 16px;border-radius:var(--radius);border:none;display:flex;align-items:center;gap:14px;cursor:pointer;margin-bottom:12px;text-align:left;transition:transform 0.12s,box-shadow 0.12s;box-shadow:0 2px 12px rgba(0,0,0,0.07);background:white;}
-.home-btn:active{transform:scale(0.985);box-shadow:0 1px 6px rgba(0,0,0,0.1);}
-.home-btn .hico{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
-.hico-desvio{background:#FEF2F2;}
-.hico-contrib{background:var(--roxo-bg);}
-.hico-painel{background:var(--sz-green-bg);}
-.home-btn .htxt strong{font-size:15px;font-weight:700;display:block;color:var(--sz-black);margin-bottom:2px;}
-.home-btn .htxt span{font-size:12px;color:var(--sz-gray);line-height:1.4;}
-.home-btn .harrow{font-size:20px;color:#D1D5DB;margin-left:auto;flex-shrink:0;}
+.qr-section{
+  background:white;border-radius:16px;
+  padding:16px;margin-top:4px;
+}
+.qr-section-label{
+  font-size:11px;font-weight:700;color:#6B7280;
+  text-transform:uppercase;letter-spacing:0.8px;
+  margin-bottom:12px;
+}
+.qr-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.qr-card{
+  border-radius:12px;padding:12px;text-align:center;
+}
+.qr-card.green{background:#E8F5EE;border:1px solid #C6E0CF;}
+.qr-card.purple{background:#F5F3FF;border:1px solid #D8D0F8;}
+.qr-card h4{font-size:12px;font-weight:700;margin-bottom:2px;}
+.qr-card.green h4{color:#005B2E;}
+.qr-card.purple h4{color:#6D28D9;}
+.qr-card p{font-size:10px;color:#6B7280;margin-bottom:8px;}
+.qr-card canvas,.qr-card img{width:100%;border-radius:6px;}
 
-.home-divider{height:1px;background:#E5E7EB;margin:4px 0 12px;}
-
-/* ── CARD ── */
-.card{background:white;border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:0 1px 8px rgba(0,0,0,0.06);}
-.card-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--sz-gray);margin-bottom:10px;}
-
-/* ── SUBÁREA ── */
-.subarea-btn{width:100%;padding:14px 16px;border:2px solid #E5E7EB;border-radius:12px;background:white;display:flex;align-items:center;gap:14px;cursor:pointer;margin-bottom:10px;text-align:left;transition:all 0.15s;}
-.subarea-btn:active{border-color:var(--sz-green);background:var(--sz-green-bg);}
-.floor{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;flex-shrink:0;color:white;}
-.floor.v{background:var(--sz-green);}
-.floor.r{background:var(--roxo);}
-.subarea-btn strong{font-size:15px;font-weight:700;display:block;}
-.subarea-btn small{font-size:12px;color:var(--sz-gray);}
-
-/* ── FORM ── */
-.fg{margin-bottom:12px;}
-.fg label{display:block;font-size:11px;font-weight:700;color:var(--sz-gray);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.5px;}
-input[type=text],textarea{width:100%;padding:12px 14px;border:2px solid #E5E7EB;border-radius:10px;font-size:15px;color:var(--sz-black);background:white;-webkit-appearance:none;transition:border-color 0.2s;font-family:inherit;}
-input[type=text]:focus,textarea:focus{outline:none;border-color:var(--sz-green);}
-textarea{resize:none;height:80px;}
-
-/* ── TIPO ── */
-.tipo-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.tipo-btn{padding:14px 8px;border:2px solid #E5E7EB;border-radius:12px;background:white;text-align:center;cursor:pointer;font-size:13px;font-weight:600;color:var(--sz-gray);transition:all 0.15s;}
-.tipo-btn .ico{font-size:24px;display:block;margin-bottom:5px;}
-.tipo-btn.sel-org{border-color:var(--amarelo);color:#92400E;background:#FFFBEB;}
-.tipo-btn.sel-limp{border-color:var(--azul);color:#1E40AF;background:#EFF6FF;}
-
-/* ── CATEGORIAS ── */
-.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.cat-btn{padding:11px 8px;border:2px solid #E5E7EB;border-radius:10px;background:white;text-align:center;cursor:pointer;font-size:12px;font-weight:600;color:var(--sz-gray);transition:all 0.15s;}
-.cat-btn .ico{font-size:20px;display:block;margin-bottom:3px;}
-.cat-btn.sel{border-color:var(--roxo);color:#5B21B6;background:var(--roxo-bg);}
-
-/* ── FOTO ── */
-input[type=file]{display:none;}
-.foto-label{display:block;border:2px dashed;border-radius:12px;cursor:pointer;overflow:hidden;}
-.foto-label.verde{border-color:var(--sz-green);background:var(--sz-green-bg);}
-.foto-label.roxo-cor{border-color:var(--roxo);background:var(--roxo-bg);}
-.foto-ph{padding:26px 16px;text-align:center;}
-.foto-ph .ico{font-size:32px;display:block;margin-bottom:6px;}
-.foto-ph p{font-size:14px;font-weight:600;}
-.foto-ph small{font-size:12px;color:var(--sz-gray);}
-.foto-ph.c-verde p{color:var(--sz-green);}
-.foto-ph.c-roxo p{color:var(--roxo);}
-.foto-img{width:100%;max-height:220px;object-fit:cover;display:none;}
-
-/* ── BOTÕES ── */
-.btn{width:100%;padding:15px;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;transition:opacity 0.15s;font-family:inherit;margin-top:4px;letter-spacing:-0.2px;}
-.btn:active{opacity:0.82;}
-.btn-verde{background:var(--sz-green);color:white;}
-.btn-roxo{background:var(--roxo);color:white;}
-.btn-outline-verde{background:white;color:var(--sz-green);border:2px solid var(--sz-green);}
-.btn-outline-roxo{background:white;color:var(--roxo);border:2px solid var(--roxo);}
-
-/* ── FILTROS ── */
-.filtros{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;}
-.f-btn{padding:6px 12px;border-radius:20px;border:2px solid #E5E7EB;background:white;font-size:12px;font-weight:600;color:var(--sz-gray);cursor:pointer;white-space:nowrap;}
-.f-btn.av{background:var(--sz-green);border-color:var(--sz-green);color:white;}
-.f-btn.ar{background:var(--roxo);border-color:var(--roxo);color:white;}
-
-/* ── DESVIO CARD ── */
-.dcard{background:white;border-radius:var(--radius);padding:14px;margin-bottom:10px;box-shadow:0 1px 8px rgba(0,0,0,0.06);border-left:4px solid #E5E7EB;}
-.dcard.org{border-left-color:var(--amarelo);}
-.dcard.limp{border-left-color:var(--azul);}
-.dcard-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px;}
-.dcard-area{font-size:13px;font-weight:700;color:var(--sz-green);}
-.dcard-meta{font-size:11px;color:var(--sz-gray);margin-top:1px;}
-.tipo-tag{font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0;}
-.tipo-tag.org{background:#FFFBEB;color:#92400E;}
-.tipo-tag.limp{background:#EFF6FF;color:#1E40AF;}
-.dcard-obs{font-size:13px;color:var(--sz-black);margin-bottom:8px;}
-.dcard-foto{width:100%;max-height:160px;object-fit:cover;border-radius:8px;margin-bottom:8px;}
-.dcard-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;}
-.status{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:20px;font-size:12px;font-weight:700;}
-.status.aberto{background:#FEF2F2;color:var(--vermelho);}
-.status.andamento{background:#FFFBEB;color:#92400E;}
-.status.tratado,.status.concluido{background:var(--sz-green-bg);color:var(--sz-green);}
-.btn-av{padding:7px 12px;border-radius:8px;border:none;font-size:12px;font-weight:700;background:var(--sz-gray-cl);color:var(--sz-black);cursor:pointer;font-family:inherit;}
-.btn-av:active{background:var(--sz-green-bg);color:var(--sz-green);}
-
-/* ── CONTRIB CARD ── */
-.ccard{background:white;border-radius:var(--radius);padding:14px;margin-bottom:10px;box-shadow:0 1px 8px rgba(0,0,0,0.06);border-left:4px solid var(--roxo);}
-.ccard-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px;}
-.ccard-area{font-size:13px;font-weight:700;color:var(--roxo);}
-.ccard-meta{font-size:11px;color:var(--sz-gray);margin-top:1px;}
-.cat-tag{font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;background:var(--roxo-bg);color:#5B21B6;white-space:nowrap;flex-shrink:0;}
-.ccard-desc{font-size:13px;color:var(--sz-black);margin-bottom:8px;}
-.ccard-foto{width:100%;max-height:160px;object-fit:cover;border-radius:8px;}
-
-/* ── DASHBOARD ── */
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
-.stat{background:white;border-radius:var(--radius);padding:14px;text-align:center;box-shadow:0 1px 8px rgba(0,0,0,0.06);}
-.stat-n{font-size:32px;font-weight:800;line-height:1;}
-.stat-l{font-size:11px;color:var(--sz-gray);margin-top:4px;text-transform:uppercase;letter-spacing:0.5px;font-weight:600;}
-.section-title{font-size:12px;font-weight:700;color:var(--sz-gray);text-transform:uppercase;letter-spacing:0.6px;margin:14px 0 8px;}
-.bar-row{margin-bottom:10px;}
-.bar-label{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:4px;}
-.bar-bg{background:#E5E7EB;border-radius:20px;height:8px;}
-.bar-fill{border-radius:20px;height:8px;transition:width 0.4s;}
-
-/* ── EMPTY ── */
-.empty{text-align:center;padding:48px 16px;color:var(--sz-gray);}
-.empty .ico{font-size:48px;margin-bottom:10px;}
-.empty p{font-size:14px;}
-
-/* ── TOAST ── */
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--sz-black);color:white;padding:12px 22px;border-radius:30px;font-size:14px;font-weight:600;z-index:999;transition:transform 0.3s cubic-bezier(.34,1.4,.64,1);white-space:nowrap;max-width:90vw;text-align:center;}
-.toast.show{transform:translateX(-50%) translateY(0);}
-.toast.ok{background:var(--sz-green);}
-.toast.ok2{background:var(--roxo);}
-.toast.err{background:var(--vermelho);}
-
-/* ── QR ── */
-.qr-item{background:white;border-radius:var(--radius);padding:20px;margin-bottom:12px;text-align:center;box-shadow:0 1px 8px rgba(0,0,0,0.06);}
-.qr-item h3{font-size:14px;font-weight:700;margin-bottom:4px;}
-.qr-item .qr-tipo{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:10px;}
-.qr-tipo.d{background:#FEF2F2;color:var(--vermelho);}
-.qr-tipo.c{background:var(--roxo-bg);color:var(--roxo);}
-.qr-item p{font-size:10px;color:var(--sz-gray);margin-bottom:12px;word-break:break-all;}
-.qr-item img{border-radius:8px;width:180px;height:180px;}
+.footer{
+  text-align:center;font-size:11px;color:#9CA3AF;
+  margin-top:16px;
+}
 </style>
 </head>
 <body>
 
-<!-- ══ HOME ══ -->
-<div class="tela ativa" id="tela-home">
-  <div style="height:100vh;max-height:100vh;overflow:hidden;background:linear-gradient(160deg,#003D1F 0%,#005B2E 50%,#007A3D 100%);display:flex;flex-direction:column;">
-
-    <!-- TOP BAR -->
-    <div style="padding:20px 20px 0;display:flex;align-items:center;justify-content:space-between;">
-      <div style="background:rgba(255,255,255,0.12);border-radius:12px;padding:8px 14px;">
-        <span style="color:rgba(255,255,255,0.7);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Recuperação Química</span>
-      </div>
-      <div style="background:rgba(255,255,255,0.12);border-radius:12px;padding:8px 14px;">
-        <span style="color:rgba(255,255,255,0.7);font-size:11px;font-weight:600;">Jacareí</span>
-      </div>
-    </div>
-
-    <!-- HERO -->
-    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 24px 12px;text-align:center;">
-      <div style="background:white;border-radius:20px;padding:10px 16px;margin-bottom:14px;box-shadow:0 8px 32px rgba(0,0,0,0.25);">
-        <img src="data:image/png;base64,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" alt="Suzano" style="height:38px;width:auto;display:block;">
-      </div>
-      <h1 style="color:white;font-size:22px;font-weight:800;letter-spacing:-0.5px;margin-bottom:4px;line-height:1.2;">Gestão de 5S</h1>
-      <p style="color:rgba(255,255,255,0.65);font-size:14px;font-weight:500;">Programa de organização e limpeza</p>
-    </div>
-
-    <!-- CARDS -->
-    <div style="background:#F4F6F4;border-radius:28px 28px 0 0;padding:18px 20px 24px;">
-
-      <p style="font-size:12px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;text-align:center;">Selecione seu perfil de acesso</p>
-
-      <!-- GESTÃO -->
-      <button onclick="irPara('tela-gestao')" style="width:100%;background:white;border:none;border-radius:18px;padding:14px 16px;display:flex;align-items:center;gap:14px;margin-bottom:10px;box-shadow:0 2px 16px rgba(0,0,0,0.07);cursor:pointer;text-align:left;transition:transform 0.15s;" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'" ontouchstart="this.style.transform='scale(0.98)'" ontouchend="this.style.transform='scale(1)'">
-        <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#005B2E,#007A3D);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;box-shadow:0 4px 12px rgba(0,91,46,0.3);">📋</div>
-        <div style="flex:1;">
-          <div style="font-size:17px;font-weight:700;color:#1C1C1E;margin-bottom:3px;">Gestão</div>
-          <div style="font-size:13px;color:#6B7280;line-height:1.4;">Inserir desvios e acompanhar indicadores</div>
-        </div>
-        <div style="color:#D1D5DB;font-size:22px;font-weight:300;">›</div>
-      </button>
-
-      <!-- EXECUÇÃO -->
-      <button onclick="irPara('tela-backlog')" style="width:100%;background:white;border:none;border-radius:18px;padding:14px 16px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 16px rgba(0,0,0,0.07);cursor:pointer;text-align:left;transition:transform 0.15s;" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'" ontouchstart="this.style.transform='scale(0.98)'" ontouchend="this.style.transform='scale(1)'">
-        <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#4F46E5,#6D28D9);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;box-shadow:0 4px 12px rgba(109,40,217,0.3);">🔧</div>
-        <div style="flex:1;">
-          <div style="font-size:17px;font-weight:700;color:#1C1C1E;margin-bottom:3px;">Execução</div>
-          <div style="font-size:13px;color:#6B7280;line-height:1.4;">Visualizar e tratar desvios do backlog</div>
-        </div>
-        <div style="color:#D1D5DB;font-size:22px;font-weight:300;">›</div>
-      </button>
-
-      <!-- VERSÃO -->
-      <p style="text-align:center;font-size:11px;color:#9CA3AF;margin-top:14px;">v1.0 · Suzano Jacareí · 2025</p>
-    </div>
-
+<div class="hero">
+  <div class="logo-wrap">
+    <img src="data:image/png;base64,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" alt="Suzano">
   </div>
+  <h1>Gestão de 5S</h1>
+  <p class="sub">Recuperação Química · Suzano Jacareí</p>
 </div>
 
-<!-- ══ TELA GESTÃO ══ -->
-<div class="tela" id="tela-gestao">
-  <div class="header">
-    <span class="back" onclick="irHome()">‹</span>
-    <h1>👔 Gestão 5S</h1>
-  </div>
-  <nav class="nav" id="gest-nav">
-    <div class="nav-item active" data-tab="gest-desvio"      onclick="gestTab(this)">⚠️ Inserir Desvio</div>
-    <div class="nav-item"        data-tab="gest-indicadores" onclick="gestTab(this)">📊 Indicadores</div>
-    <div class="nav-item"        data-tab="gest-qr"          onclick="gestTab(this)">QR Codes</div>
-  </nav>
+<div class="cards">
+  <p class="cards-label">Selecione seu perfil de acesso</p>
 
-  <!-- INSERIR DESVIO -->
-  <div id="gest-desvio">
-<div style="background:var(--sz-green);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;"><span style="color:white;font-size:13px;font-weight:600;">Inserir desvio no backlog</span><span class="badge" id="d-badge-area" style="background:rgba(255,255,255,0.2);border-radius:20px;padding:3px 10px;font-size:12px;font-weight:600;color:white;">—</span></div>
-
-
-  <div id="d-reg" class="conteudo">
-    <div id="d-picker">
-      <div class="card">
-        <div class="card-label">Selecione a área e subárea</div>
-        <div class="fg">
-          <label>Área</label>
-          <select id="d-sel-area" onchange="dUpdateSubarea()">
-            <option value="">Selecione...</option>
-            <option>CR3</option><option>CR4</option><option>EVA3</option>
-            <option>EVA4</option><option>CAUSTS</option><option>FORNOS</option>
-          </select>
-        </div>
-        <div class="fg" id="d-sel-sub-wrap" style="display:none;">
-          <label>Subárea</label>
-          <select id="d-sel-sub" onchange="dConfirmArea()">
-            <option value="">Selecione...</option>
-          </select>
-        </div>
-      </div>
+  <a href="gestao.html" class="app-card">
+    <div class="app-icon icon-green">📋</div>
+    <div class="app-text">
+      <div class="app-title">Gestão</div>
+      <div class="app-desc">Inserir desvios e acompanhar indicadores</div>
     </div>
-    <div id="d-form" style="display:none">
-      <div class="card">
-        <div class="card-label">Responsável</div>
-        <div class="fg"><label>Nome</label><input type="text" id="d-nome" placeholder="Seu nome completo"></div>
+    <div class="app-arrow">›</div>
+  </a>
+
+  <a href="execucao.html" class="app-card">
+    <div class="app-icon icon-purple">🔧</div>
+    <div class="app-text">
+      <div class="app-title">Execução</div>
+      <div class="app-desc">Visualizar e tratar desvios do backlog</div>
+    </div>
+    <div class="app-arrow">›</div>
+  </a>
+
+  <div class="qr-section">
+    <div class="qr-section-label">🔲 QR Codes de acesso direto</div>
+    <div class="qr-grid">
+      <div class="qr-card green">
+        <h4>Gestão</h4>
+        <p>Supervisão</p>
+        <div id="qr-gestao"></div>
       </div>
-      <div class="card">
-        <div class="card-label">Tipo de Desvio</div>
-        <div class="tipo-grid">
-          <div class="tipo-btn" id="d-t-org" onclick="dSelTipo('organizacao')"><span class="ico">📦</span>Organização</div>
-          <div class="tipo-btn" id="d-t-limp" onclick="dSelTipo('limpeza')"><span class="ico">🧹</span>Limpeza</div>
-        </div>
+      <div class="qr-card purple">
+        <h4>Execução</h4>
+        <p>Turmas A·B·C·D·E</p>
+        <div id="qr-exec"></div>
       </div>
-      <div class="card">
-        <div class="card-label">Foto do Desvio</div>
-        <img id="d-foto-prev" style="display:none;width:100%;max-height:220px;object-fit:cover;border-radius:10px;margin-bottom:10px;">
-        <label for="d-foto-inp" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:16px;background:var(--sz-green-bg);border:2px dashed var(--sz-green);border-radius:10px;font-size:15px;font-weight:700;color:var(--sz-green);cursor:pointer;box-sizing:border-box;">
-          <span style="font-size:22px;">📷</span> Tirar foto / Galeria
-          <input type="file" id="d-foto-inp" accept="image/*" onchange="dOnFoto(this)" style="display:none;">
-        </label>
-      </div>
-      <div class="card">
-        <div class="card-label">Observação (opcional)</div>
-        <textarea id="d-obs" placeholder="Descreva brevemente o desvio..."></textarea>
-      </div>
-      <button class="btn btn-verde" onclick="dRegistrar()">Inserir no backlog</button>
-      <button class="btn btn-outline-verde" onclick="dVoltarPicker()" style="margin-top:10px;">← Trocar subárea</button>
-      <div style="height:24px"></div>
     </div>
   </div>
 
-
+  <p class="footer">v2.0 · Suzano Jacareí · 2025</p>
 </div>
-  </div>
-  </div>
-
-  <!-- INDICADORES -->
-  <div id="gest-indicadores" style="display:none;">
-    <div style="padding:16px;">
-
-      <!-- FILTROS -->
-      <div class="card" style="margin-bottom:12px;">
-        <div class="card-label">Filtros</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
-          <div>
-            <label style="font-size:11px;font-weight:700;color:var(--sz-gray);display:block;margin-bottom:4px;text-transform:uppercase;">Área</label>
-            <select id="p-filtro-area" onchange="renderPainel()" style="width:100%;padding:10px 12px;border:2px solid #E5E7EB;border-radius:8px;font-size:13px;-webkit-appearance:none;background:white;">
-              <option value="todas">Todas</option>
-              <option>CR3</option><option>CR4</option><option>EVA3</option>
-              <option>EVA4</option><option>CAUSTS</option><option>FORNOS</option>
-            </select>
-          </div>
-          <div>
-            <label style="font-size:11px;font-weight:700;color:var(--sz-gray);display:block;margin-bottom:4px;text-transform:uppercase;">Período</label>
-            <select id="p-filtro-periodo" onchange="onPeriodoChange()" style="width:100%;padding:10px 12px;border:2px solid #E5E7EB;border-radius:8px;font-size:13px;-webkit-appearance:none;background:white;">
-              <option value="semana">Esta semana</option>
-              <option value="mes">Este mês</option>
-              <option value="custom" selected>Personalizado</option>
-              <option value="todos">Todos</option>
-            </select>
-          </div>
-        </div>
-        <div id="p-custom-dates" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-          <div>
-            <label style="font-size:11px;font-weight:700;color:var(--sz-gray);display:block;margin-bottom:4px;text-transform:uppercase;">De</label>
-            <input type="date" id="p-data-ini" onchange="renderPainel()" style="width:100%;padding:10px 12px;border:2px solid #E5E7EB;border-radius:8px;font-size:13px;background:white;">
-          </div>
-          <div>
-            <label style="font-size:11px;font-weight:700;color:var(--sz-gray);display:block;margin-bottom:4px;text-transform:uppercase;">Até</label>
-            <input type="date" id="p-data-fim" onchange="renderPainel()" style="width:100%;padding:10px 12px;border:2px solid #E5E7EB;border-radius:8px;font-size:13px;background:white;">
-          </div>
-        </div>
-      </div>
-
-      <!-- STATS PRINCIPAIS -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
-        <div class="stat"><div class="stat-n" id="p-d-tot" style="color:var(--sz-black);">—</div><div class="stat-l">Total</div></div>
-        <div class="stat"><div class="stat-n" id="p-d-ab" style="color:var(--vermelho);">—</div><div class="stat-l">A iniciar</div></div>
-        <div class="stat"><div class="stat-n" id="p-d-and" style="color:var(--amarelo);">—</div><div class="stat-l">Andamento</div></div>
-        <div class="stat"><div class="stat-n" id="p-d-tr" style="color:var(--sz-green);">—</div><div class="stat-l">Concluídos</div></div>
-      </div>
-
-      <!-- TAXA DE CONCLUSÃO POR ÁREA -->
-      <div class="card" style="margin-bottom:12px;">
-        <div class="card-label">Taxa de conclusão por área</div>
-        <div id="p-taxa-areas"></div>
-      </div>
-
-      <!-- TEMPO MÉDIO DE RESOLUÇÃO -->
-      <div class="card" style="margin-bottom:12px;">
-        <div class="card-label">Tempo médio de resolução</div>
-        <div id="p-tempo-medio" style="text-align:center;padding:8px 0;">
-          <div style="font-size:36px;font-weight:800;color:var(--sz-green);" id="p-tempo-val">—</div>
-          <div style="font-size:12px;color:var(--sz-gray);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">dias em média</div>
-        </div>
-      </div>
-
-      <!-- RANKING DE TURMAS -->
-      <div class="card" style="margin-bottom:12px;">
-        <div class="card-label">Ranking de turmas — tratamentos realizados</div>
-        <div id="p-ranking-turmas"></div>
-      </div>
-
-      <!-- % CONCLUSÃO POR LETRA -->
-      <div class="card" style="margin-bottom:12px;">
-        <div class="card-label">% Conclusão por turma</div>
-        <div id="p-conc-letra"></div>
-      </div>
-
-      <!-- EVOLUÇÃO TEMPORAL -->
-      <div class="card" style="margin-bottom:12px;">
-        <div class="card-label">Evolução — Abertos vs Concluídos</div>
-        <div id="p-evolucao" style="overflow-x:auto;">
-          <canvas id="p-chart" height="160"></canvas>
-        </div>
-      </div>
-
-      <!-- EXPORTAR PDF -->
-      <button class="btn btn-verde" onclick="exportarPDF()" style="margin-bottom:24px;">
-        📄 Exportar Relatório PDF
-      </button>
-
-    </div>
-  </div>
-
-  <!-- QR CODES -->
-  <div id="gest-qr" style="display:none;padding:16px;">
-    <div id="qr-out" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%;max-width:480px;"></div>
-    <button class="btn btn-verde" onclick="gerarQR()" style="width:100%;max-width:480px;margin:0;">↺ Regenerar QR Codes</button>
-  </div>
-
-</div>
-
-<!-- ══ TELA BACKLOG ══ -->
-<div class="tela" id="tela-backlog">
-  <div class="header">
-    <span class="back" onclick="irHome()">‹</span>
-    <h1>🔧 Backlog de Desvios</h1>
-  </div>
-
-  <div class="conteudo">
-    <div class="card" style="margin-bottom:10px;padding:12px 14px;">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
-        <div>
-          <label style="font-size:11px;font-weight:700;color:var(--sz-gray);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">Área</label>
-          <select id="bl-sel-area" onchange="blUpdateSub()" style="width:100%;padding:10px 12px;border:2px solid #E5E7EB;border-radius:8px;font-size:14px;-webkit-appearance:none;background:white;">
-            <option value="todas">Todas</option>
-            <option>CR3</option><option>CR4</option><option>EVA3</option>
-            <option>EVA4</option><option>CAUSTS</option><option>FORNOS</option>
-          </select>
-        </div>
-        <div>
-          <label style="font-size:11px;font-weight:700;color:var(--sz-gray);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">Subárea</label>
-        <select id="bl-sel-sub" onchange="blFiltrar()" style="width:100%;padding:10px 12px;border:2px solid #E5E7EB;border-radius:8px;font-size:14px;-webkit-appearance:none;background:white;">
-            <option value="todas">Todas</option>
-          </select>
-        </div>
-      </div>
-      <div>
-        <label style="font-size:11px;font-weight:700;color:var(--sz-gray);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">Status</label>
-        <select id="bl-sel-st" onchange="blFiltrar()" style="width:100%;padding:10px 12px;border:2px solid #E5E7EB;border-radius:8px;font-size:14px;-webkit-appearance:none;background:white;">
-          <option value="aberto">A iniciar</option>
-          <option value="andamento">Em andamento</option>
-          <option value="concluido">Concluído</option>
-          <option value="todos">Todos</option>
-        </select>
-      </div>
-      <div style="margin-top:10px;">
-        <label style="font-size:11px;font-weight:700;color:var(--sz-gray);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">Ordenar por data</label>
-        <select id="bl-sel-ord" onchange="blFiltrar()" style="width:100%;padding:10px 12px;border:2px solid #E5E7EB;border-radius:8px;font-size:14px;-webkit-appearance:none;background:white;">
-          <option value="asc">Mais antigo primeiro</option>
-          <option value="desc">Mais recente primeiro</option>
-        </select>
-      </div>
-    </div>
-    <div id="bl-out"><div class="empty"><div class="ico">⏳</div><p>Carregando...</p></div></div>
-  </div>
-</div>
-
-<!-- ══ MODAL ATUALIZAR STATUS ══ -->
-<div id="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;align-items:flex-end;justify-content:center;">
-  <div style="background:white;border-radius:24px 24px 0 0;padding:24px 20px 40px;width:100%;max-width:480px;box-shadow:0 -8px 32px rgba(0,0,0,0.15);">
-    <div style="width:40px;height:4px;background:#E5E7EB;border-radius:2px;margin:0 auto 20px;"></div>
-    <h3 style="font-size:17px;font-weight:700;margin-bottom:16px;">Atualizar Status</h3>
-
-    <div class="fg" style="margin-bottom:12px;">
-      <label style="font-size:11px;font-weight:700;color:var(--sz-gray);text-transform:uppercase;letter-spacing:0.4px;display:block;margin-bottom:5px;">Novo status</label>
-      <select id="modal-status" style="width:100%;padding:12px 14px;border:2px solid #E5E7EB;border-radius:10px;font-size:15px;-webkit-appearance:none;background:white;">
-        <option value="">Selecione...</option>
-        <option value="andamento">🟡 Em andamento</option>
-        <option value="concluido">🟢 Concluído</option>
-      </select>
-    </div>
-
-    <div class="fg" style="margin-bottom:12px;">
-      <label style="font-size:11px;font-weight:700;color:var(--sz-gray);text-transform:uppercase;letter-spacing:0.4px;display:block;margin-bottom:5px;">Turma executante</label>
-      <select id="modal-letra" style="width:100%;padding:12px 14px;border:2px solid #E5E7EB;border-radius:10px;font-size:15px;-webkit-appearance:none;background:white;">
-        <option value="">Selecione...</option>
-        <option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>Adm</option>
-      </select>
-    </div>
-
-    <div class="fg" style="margin-bottom:12px;">
-      <label style="font-size:11px;font-weight:700;color:var(--sz-gray);text-transform:uppercase;letter-spacing:0.4px;display:block;margin-bottom:5px;">Executante(s) — opcional</label>
-      <input type="text" id="modal-nomes" placeholder="Nome(s) de quem executou..." style="width:100%;padding:12px 14px;border:2px solid #E5E7EB;border-radius:10px;font-size:15px;">
-    </div>
-
-    <div class="fg" style="margin-bottom:16px;">
-      <label style="font-size:11px;font-weight:700;color:var(--sz-gray);text-transform:uppercase;letter-spacing:0.4px;display:block;margin-bottom:5px;">Foto obrigatória</label>
-      <label for="modal-foto" style="display:flex;align-items:center;justify-content:center;gap:10px;background:var(--sz-green-bg);border:2px dashed var(--sz-green);border-radius:10px;padding:14px;cursor:pointer;font-size:14px;font-weight:600;color:var(--sz-green);">
-        📷 Tirar foto / Galeria
-        <input type="file" id="modal-foto" accept="image/*" style="display:none;" onchange="modalPreviewFoto(this)">
-      </label>
-      <img id="modal-foto-prev" style="display:none;width:100%;max-height:180px;object-fit:cover;border-radius:10px;margin-top:8px;">
-    </div>
-
-    <button id="modal-btn-confirmar" class="btn btn-verde" onclick="confirmarAvancar()" style="margin-bottom:10px;">Confirmar</button>
-    <button class="btn btn-outline-verde" onclick="fecharModal()">Cancelar</button>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-const AREAS_MAP = {
-  'CR3': [
-    'Piso 0','Piso 1','Piso 2','Piso 3','Piso 4','Piso 5','Piso 6','Piso 7',
-    'Panorâmica','Precipitador'
-  ],
-  'CR4': [
-    'Piso 0','Piso 1','Piso 2','Piso 3','Piso 4','Piso 5','Piso 6','Piso 7',
-    'Panorâmica','Precipitador','Ashleaching'
-  ],
-  'EVA3': [
-    'Piso zero Evaporação 3','Piso 1 da Evaporação 3'
-  ],
-  'EVA4': [
-    'Piso zero Evaporação 4','1º piso e acima da Evaporação 4'
-  ],
-  'CAUSTS': [
-    'Sistema de enxofre',
-    'Piso zero — Tanques LBF/LBC/LVB/LVC/Reatores 33',
-    'Rua 13 — Bomba de vácuo dregs 3012/3013 / Baia de dregs',
-    'Bancada de amostras / Reatores 32 / Tanque de dregs / Xfilters',
-    'Centrífuga de dregs / Resfriador de LVC',
-    'Tanque de lama',
-    'Slaker 33 e 32 / Rosca de grits',
-    'Filtro de dregs / Abaixo slaker 33'
-  ],
-  'FORNOS': [
-    'Cal comprada',
-    'Queimador forno 42 / P.E 42',
-    'Filtro de lama 42',
-    'Piso zero fornos 42 / Lavador de gases',
-    'Queimador forno 43 / P.E 43',
-    'Filtro de lama 43',
-    'Piso zero fornos 43',
-    'Silo de Cal'
-  ]
-};
-const AREAS_LIST = Object.keys(AREAS_MAP);
-// helper para exibir label da área+subárea
-function areaLabel(area, sub){ return sub ? `${area} — ${sub}` : area; }
-const SB_URL='https://uivzwjcqvupvxjueaojd.supabase.co';
-const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVpdnp3amNxdnVwdnhqdWVhb2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MDkxNTYsImV4cCI6MjA5NzI4NTE1Nn0.4l_bzUXw1v-ngK7poJSezXe02BRHtcgU--stcLuV2vk';
-
-function sbH(){return {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'};}
-async function sbGet(path){return fetch(SB_URL+path,{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});}
-async function sbPost(path,body){return fetch(SB_URL+path,{method:'POST',headers:sbH(),body:JSON.stringify(body)});}
-async function sbPatch(path,body){return fetch(SB_URL+path,{method:'PATCH',headers:{...sbH(),'Prefer':'return=minimal'},body:JSON.stringify(body)});}
-async function uploadFoto(b64,prefix){
-  const res=await fetch(b64);const blob=await res.blob();
-  const ext=blob.type.split('/')[1]||'jpg';
-  const name=prefix+'-'+Date.now()+'.'+ext;
-  const up=await fetch(SB_URL+'/storage/v1/object/fotos/'+name,{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':blob.type},body:blob});
-  if(up.ok) return SB_URL+'/storage/v1/object/public/fotos/'+name;
-  return b64; // fallback base64
-}
-
-let dArea='',dTipo='',dFoto='';
-let cArea='',cCat='',cFoto='';
-let dFiltSt='todos',dFiltAr='todas',pdFiltSt='todos',cFiltAr='todas';
-
-
-
-const _perfilAtual = new URLSearchParams(location.search).get('perfil');
-
-function irPara(id){
-  // Bloquear acesso à gestão se perfil=execucao
-  if(_perfilAtual==='execucao' && id==='tela-gestao'){
-    toast('Acesso restrito ao perfil de gestão','err');
-    return;
-  }
-  document.querySelectorAll('.tela').forEach(t=>t.classList.remove('ativa'));
-  document.getElementById(id).classList.add('ativa');
-  window.scrollTo(0,0);
-  if(id==='tela-backlog')renderBacklog();
-}
-function irHome(){irPara('tela-home');}
-
-function dTab(el){
-  document.querySelectorAll('#d-nav .nav-item').forEach(n=>n.classList.remove('active'));
-  el.classList.add('active');
-  ['d-reg','d-lista'].forEach(id=>document.getElementById(id).style.display='none');
-  document.getElementById(el.dataset.tab).style.display='block';
-  if(el.dataset.tab==='d-lista')renderDLista();
-}
-function cTab(el){
-  document.querySelectorAll('#c-nav .nav-item').forEach(n=>n.classList.remove('active'));
-  el.classList.add('active');
-  ['c-reg','c-lista'].forEach(id=>document.getElementById(id).style.display='none');
-  document.getElementById(el.dataset.tab).style.display='block';
-  if(el.dataset.tab==='c-lista')renderCLista();
-}
-function gestTab(el){
-  document.querySelectorAll('#gest-nav .nav-item').forEach(n=>n.classList.remove('active'));
-  el.classList.add('active');
-  ['gest-desvio','gest-indicadores','gest-qr'].forEach(id=>{
-    const d=document.getElementById(id);if(d)d.style.display='none';
-  });
-  const tab=el.dataset.tab;
-  const target=document.getElementById(tab);
-  if(target) target.style.display='block';
-  if(tab==='gest-indicadores'){ setTimeout(renderPainel, 100); }
-  if(tab==='gest-qr'){
-    const qrEl=document.getElementById('qr-url');
-    if(qrEl) qrEl.value=location.origin+location.pathname.replace(/\/$/,'');
-    setTimeout(gerarQR,200);
-  }
-}
-function pTab(el){
-  document.querySelectorAll('#p-nav .nav-item').forEach(n=>n.classList.remove('active'));
-  el.classList.add('active');
-  ['p-geral','p-qr'].forEach(id=>{
-    const el2=document.getElementById(id);
-    if(el2) el2.style.display='none';
-  });
-  const target=document.getElementById(el.dataset.tab);
-  if(target) target.style.display='block';
-  if(el.dataset.tab==='p-qr'){
-    // auto-preencher URL e gerar QR se já tiver URL
-    const qrEl=document.getElementById('qr-url');
-    if(qrEl && location.protocol==='https:' && !document.getElementById('qr-out').innerHTML){
-      gerarQR();
-    }
-  }
-}
-
-/* DESVIO */
-function dUpdateSubarea(){
-  const area=document.getElementById('d-sel-area').value;
-  const wrap=document.getElementById('d-sel-sub-wrap');
-  const sub=document.getElementById('d-sel-sub');
-  sub.innerHTML='<option value="">Selecione...</option>';
-  if(area && AREAS_MAP[area]){
-    AREAS_MAP[area].forEach(s=>{
-      const o=document.createElement('option');o.value=s;o.textContent=s;sub.appendChild(o);
+window.addEventListener('load', function(){
+  var base = location.origin + location.pathname.replace(/\/index\.html$/, '').replace(/\/$/, '');
+  if(typeof QRCode !== 'undefined'){
+    new QRCode(document.getElementById('qr-gestao'), {
+      text: base + '/gestao.html',
+      width: 140, height: 140,
+      colorDark: '#005B2E', colorLight: '#E8F5EE',
+      correctLevel: QRCode.CorrectLevel.M
     });
-    wrap.style.display='block';
-  } else { wrap.style.display='none'; }
-}
-function dConfirmArea(){
-  const area=document.getElementById('d-sel-area').value;
-  const sub=document.getElementById('d-sel-sub').value;
-  if(!area||!sub)return;
-  dArea=area+'|'+sub;
-  document.getElementById('d-badge-area').textContent=area+' · '+sub;
-  document.getElementById('d-picker').style.display='none';
-  document.getElementById('d-form').style.display='block';
-}
-function dSelectArea(a){
-  dArea=a;
-  document.getElementById('d-badge-area').textContent=AREAS[a]||'—';
-  document.getElementById('d-picker').style.display='none';
-  document.getElementById('d-form').style.display='block';
-}
-function dVoltarPicker(){
-  dArea='';dTipo='';dFoto='';
-  document.getElementById('d-badge-area').textContent='—';
-  document.getElementById('d-picker').style.display='block';
-  document.getElementById('d-form').style.display='none';
-  dReset();
-}
-function dSelTipo(t){
-  dTipo=t;
-  document.getElementById('d-t-org').className='tipo-btn'+(t==='organizacao'?' sel-org':'');
-  document.getElementById('d-t-limp').className='tipo-btn'+(t==='limpeza'?' sel-limp':'');
-}
-function dOnFoto(inp){
-  if(!inp.files||!inp.files[0])return;
-  const r=new FileReader();r.onload=e=>{
-    dFoto=e.target.result;
-    const prev=document.getElementById('d-foto-prev');
-    prev.src=dFoto; prev.style.display='block';
-  };r.readAsDataURL(inp.files[0]);
-}
-async function dRegistrar(){
-  const nome=document.getElementById('d-nome').value.trim();
-  const obs=document.getElementById('d-obs').value.trim();
-  if(!nome){toast('Informe seu nome','err');return;}
-  if(!dTipo){toast('Selecione o tipo de desvio','err');return;}
-  if(!dFoto){toast('Tire uma foto do desvio','err');return;}
-  const btn=document.querySelector('#d-reg .btn-verde');
-  btn.disabled=true;btn.textContent='Enviando...';
-  try{
-    const fotoUrl=await uploadFoto(dFoto,'desvio');
-    const id=Date.now().toString();
-    const res=await sbPost('/rest/v1/desvios',{id,area:dArea,tipo:dTipo,status:'aberto',nome,obs:obs||null,foto:fotoUrl});
-    if(!res.ok)throw new Error(await res.text());
-    toast('Desvio inserido no backlog!','ok');dReset();
-  }catch(e){toast('Erro: '+e.message,'err');}
-  finally{btn.disabled=false;btn.textContent='Inserir no backlog';}
-}
-function dReset(){
-  ['d-nome','d-obs'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-  const prev=document.getElementById('d-foto-prev');
-  if(prev){prev.style.display='none';prev.src='';}
-  dFoto='';dTipo='';
-  const to=document.getElementById('d-t-org');
-  const tl=document.getElementById('d-t-limp');
-  if(to)to.className='tipo-btn';
-  if(tl)tl.className='tipo-btn';
-}
-function dFSt(s,el){dFiltSt=s;document.querySelectorAll('#d-f-st .f-btn').forEach(b=>b.classList.remove('av'));el.classList.add('av');renderDLista();}
-function dFAr(a,el){dFiltAr=a;document.querySelectorAll('#d-f-ar .f-btn').forEach(b=>b.classList.remove('av'));el.classList.add('av');renderDLista();}
-async function renderDLista(){
-  const el=document.getElementById('d-lista-out');
-  el.innerHTML='<div class="empty"><div class="ico">⏳</div><p>Carregando...</p></div>';
-  try{
-    let url='/rest/v1/desvios?order=created.desc&limit=100';
-    if(dFiltSt!=='todos')url+=`&status=eq.${dFiltSt}`;
-    if(dFiltAr!=='todas')url+=`&area=eq.${dFiltAr}`;
-    const res=await sbGet(url);
-    const d=await res.json();
-    el.innerHTML=d.length?d.map(x=>dCardHTML(x,'execucao')).join(''):'<div class="empty"><div class="ico">✅</div><p>Nenhum desvio encontrado</p></div>';
-  }catch(e){el.innerHTML='<div class="empty"><div class="ico">⚠️</div><p>Erro ao carregar</p></div>';}
-}
-function dCardHTML(x, modo){
-  const sMap={aberto:'🔴 A iniciar',andamento:'🟡 Em andamento',concluido:'🟢 Concluído',tratado:'🟢 Concluído'};
-  const dtCriacao=new Date(x.created).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'});
-  const dtUpdate=x.updated_at?new Date(x.updated_at).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'}):null;
-  const tc=x.tipo==='organizacao'?'org':'limp';
-  const tl=x.tipo==='organizacao'?'📦 Org':'🧹 Limp';
-  const prox=x.status==='aberto'?'andamento':x.status==='andamento'?'concluido':null;
-  const btnLabel='✏️ Atualizar status';
-  const btnColor='var(--sz-green)';
-
-  const btnAtualizar = (modo==='execucao' && prox) ? `
-    <button
-      class="btn-avancar-status"
-      data-id="${x.id}"
-      data-prox="${prox}"
-      style="margin-top:12px;width:100%;padding:13px;background:${btnColor};color:white;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;"
-    >${btnLabel}</button>` : '';
-
-  return `<div class="dcard ${tc}">
-    <div class="dcard-top">
-      <div style="flex:1;min-width:0;">
-        <div class="dcard-area">${x.area?x.area.replace('|',' · '):''}</div>
-        ${modo!=='execucao'?`<div class="dcard-meta">${x.nome||''}</div>`:''}
-        <div style="margin-top:4px;display:flex;flex-direction:column;gap:2px;">
-          <span style="font-size:12px;color:var(--sz-green);font-weight:600;">📅 Aberto: ${dtCriacao}</span>
-          ${dtUpdate?`<span style="font-size:12px;color:var(--amarelo);font-weight:600;">🔄 Atualizado: ${dtUpdate}</span>`:''}
-          ${x.letra_exec?`<span style="font-size:12px;color:var(--sz-gray);">Turma: <strong>${x.letra_exec}</strong>${x.nomes_exec?' · '+x.nomes_exec:''}</span>`:''}
-        </div>
-      </div>
-      <span class="tipo-tag ${tc}" style="flex-shrink:0;">${tl}</span>
-    </div>
-    ${x.obs?`<div class="dcard-obs">${x.obs}</div>`:''}
-    ${x.foto?`<img class="dcard-foto" src="${x.foto}">`:''}
-    <div class="dcard-footer" style="margin-top:8px;">
-      <span class="status ${x.status}">${sMap[x.status]}</span>
-    </div>
-    ${btnAtualizar}
-  </div>`;
-}
-// ── MODAL ──
-let modalDesvioId = '';
-let modalNovoStatus = '';
-let modalFotoB64 = '';
-
-// Event delegation registrado após DOM pronto
-document.addEventListener('DOMContentLoaded', function(){
-  document.body.addEventListener('click', function(e){
-    // Clique no card de execução
-    const card = e.target.closest('[data-modo="execucao"]');
-    if(card){
-      e.stopPropagation();
-      const id = card.getAttribute('data-id');
-      const prox = card.getAttribute('data-prox');
-      if(id && prox) abrirModal(id, prox);
-      return;
-    }
-    // Clique fora do modal fecha
-    const overlay = document.getElementById('modal-overlay');
-    if(overlay && e.target === overlay) fecharModal();
-  });
+    new QRCode(document.getElementById('qr-exec'), {
+      text: base + '/execucao.html',
+      width: 140, height: 140,
+      colorDark: '#6D28D9', colorLight: '#F5F3FF',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  }
 });
-
-function abrirModal(id, novoStatus){
-  modalDesvioId = id;
-  modalNovoStatus = '';
-  modalFotoB64 = '';
-  document.getElementById('modal-status').value = novoStatus || '';
-  document.getElementById('modal-letra').value = '';
-  document.getElementById('modal-nomes').value = '';
-  document.getElementById('modal-foto').value = '';
-  document.getElementById('modal-foto-prev').style.display = 'none';
-  document.getElementById('modal-foto-prev').src = '';
-  const overlay = document.getElementById('modal-overlay');
-  overlay.style.display = 'flex';
-}
-
-function fecharModal(){
-  document.getElementById('modal-overlay').style.display = 'none';
-  modalDesvioId = '';
-  modalNovoStatus = '';
-  modalFotoB64 = '';
-}
-
-function modalPreviewFoto(inp){
-  if(!inp.files||!inp.files[0])return;
-  const r=new FileReader();
-  r.onload=e=>{
-    modalFotoB64=e.target.result;
-    const prev=document.getElementById('modal-foto-prev');
-    prev.src=modalFotoB64;prev.style.display='block';
-  };
-  r.readAsDataURL(inp.files[0]);
-}
-
-async function confirmarAvancar(){
-  const novoStatus=document.getElementById('modal-status').value;
-  if(!novoStatus){toast('Selecione o novo status','err');return;}
-  if(!modalFotoB64){toast('Necessário anexar foto para atualizar','err');return;}
-  modalNovoStatus=novoStatus;
-  const letra=document.getElementById('modal-letra').value;
-  const nomes=document.getElementById('modal-nomes').value.trim();
-  const btn=document.getElementById('modal-btn-confirmar');
-  btn.disabled=true;btn.textContent='Enviando...';
-  try{
-    const fotoUrl=await uploadFoto(modalFotoB64,'status');
-    const payload={status:modalNovoStatus,foto:fotoUrl,updated_at:new Date().toISOString()};
-    if(letra) payload.letra_exec=letra;
-    if(nomes) payload.nomes_exec=nomes;
-    const res=await sbPatch('/rest/v1/desvios?id=eq.'+modalDesvioId,payload);
-    if(!res.ok)throw new Error(await res.text());
-    toast('Status atualizado!','ok');
-    fecharModal();
-    renderBacklog();
-  }catch(e){toast('Erro: '+e.message,'err');}
-  finally{btn.disabled=false;btn.textContent='Confirmar';}
-}
-
-// event delegation unificado acima
-
-function previewAvancar(id, inp){
-  if(!inp.files||!inp.files[0])return;
-  const r=new FileReader();
-  r.onload=e=>{
-    const prev=document.getElementById('prev-av-'+id);
-    if(prev){prev.src=e.target.result;prev.style.display='block';}
-  };
-  r.readAsDataURL(inp.files[0]);
-}
-
-async function avancar(id,ns){
-  const fotoInp=document.getElementById('foto-av-'+id);
-  if(!fotoInp||!fotoInp.files||!fotoInp.files[0]){
-    toast('Necessário anexar foto para atualizar','err');
-    return;
-  }
-  const letra=document.getElementById('letra-av-'+id)?document.getElementById('letra-av-'+id).value:'';
-  const nomes=document.getElementById('nomes-av-'+id)?document.getElementById('nomes-av-'+id).value.trim():'';
-  const btn=event.target;
-  btn.disabled=true;btn.textContent='Enviando...';
-  try{
-    const fotoUrl=await uploadFoto(await toB64(fotoInp.files[0]),'status');
-    const payload={status:ns,foto:fotoUrl,updated_at:new Date().toISOString()};
-    if(letra) payload.letra_exec=letra;
-    if(nomes) payload.nomes_exec=nomes;
-    const res=await sbPatch('/rest/v1/desvios?id=eq.'+id,payload);
-    if(!res.ok)throw new Error(await res.text());
-    toast('Status atualizado!','ok');
-    renderBacklog();
-  }catch(e){toast('Erro: '+e.message,'err');}
-  finally{btn.disabled=false;}
-}
-
-function toB64(file){
-  return new Promise((res,rej)=>{
-    const r=new FileReader();
-    r.onload=e=>res(e.target.result);
-    r.onerror=rej;
-    r.readAsDataURL(file);
-  });
-}
-
-/* CONTRIB */
-function cUpdateSubarea(){
-  const area=document.getElementById('c-sel-area').value;
-  const wrap=document.getElementById('c-sel-sub-wrap');
-  const sub=document.getElementById('c-sel-sub');
-  sub.innerHTML='<option value="">Selecione...</option>';
-  if(area && AREAS_MAP[area]){
-    AREAS_MAP[area].forEach(s=>{
-      const o=document.createElement('option');o.value=s;o.textContent=s;sub.appendChild(o);
-    });
-    wrap.style.display='block';
-  } else { wrap.style.display='none'; }
-}
-function cConfirmArea(){
-  const area=document.getElementById('c-sel-area').value;
-  const sub=document.getElementById('c-sel-sub').value;
-  if(!area||!sub)return;
-  cArea=area+'|'+sub;
-  document.getElementById('c-badge-area').textContent=area+' · '+sub;
-  document.getElementById('c-picker').style.display='none';
-  document.getElementById('c-form').style.display='block';
-}
-function cSelectArea(a){
-  cArea=a;
-  document.getElementById('c-badge-area').textContent=AREAS[a]||'—';
-  document.getElementById('c-picker').style.display='none';
-  document.getElementById('c-form').style.display='block';
-}
-function cVoltarPicker(){
-  cArea='';cCat='';cFoto='';
-  document.getElementById('c-badge-area').textContent='—';
-  document.getElementById('c-picker').style.display='block';
-  document.getElementById('c-form').style.display='none';
-  cReset();
-}
-function cSelCat(cat,el){
-  cCat=cat;
-  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('sel'));
-  el.classList.add('sel');
-}
-function cOnFoto(inp){
-  if(!inp.files||!inp.files[0])return;
-  const r=new FileReader();r.onload=e=>{
-    cFoto=e.target.result;
-    const prev=document.getElementById('c-foto-prev');
-    prev.src=cFoto; prev.style.display='block';
-  };r.readAsDataURL(inp.files[0]);
-}
-async function cRegistrar(){
-  const nome=document.getElementById('c-nome').value.trim();
-  const desc=document.getElementById('c-desc').value.trim();
-  if(!nome){toast('Informe seu nome','err');return;}
-  if(!cCat){toast('Selecione a categoria','err');return;}
-  if(!desc){toast('Descreva a ação realizada','err');return;}
-  if(!cFoto){toast('Tire uma foto da melhoria','err');return;}
-  const btn=document.querySelector('#c-reg .btn-roxo');
-  btn.disabled=true;btn.textContent='Enviando...';
-  try{
-    const fotoUrl=await uploadFoto(cFoto,'contrib');
-    const id=Date.now().toString();
-    const res=await sbPost('/rest/v1/contribs',{id,area:cArea,categoria:cCat,nome,descricao:desc,foto:fotoUrl});
-    if(!res.ok)throw new Error(await res.text());
-    toast('Tratativa registrada!','ok2');cReset();
-  }catch(e){toast('Erro: '+e.message,'err');}
-  finally{btn.disabled=false;btn.textContent='Registrar tratativa';}
-}
-function cReset(){
-  ['c-nome','c-desc'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-  const prev=document.getElementById('c-foto-prev');
-  if(prev){prev.style.display='none';prev.src='';}
-  cFoto='';cCat='';
-  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('sel'));
-}
-function cFAr(a,el){cFiltAr=a;document.querySelectorAll('#c-f-ar .f-btn').forEach(b=>b.classList.remove('ar'));el.classList.add('ar');renderCLista();}
-async function renderCLista(){
-  const el=document.getElementById('c-lista-out');
-  el.innerHTML='<div class="empty"><div class="ico">⏳</div><p>Carregando...</p></div>';
-  try{
-    let url='/rest/v1/contribs?order=created.desc&limit=100';
-    if(cFiltAr!=='todas')url+=`&area=eq.${cFiltAr}`;
-    const res=await sbGet(url);
-    const c=await res.json();
-    el.innerHTML=c.length?c.map(cCardHTML).join(''):'<div class="empty"><div class="ico">⭐</div><p>Nenhuma contribuição ainda</p></div>';
-  }catch(e){el.innerHTML='<div class="empty"><div class="ico">⚠️</div><p>Erro ao carregar</p></div>';}
-}
-function cCardHTML(x){
-  const dt=new Date(x.created).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
-  return `<div class="ccard">
-    <div class="ccard-top">
-      <div><div class="ccard-area">${x.area?x.area.replace("|"," · "):""}</div><div class="ccard-meta">${x.nome} · ${dt}</div></div>
-      <span class="cat-tag">${x.categoria}</span>
-    </div>
-    <div class="ccard-desc">${x.descricao||x.desc||''}</div>
-    ${x.foto?`<img class="ccard-foto" src="${x.foto}">`:''}
-  </div>`;
-}
-
-/* PAINEL */
-async function renderPainel(){
-  try{
-    const filtArea = document.getElementById('p-filtro-area')?.value || 'todas';
-    const periodo  = document.getElementById('p-filtro-periodo')?.value || 'todos';
-    const dataIni  = document.getElementById('p-data-ini')?.value;
-    const dataFim  = document.getElementById('p-data-fim')?.value;
-
-    let url = '/rest/v1/desvios?select=*&order=created.asc&limit=1000';
-    if(filtArea !== 'todas') url += `&area=like.${filtArea}|*`;
-
-    const res = await sbGet(url);
-    let d = await res.json();
-
-    // Filtro por período
-    const agora = new Date();
-    if(periodo === 'semana'){
-      const ini = new Date(agora); ini.setDate(ini.getDate() - ini.getDay());
-      ini.setHours(0,0,0,0);
-      d = d.filter(x => new Date(x.created) >= ini);
-    } else if(periodo === 'mes'){
-      const ini = new Date(agora.getFullYear(), agora.getMonth(), 1);
-      d = d.filter(x => new Date(x.created) >= ini);
-    } else if(periodo === 'custom' && dataIni){
-      const ini = new Date(dataIni + 'T00:00:00');
-      const fim = dataFim ? new Date(dataFim + 'T23:59:59') : agora;
-      d = d.filter(x => { const dt = new Date(x.created); return dt >= ini && dt <= fim; });
-    }
-
-    // Stats principais
-    const concluidos = d.filter(x => x.status==='concluido'||x.status==='tratado');
-    document.getElementById('p-d-tot').textContent = d.length;
-    document.getElementById('p-d-ab').textContent  = d.filter(x=>x.status==='aberto').length;
-    document.getElementById('p-d-and').textContent = d.filter(x=>x.status==='andamento').length;
-    document.getElementById('p-d-tr').textContent  = concluidos.length;
-
-    // 1. Taxa de conclusão por área
-    const taxaEl = document.getElementById('p-taxa-areas');
-    taxaEl.innerHTML = AREAS_LIST.map(a => {
-      const total = d.filter(x => x.area && x.area.startsWith(a+'|') || x.area===a).length;
-      const conc  = d.filter(x => (x.area && x.area.startsWith(a+'|') || x.area===a) && (x.status==='concluido'||x.status==='tratado')).length;
-      if(!total) return '';
-      const pct = Math.round(conc/total*100);
-      const cor = pct>=80?'var(--sz-green)':pct>=50?'var(--amarelo)':'var(--vermelho)';
-      return `<div class="bar-row">
-        <div class="bar-label"><span>${a}</span><span style="color:${cor};font-weight:700;">${pct}% (${conc}/${total})</span></div>
-        <div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:${cor};"></div></div>
-      </div>`;
-    }).join('');
-
-    // 2. Tempo médio de resolução
-    const tempos = concluidos
-      .filter(x => x.updated_at)
-      .map(x => (new Date(x.updated_at) - new Date(x.created)) / (1000*60*60*24));
-    const tempoMedio = tempos.length ? (tempos.reduce((a,b)=>a+b,0)/tempos.length).toFixed(1) : '—';
-    document.getElementById('p-tempo-val').textContent = tempoMedio;
-
-    // 4. Ranking de turmas
-    const turmas = {};
-    d.filter(x=>x.letra_exec).forEach(x=>{ turmas[x.letra_exec]=(turmas[x.letra_exec]||0)+1; });
-    const rankEl = document.getElementById('p-ranking-turmas');
-    const sorted = Object.entries(turmas).sort((a,b)=>b[1]-a[1]);
-    if(!sorted.length){
-      rankEl.innerHTML = '<p style="font-size:13px;color:var(--sz-gray);text-align:center;padding:8px;">Nenhuma atualização registrada</p>';
-    } else {
-      const max = sorted[0][1];
-      rankEl.innerHTML = sorted.map(([turma,n],i) => `
-        <div class="bar-row">
-          <div class="bar-label">
-            <span>${i===0?'🥇':i===1?'🥈':i===2?'🥉':'  '} Turma ${turma}</span>
-            <span style="font-weight:700;">${n} tratamentos</span>
-          </div>
-          <div class="bar-bg"><div class="bar-fill" style="width:${Math.round(n/max*100)}%;background:var(--roxo);"></div></div>
-        </div>`).join('');
-    }
-
-    // % conclusão por turma (letra)
-    const letras = ['A','B','C','D','E','Adm'];
-    const concLetraEl = document.getElementById('p-conc-letra');
-    const letraRows = letras.map(l => {
-      const total = d.filter(x => x.letra_exec === l).length;
-      const conc2 = d.filter(x => x.letra_exec === l && (x.status==='concluido'||x.status==='tratado')).length;
-      if(!total) return '';
-      const pct = Math.round(conc2/total*100);
-      const cor = pct>=80?'var(--sz-green)':pct>=50?'var(--amarelo)':'var(--vermelho)';
-      return `<div class="bar-row">
-        <div class="bar-label"><span>Turma ${l}</span><span style="color:${cor};font-weight:700;">${pct}% (${conc2}/${total})</span></div>
-        <div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:${cor};"></div></div>
-      </div>`;
-    }).filter(Boolean).join('');
-    concLetraEl.innerHTML = letraRows || '<p style="font-size:13px;color:var(--sz-gray);text-align:center;padding:8px;">Sem dados</p>';
-
-    // 7. Evolução temporal (últimos 14 dias ou período)
-    renderEvolucao(d);
-
-  }catch(e){ console.error(e); }
-}
-
-function renderEvolucao(d){
-  const canvas = document.getElementById('p-chart');
-  if(!canvas) return;
-  const ctx = canvas.getContext('2d');
-
-  // Agrupar por dia
-  const dias = {};
-  d.forEach(x => {
-    const dia = new Date(x.created).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
-    if(!dias[dia]) dias[dia] = {abertos:0, concluidos:0};
-    dias[dia].abertos++;
-    if(x.status==='concluido'||x.status==='tratado') dias[dia].concluidos++;
-  });
-
-  const labels = Object.keys(dias).slice(-14);
-  const abertos = labels.map(d => dias[d].abertos);
-  const conc    = labels.map(d => dias[d].concluidos);
-
-  const W = canvas.parentElement.offsetWidth || 300;
-  canvas.width  = W;
-  canvas.height = 160;
-  ctx.clearRect(0,0,W,160);
-
-  if(!labels.length){ ctx.fillStyle='#9CA3AF'; ctx.font='13px sans-serif'; ctx.fillText('Sem dados',W/2-30,80); return; }
-
-  const pad = {top:10,right:10,bottom:30,left:28};
-  const cw = W - pad.left - pad.right;
-  const ch = 160 - pad.top - pad.bottom;
-  const maxVal = Math.max(...abertos,...conc,1);
-  const bw = cw / labels.length;
-
-  // Grid
-  ctx.strokeStyle='#E5E7EB'; ctx.lineWidth=1;
-  [0,0.25,0.5,0.75,1].forEach(r=>{
-    const y = pad.top + ch*(1-r);
-    ctx.beginPath(); ctx.moveTo(pad.left,y); ctx.lineTo(W-pad.right,y); ctx.stroke();
-    ctx.fillStyle='#9CA3AF'; ctx.font='10px sans-serif'; ctx.textAlign='right';
-    ctx.fillText(Math.round(maxVal*r), pad.left-2, y+3);
-  });
-
-  // Barras abertos (vermelho claro)
-  ctx.fillStyle='rgba(220,38,38,0.25)';
-  abertos.forEach((v,i)=>{
-    const h = (v/maxVal)*ch;
-    ctx.fillRect(pad.left+i*bw+2, pad.top+ch-h, bw*0.45, h);
-  });
-
-  // Barras concluídos (verde)
-  ctx.fillStyle='rgba(0,91,46,0.7)';
-  conc.forEach((v,i)=>{
-    const h = (v/maxVal)*ch;
-    ctx.fillRect(pad.left+i*bw+bw*0.5, pad.top+ch-h, bw*0.45, h);
-  });
-
-  // Labels X
-  ctx.fillStyle='#6B7280'; ctx.font='9px sans-serif'; ctx.textAlign='center';
-  labels.forEach((l,i)=>{ ctx.fillText(l, pad.left+i*bw+bw/2, 160-pad.bottom+12); });
-
-  // Legenda
-  ctx.fillStyle='rgba(220,38,38,0.5)'; ctx.fillRect(pad.left,148,10,8);
-  ctx.fillStyle='#6B7280'; ctx.textAlign='left'; ctx.font='10px sans-serif';
-  ctx.fillText('Abertos', pad.left+13, 156);
-  ctx.fillStyle='rgba(0,91,46,0.7)'; ctx.fillRect(pad.left+70,148,10,8);
-  ctx.fillStyle='#6B7280'; ctx.fillText('Concluídos', pad.left+83, 156);
-}
-
-function onPeriodoChange(){
-  const p = document.getElementById('p-filtro-periodo').value;
-  document.getElementById('p-custom-dates').style.display = p==='custom' ? 'grid' : 'none';
-  renderPainel();
-}
-
-async function exportarPDF(){
-  try{
-    const filtArea = document.getElementById('p-filtro-area')?.value || 'todas';
-    let url = '/rest/v1/desvios?select=*&order=created.asc&limit=1000';
-    if(filtArea !== 'todas') url += '&area=like.'+filtArea+'|*';
-    const res = await sbGet(url);
-    const d = await res.json();
-
-    const sMap = {aberto:'A iniciar', andamento:'Em andamento', concluido:'Concluido', tratado:'Concluido'};
-    const agora = new Date().toLocaleString('pt-BR');
-    const conc = d.filter(function(x){return x.status==='concluido'||x.status==='tratado';}).length;
-    const pctGeral = d.length ? Math.round(conc/d.length*100) : 0;
-
-    const linhas = d.map(function(x,i){
-      const dt = new Date(x.created).toLocaleDateString('pt-BR');
-      const area = (x.area||'').replace('|',' - ');
-      const turma = x.letra_exec || '-';
-      const nomes = x.nomes_exec || '-';
-      const status = sMap[x.status] || x.status;
-      return '<tr>'
-        +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:11px;">'+area+'</td>'
-        +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:11px;">'+(x.tipo==='organizacao'?'Organizacao':'Limpeza')+'</td>'
-        +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:11px;">'+status+'</td>'
-        +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:11px;">'+dt+'</td>'
-        +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:11px;">'+turma+'</td>'
-        +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:11px;">'+nomes+'</td>'
-        +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:11px;">'+(x.obs||'-')+'</td>'
-        +'</tr>';
-    }).join('');
-
-
-    // Taxa de conclusão por área
-    const taxaAreaRows = AREAS_LIST.map(function(a){
-      const tot = d.filter(function(x){return x.area&&(x.area.startsWith(a+'|')||x.area===a);}).length;
-      const con = d.filter(function(x){return (x.area&&(x.area.startsWith(a+'|')||x.area===a))&&(x.status==='concluido'||x.status==='tratado');}).length;
-      if(!tot) return '';
-      const pct = Math.round(con/tot*100);
-      const cor = pct>=80?'#005B2E':pct>=50?'#F59E0B':'#DC2626';
-      return '<tr><td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:12px;font-weight:600;">'+a+'</td>'
-        +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:12px;">'+tot+'</td>'
-        +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:12px;">'+con+'</td>'
-        +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:12px;color:'+cor+';font-weight:700;">'+pct+'%</td></tr>';
-    }).join('');
-
-    // Tempo médio de resolução
-    const tempos = d.filter(function(x){return (x.status==='concluido'||x.status==='tratado')&&x.updated_at;})
-      .map(function(x){return (new Date(x.updated_at)-new Date(x.created))/(1000*60*60*24);});
-    const tempoMedio = tempos.length ? (tempos.reduce(function(a,b){return a+b;},0)/tempos.length).toFixed(1) : 'N/A';
-
-    // Ranking de turmas
-    const turmasMap = {};
-    d.filter(function(x){return x.letra_exec;}).forEach(function(x){turmasMap[x.letra_exec]=(turmasMap[x.letra_exec]||0)+1;});
-    const turmasSorted = Object.entries(turmasMap).sort(function(a,b){return b[1]-a[1];});
-    const rankingRows = turmasSorted.map(function(t,i){
-      return '<tr><td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:12px;">'+(i===0?'🥇':i===1?'🥈':i===2?'🥉':'')+' Turma '+t[0]+'</td>'
-        +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:12px;font-weight:700;">'+t[1]+' tratamentos</td></tr>';
-    }).join('');
-
-    // % Conclusão por turma
-    const letrasAll = ['A','B','C','D','E','Adm'];
-    const concLetraRows = letrasAll.map(function(l){
-      const tot = d.filter(function(x){return x.letra_exec===l;}).length;
-      const con = d.filter(function(x){return x.letra_exec===l&&(x.status==='concluido'||x.status==='tratado');}).length;
-      if(!tot) return '';
-      const pct = Math.round(con/tot*100);
-      const cor = pct>=80?'#005B2E':pct>=50?'#F59E0B':'#DC2626';
-      return '<tr><td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:12px;font-weight:600;">Turma '+l+'</td>'
-        +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:12px;">'+tot+'</td>'
-        +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:12px;">'+con+'</td>'
-        +'<td style="padding:6px 8px;border:1px solid #E5E7EB;font-size:12px;color:'+cor+';font-weight:700;">'+pct+'%</td></tr>';
-    }).join('');
-
-    const html = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">'
-      +'<title>Relatorio 5S</title>'
-      +'<style>'
-      +'body{font-family:Arial,sans-serif;padding:24px;color:#1C1C1E;font-size:13px;}'
-      +'h1{color:#005B2E;font-size:22px;margin-bottom:4px;}'
-      +'h2{color:#005B2E;font-size:15px;margin:20px 0 8px;border-bottom:2px solid #005B2E;padding-bottom:4px;}'
-      +'.sub{color:#6B7280;font-size:12px;margin-bottom:20px;}'
-      +'.stats{display:flex;gap:12px;margin-bottom:8px;flex-wrap:wrap;}'
-      +'.stat-box{background:#f3f4f6;border-radius:8px;padding:12px 16px;text-align:center;min-width:80px;}'
-      +'.stat-n{font-size:26px;font-weight:800;}'
-      +'.stat-l{font-size:10px;color:#6B7280;text-transform:uppercase;letter-spacing:0.5px;}'
-      +'.tempo{background:#E8F5EE;border-radius:8px;padding:12px 16px;display:inline-block;margin-bottom:8px;}'
-      +'.tempo-n{font-size:28px;font-weight:800;color:#005B2E;}'
-      +'.tempo-l{font-size:11px;color:#6B7280;}'
-      +'table{width:100%;border-collapse:collapse;margin-bottom:16px;}'
-      +'th{background:#005B2E;color:white;padding:8px;font-size:11px;text-align:left;}'
-      +'tr:nth-child(even){background:#f9fafb;}'
-      +'@media print{body{padding:0;} h2{page-break-before:auto;}}'
-      +'</style></head><body>'
-      +'<h1>Relatorio 5S — Recuperacao Quimica</h1>'
-      +'<div class="sub">Gerado em: '+agora+' &nbsp;|&nbsp; Área: '+(filtArea==='todas'?'Todas':filtArea)+'</div>'
-
-      +'<h2>Indicadores Gerais</h2>'
-      +'<div class="stats">'
-      +'<div class="stat-box"><div class="stat-n">'+d.length+'</div><div class="stat-l">Total</div></div>'
-      +'<div class="stat-box"><div class="stat-n" style="color:#DC2626">'+d.filter(function(x){return x.status==='aberto';}).length+'</div><div class="stat-l">A iniciar</div></div>'
-      +'<div class="stat-box"><div class="stat-n" style="color:#F59E0B">'+d.filter(function(x){return x.status==='andamento';}).length+'</div><div class="stat-l">Andamento</div></div>'
-      +'<div class="stat-box"><div class="stat-n" style="color:#005B2E">'+conc+'</div><div class="stat-l">Concluidos</div></div>'
-      +'<div class="stat-box"><div class="stat-n" style="color:#005B2E">'+pctGeral+'%</div><div class="stat-l">Conclusao</div></div>'
-      +'</div>'
-      +'<div class="tempo"><div class="tempo-n">'+tempoMedio+'</div><div class="tempo-l">dias — tempo medio de resolucao</div></div>'
-
-      +'<h2>Taxa de Conclusao por Area</h2>'
-      +'<table><thead><tr><th>Area</th><th>Total</th><th>Concluidos</th><th>% Conclusao</th></tr></thead><tbody>'+taxaAreaRows+'</tbody></table>'
-
-      +'<h2>Ranking de Turmas — Tratamentos Realizados</h2>'
-      +'<table><thead><tr><th>Turma</th><th>Quantidade</th></tr></thead><tbody>'+(rankingRows||'<tr><td colspan="2" style="padding:8px;color:#6B7280;">Sem dados</td></tr>')+'</tbody></table>'
-
-      +'<h2>% Conclusao por Turma</h2>'
-      +'<table><thead><tr><th>Turma</th><th>Total</th><th>Concluidos</th><th>% Conclusao</th></tr></thead><tbody>'+(concLetraRows||'<tr><td colspan="4" style="padding:8px;color:#6B7280;">Sem dados</td></tr>')+'</tbody></table>'
-
-      +'<h2>Listagem Completa de Desvios</h2>'
-      +'<table><thead><tr><th>Area</th><th>Tipo</th><th>Status</th><th>Abertura</th><th>Turma</th><th>Executante</th><th>Observacao</th></tr></thead><tbody>'+linhas+'</tbody></table>'
-      +'<script>window.onload=function(){window.print();}<\/script>'
-      +'</body></html>';
-
-    const blob = new Blob([html], {type:'text/html'});
-    const url2 = URL.createObjectURL(blob);
-    const win = window.open(url2, '_blank');
-    if(!win) toast('Permita pop-ups para gerar o PDF','err');
-  }catch(e){ toast('Erro ao exportar: '+e.message,'err'); }
-}
-
-
-/* ── BACKLOG ── */
-let blFiltAr='todas', blFiltSt='aberto';
-
-function blUpdateSub(){
-  const area=document.getElementById('bl-sel-area').value;
-  const sub=document.getElementById('bl-sel-sub');
-  sub.innerHTML='<option value="todas">Todas</option>';
-  if(area!=='todas' && AREAS_MAP[area]){
-    AREAS_MAP[area].forEach(function(s){
-      const o=document.createElement('option');o.value=s;o.textContent=s;sub.appendChild(o);
-    });
-  }
-  blFiltrar();
-}
-
-function blFiltrar(){
-  const area=document.getElementById('bl-sel-area').value;
-  const sub=document.getElementById('bl-sel-sub').value;
-  blFiltSt=document.getElementById('bl-sel-st').value;
-  if(area==='todas') blFiltAr='todas';
-  else if(sub!=='todas') blFiltAr=area+'|'+sub;
-  else blFiltAr=area;
-  renderBacklog();
-}
-
-async function renderBacklog(){
-  const el=document.getElementById('bl-out');
-  if(!el) return;
-  el.innerHTML='<div class="empty"><div class="ico">⏳</div><p>Carregando...</p></div>';
-  try{
-    const ord=document.getElementById('bl-sel-ord')?document.getElementById('bl-sel-ord').value:'asc';
-    let url='/rest/v1/desvios?select=*&order=created.'+ord+'&limit=200';
-    if(blFiltAr!=='todas'){
-      if(!blFiltAr.includes('|')) url+='&area=like.'+blFiltAr+'|*';
-      else url+='&area=eq.'+blFiltAr;
-    }
-    if(blFiltSt!=='todos') url+='&status=eq.'+blFiltSt;
-    const res=await sbGet(url);
-    const d=await res.json();
-    el.innerHTML=d.length?d.map(function(x){return dCardHTML(x,'execucao');}).join(''):'<div class="empty"><div class="ico">✅</div><p>Nenhum desvio encontrado</p></div>';
-    el.querySelectorAll('.btn-avancar-status').forEach(function(btn){
-      btn.addEventListener('click',function(e){
-        e.stopPropagation();
-        abrirModal(this.getAttribute('data-id'),this.getAttribute('data-prox'));
-      });
-    });
-  }catch(e){
-    el.innerHTML='<div class="empty"><div class="ico">⚠️</div><p>Erro ao carregar</p></div>';
-  }
-}
-
-/* ── QR ── */
-function gerarQR(){
-  const qrEl=document.getElementById('qr-url');
-  const base=(qrEl?qrEl.value.trim():'').replace(/\/$/,'') || (location.origin+location.pathname.replace(/\/$/,''));
-  if(!base){toast('URL não disponível','err');return;}
-  const out=document.getElementById('qr-out');
-  if(!out) return;
-  const perfis=[
-    {label:'QR Gestão',sub:'Inserir desvios · Painel de indicadores',url:base+'?perfil=gestao',cor:'#005B2E'},
-    {label:'QR Execução',sub:'Tratar desvios do backlog',url:base+'?perfil=execucao',cor:'#6D28D9'}
-  ];
-  out.innerHTML='';
-  out.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:12px;';
-  perfis.forEach(function(p,i){
-    const div=document.createElement('div');
-    div.style.cssText='background:white;border-radius:14px;padding:14px;text-align:center;box-shadow:0 1px 8px rgba(0,0,0,0.07);border-top:4px solid '+p.cor+';';
-    div.innerHTML='<div style="font-size:13px;font-weight:700;color:'+p.cor+';margin-bottom:2px;">'+p.label+'</div>'
-      +'<div style="font-size:10px;color:var(--sz-gray);margin-bottom:10px;">'+p.sub+'</div>'
-      +'<div id="qr-wrap-'+i+'" style="display:flex;justify-content:center;margin-bottom:8px;"></div>'
-      +'<div style="font-size:9px;color:var(--sz-gray);word-break:break-all;">'+p.url+'</div>';
-    out.appendChild(div);
-    if(typeof QRCode!=='undefined'){
-      setTimeout(function(){
-        new QRCode(document.getElementById('qr-wrap-'+i),{
-          text:p.url,width:130,height:130,
-          colorDark:p.cor,colorLight:'#ffffff',
-          correctLevel:QRCode.CorrectLevel.M
-        });
-      },150*i);
-    }
-  });
-}
-
-function pdFSt(s,el){
-  var btns=document.querySelectorAll('#p-d-f-st .f-btn');
-  if(btns) btns.forEach(function(b){b.classList.remove('av');});
-  if(el) el.classList.add('av');
-}
-
-// ── INIT ──
-document.addEventListener('DOMContentLoaded', function(){
-  const p = new URLSearchParams(location.search);
-  const perfil = p.get('perfil');
-  if(perfil==='gestao') irPara('tela-gestao');
-  else if(perfil==='execucao') irPara('tela-backlog');
-  else irPara('tela-home');
-
-  const qrEl = document.getElementById('qr-url');
-  if(qrEl) qrEl.value = location.origin + location.pathname.replace(/\/$/, '');
-
-  const hoje = new Date();
-  const ini = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
-  const fmt = d => d.toISOString().split('T')[0];
-  const iniEl = document.getElementById('p-data-ini');
-  const fimEl = document.getElementById('p-data-fim');
-  if(iniEl) iniEl.value = fmt(ini);
-  if(fimEl) fimEl.value = fmt(hoje);
-});
-
-let tT;
-function toast(msg,type=''){
-  const el=document.getElementById('toast');
-  el.textContent=msg;el.className=`toast ${type} show`;
-  clearTimeout(tT);tT=setTimeout(()=>el.classList.remove('show'),2800);
-}
 </script>
 </body>
 </html>
