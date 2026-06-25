@@ -442,13 +442,6 @@ function irPara(id){
 }
 function irHome(){ return; } // sem tela-home neste app
 
-function dTab(el){
-  document.querySelectorAll('#d-nav .nav-item').forEach(n=>n.classList.remove('active'));
-  el.classList.add('active');
-  ['d-reg','d-lista'].forEach(id=>document.getElementById(id).style.display='none');
-  document.getElementById(el.dataset.tab).style.display='block';
-  if(el.dataset.tab==='d-lista')renderDLista();
-}
 function cTab(el){
   document.querySelectorAll('#c-nav .nav-item').forEach(n=>n.classList.remove('active'));
   el.classList.add('active');
@@ -456,74 +449,12 @@ function cTab(el){
   document.getElementById(el.dataset.tab).style.display='block';
   if(el.dataset.tab==='c-lista')renderCLista();
 }
-function gestTab(el){
-  document.querySelectorAll('#gest-nav .nav-item').forEach(n=>n.classList.remove('active'));
-  el.classList.add('active');
-  ['gest-desvio','gest-indicadores','gest-qr'].forEach(id=>{
-    const d=document.getElementById(id);if(d)d.style.display='none';
-  });
-  const tab=el.dataset.tab;
-  const target=document.getElementById(tab);
-  if(target) target.style.display='block';
-  if(tab==='gest-indicadores'){ setTimeout(renderPainel, 100); }
-  if(tab==='gest-qr'){
-    const qrEl=document.getElementById('qr-url');
-    if(qrEl) qrEl.value=location.origin+location.pathname.replace(/\/$/,'');
-    setTimeout(gerarQR,200);
-  }
-}
-function pTab(el){
-  document.querySelectorAll('#p-nav .nav-item').forEach(n=>n.classList.remove('active'));
-  el.classList.add('active');
-  ['p-geral','p-qr'].forEach(id=>{
-    const el2=document.getElementById(id);
-    if(el2) el2.style.display='none';
-  });
-  const target=document.getElementById(el.dataset.tab);
-  if(target) target.style.display='block';
-  if(el.dataset.tab==='p-qr'){
-    // auto-preencher URL e gerar QR se já tiver URL
-    const qrEl=document.getElementById('qr-url');
-    if(qrEl && location.protocol==='https:' && !document.getElementById('qr-out').innerHTML){
-      gerarQR();
-    }
-  }
-}
-
 /* DESVIO */
-function dUpdateSubarea(){
-  const area=document.getElementById('d-sel-area').value;
-  const wrap=document.getElementById('d-sel-sub-wrap');
-  const sub=document.getElementById('d-sel-sub');
-  sub.innerHTML='<option value="">Selecione...</option>';
-  if(area && AREAS_MAP[area]){
-    AREAS_MAP[area].forEach(s=>{
-      const o=document.createElement('option');o.value=s;o.textContent=s;sub.appendChild(o);
-    });
-    wrap.style.display='block';
-  } else { wrap.style.display='none'; }
-}
-function dConfirmArea(){
-  const area=document.getElementById('d-sel-area').value;
-  const sub=document.getElementById('d-sel-sub').value;
-  if(!area||!sub)return;
-  dArea=area+'|'+sub;
-  document.getElementById('d-badge-area').textContent=area+' · '+sub;
-  document.getElementById('d-picker').style.display='none';
-  document.getElementById('d-form').style.display='block';
-}
 function dSelectArea(a){
   dArea=a;
   document.getElementById('d-badge-area').textContent=AREAS[a]||'—';
   document.getElementById('d-picker').style.display='none';
   document.getElementById('d-form').style.display='block';
-}
-function dVoltarPicker(){
-  dArea='';dTipo='';dFoto='';
-  document.getElementById('d-badge-area').textContent='—';
-  document.getElementById('d-picker').style.display='block';
-  document.getElementById('d-form').style.display='none';
-  dReset();
 }
 function dSelTipo(t){
   dTipo=t;
@@ -631,10 +562,6 @@ let modalFotoB64 = '';
 
 // Event delegation registrado após DOM pronto
 // ALIASES para compatibilidade
-function gestTab(el){ gTab(el); }
-function dTab(el){}
-function pTab(el){}
-
 document.addEventListener('DOMContentLoaded', function(){
   // tabs controladas por gTab()
   // tab-desvio já está ativa via HTML
@@ -1130,7 +1057,7 @@ async function exportarPDF(){
 
       +'<h2>Listagem Completa de Desvios</h2>'
       +'<table><thead><tr><th>Area</th><th>Tipo</th><th>Status</th><th>Abertura</th><th>Turma</th><th>Executante</th><th>Observacao</th></tr></thead><tbody>'+linhas+'</tbody></table>'
-      +'<script>window.onload=function(){window.print();}<\/script>'
+      +'<scr'+'ipt>window.onload=function(){window.print();}</scr'+'ipt>'
       +'</body></html>';
 
     const blob = new Blob([html], {type:'text/html'});
