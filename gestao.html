@@ -231,7 +231,7 @@ input[type=file]{display:none;}
 
     <div class="card">
       <div class="card-label">Responsável</div>
-      <div class="fg"><label>Nome</label><input type="text" id="d-nome" placeholder="Seu nome completo"></div>
+      <div class="fg"><label>Nome</label><select id="d-nome-sel" onchange="dNomeSel(this)" style="width:100%;padding:12px 14px;border:2px solid #E5E7EB;border-radius:10px;font-size:15px;color:var(--black);background:white;-webkit-appearance:none;margin-bottom:8px;"><option value="">Selecione seu nome...</option><option>Camilo</option><option>Campos</option><option>Gabriel Papa</option><option>Gustavo</option><option>Marco Aurelio</option><option>Renato F</option><option>Rodrigo</option><option value="outro">Outro (digitar)</option></select><input type="text" id="d-nome" placeholder="Digite seu nome" style="display:none;"></div>
     </div>
 
     <div class="card">
@@ -483,10 +483,17 @@ function dOnFoto(inp){
     if(ph) ph.style.display='none';
   };r.readAsDataURL(inp.files[0]);
 }
+function dNomeSel(sel){
+  const inp=document.getElementById('d-nome');
+  if(sel.value==='outro'){inp.style.display='block';inp.value='';inp.focus();}
+  else{inp.style.display='none';inp.value=sel.value;}
+}
 async function dRegistrar(){
-  const nome=document.getElementById('d-nome').value.trim();
+  const nomeSel=document.getElementById('d-nome-sel');
+  const nomeInp=document.getElementById('d-nome');
+  const nome=(nomeSel&&nomeSel.value&&nomeSel.value!=='outro')?nomeSel.value:(nomeInp?nomeInp.value.trim():'');
   const obs=document.getElementById('d-obs').value.trim();
-  if(!nome){toast('Informe seu nome','err');return;}
+  if(!nome){toast('Selecione ou digite seu nome','err');return;}
   if(!dTipo){toast('Selecione o tipo de desvio','err');return;}
   if(!dFoto){toast('Tire uma foto do desvio','err');return;}
   const btn=document.getElementById('btn-registrar');
@@ -502,6 +509,10 @@ async function dRegistrar(){
 }
 function dReset(){
   ['d-nome','d-obs'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  const nomeSel=document.getElementById('d-nome-sel');
+  if(nomeSel)nomeSel.value='';
+  const nomeInp=document.getElementById('d-nome');
+  if(nomeInp)nomeInp.style.display='none';;
   const prev=document.getElementById('d-foto-prev');
   if(prev){prev.style.display='none';prev.src='';}
   const ph=document.getElementById('d-foto-ph');
@@ -969,7 +980,7 @@ function onPeriodoChange(){
 async function exportarPDF(){
   try{
     const filtArea = document.getElementById('p-filtro-area')?.value || 'todas';
-    let url = '/rest/v1/desvios?select=*&order=created.asc&limit=1000';
+    let url = '/rest/v1/desvios?select=id,area,tipo,status,created,updated_at,letra_exec,nomes_exec,nome,obs,foto&order=created.asc&limit=1000';
     if(filtArea !== 'todas') url += '&area=like.'+filtArea+'|*';
     const res = await sbGet(url);
     const d = await res.json();
