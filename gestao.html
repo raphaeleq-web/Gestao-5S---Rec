@@ -1262,6 +1262,7 @@ function dConfirmArea() {
   var sub = document.getElementById('d-sel-sub').value;
   if(!area||!sub) return;
   dArea = area+'|'+sub;
+  document.getElementById('d-badge-area').textContent = area+' · '+sub;
   document.getElementById('d-picker').style.display='none';
   document.getElementById('d-form').style.display='block';
 }
