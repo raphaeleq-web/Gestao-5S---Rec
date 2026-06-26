@@ -216,6 +216,19 @@ input[type=file]{display:none;}
 
   <!-- Formulário -->
   <div id="d-form" style="display:none;">
+
+    <!-- Badge área selecionada -->
+    <div style="background:linear-gradient(135deg,#005B2E,#007A3D);border-radius:14px;padding:14px 16px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.65);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:3px;">Área selecionada</div>
+        <div style="font-size:17px;font-weight:800;color:white;" id="d-badge-area">—</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.15);border-radius:10px;padding:8px 12px;text-align:center;cursor:pointer;" onclick="dVoltarPicker()">
+        <div style="font-size:10px;color:rgba(255,255,255,0.7);font-weight:600;">Trocar</div>
+        <div style="font-size:16px;">✏️</div>
+      </div>
+    </div>
+
     <div class="card">
       <div class="card-label">Responsável</div>
       <div class="fg"><label>Nome</label><input type="text" id="d-nome" placeholder="Seu nome completo"></div>
@@ -248,7 +261,6 @@ input[type=file]{display:none;}
     </div>
 
     <button class="btn btn-green" id="btn-registrar" onclick="dRegistrar()">✓ Registrar Desvio</button>
-    <button class="btn btn-outline" onclick="dVoltarPicker()">← Trocar área</button>
     <div style="height:20px;"></div>
   </div>
 </div>
@@ -781,7 +793,7 @@ async function renderPainel(){
     const dataFim  = document.getElementById('p-data-fim')?.value;
 
     let url = '/rest/v1/desvios?select=*&order=created.asc&limit=1000';
-    if(filtArea !== 'todas') url += `&area=like.${filtArea}|*`;
+    if(filtArea !== 'todas') url += '&area=like.'+filtArea+'|*';
 
     const res = await sbGet(url);
     let d = await res.json();
@@ -816,10 +828,10 @@ async function renderPainel(){
       if(!total) return '';
       const pct = Math.round(conc/total*100);
       const cor = pct>=80?'var(--sz-green)':pct>=50?'var(--amarelo)':'var(--vermelho)';
-      return `<div class="bar-row">
-        <div class="bar-label"><span>${a}</span><span style="color:${cor};font-weight:700;">${pct}% (${conc}/${total})</span></div>
-        <div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:${cor};"></div></div>
-      </div>`;
+      return '<div class="bar-row">'
+        +'<div class="bar-label"><span>'+a+'</span><span style="color:'+cor+';font-weight:700;">'+pct+'% ('+conc+'/'+total+')</span></div>'
+        +'<div class="bar-bg"><div class="bar-fill" style="width:'+pct+'%;background:'+cor+';"></div></div>'
+        +'</div>';
     }).join('');
 
     // 2. Tempo médio de resolução
@@ -838,14 +850,15 @@ async function renderPainel(){
       rankEl.innerHTML = '<p style="font-size:13px;color:var(--sz-gray);text-align:center;padding:8px;">Nenhuma atualização registrada</p>';
     } else {
       const max = sorted[0][1];
-      rankEl.innerHTML = sorted.map(([turma,n],i) => `
-        <div class="bar-row">
-          <div class="bar-label">
-            <span>${i===0?'🥇':i===1?'🥈':i===2?'🥉':'  '} Turma ${turma}</span>
-            <span style="font-weight:700;">${n} tratamentos</span>
-          </div>
-          <div class="bar-bg"><div class="bar-fill" style="width:${Math.round(n/max*100)}%;background:var(--roxo);"></div></div>
-        </div>`).join('');
+      rankEl.innerHTML = sorted.map(function(t,i){
+        var turma=t[0]; var n=t[1];
+        var medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
+        return '<div class="bar-row">'
+          +'<div class="bar-label"><span>'+medal+' Turma '+turma+'</span>'
+          +'<span style="font-weight:700;">'+n+' tratamentos</span></div>'
+          +'<div class="bar-bg"><div class="bar-fill" style="width:'+Math.round(n/max*100)+'%;background:var(--purple);"></div></div>'
+          +'</div>';
+      }).join('');
     }
 
     // % conclusão por turma (letra)
@@ -857,17 +870,24 @@ async function renderPainel(){
       if(!total) return '';
       const pct = Math.round(conc2/total*100);
       const cor = pct>=80?'var(--sz-green)':pct>=50?'var(--amarelo)':'var(--vermelho)';
-      return `<div class="bar-row">
-        <div class="bar-label"><span>Turma ${l}</span><span style="color:${cor};font-weight:700;">${pct}% (${conc2}/${total})</span></div>
-        <div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:${cor};"></div></div>
-      </div>`;
+      return '<div class="bar-row">'
+        +'<div class="bar-label"><span>Turma '+l+'</span><span style="color:'+cor+';font-weight:700;">'+pct+'% ('+conc2+'/'+total+')</span></div>'
+        +'<div class="bar-bg"><div class="bar-fill" style="width:'+pct+'%;background:'+cor+';"></div></div>'
+        +'</div>';
     }).filter(Boolean).join('');
     concLetraEl.innerHTML = letraRows || '<p style="font-size:13px;color:var(--sz-gray);text-align:center;padding:8px;">Sem dados</p>';
 
     // 7. Evolução temporal (últimos 14 dias ou período)
     renderEvolucao(d);
 
-  }catch(e){ console.error(e); }
+  }catch(e){
+    console.error('renderPainel erro:', e);
+    toast('Erro ao carregar indicadores: '+e.message,'err');
+    // Mostrar zeros nos stats em vez de deixar em branco
+    ['p-d-tot','p-d-ab','p-d-and','p-d-tr'].forEach(function(id){
+      var el=document.getElementById(id);if(el)el.textContent='—';
+    });
+  }
 }
 
 function renderEvolucao(d){
