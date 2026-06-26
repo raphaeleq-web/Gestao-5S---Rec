@@ -798,6 +798,10 @@ async function renderPainel(){
     const res = await sbGet(url);
     let d = await res.json();
 
+    if (!Array.isArray(d)) {
+      throw new Error('Supabase: ' + (d.message || d.hint || d.error || JSON.stringify(d)));
+    }
+
     // Filtro por período
     const agora = new Date();
     if(periodo === 'semana'){
