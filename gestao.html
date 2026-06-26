@@ -792,7 +792,7 @@ async function renderPainel(){
     const dataIni  = document.getElementById('p-data-ini')?.value;
     const dataFim  = document.getElementById('p-data-fim')?.value;
 
-    let url = '/rest/v1/desvios?select=*&order=created.asc&limit=1000';
+    let url = '/rest/v1/desvios?select=id,area,tipo,status,created,updated_at,letra_exec,nomes_exec&order=created.asc&limit=1000';
     if(filtArea !== 'todas') url += '&area=like.'+filtArea+'|*';
 
     const res = await sbGet(url);
