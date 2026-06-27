@@ -129,6 +129,16 @@ input[type=file]{display:none;}
 .loading-wrap p{font-size:14px;font-weight:600;color:var(--green);margin-bottom:4px;}
 .loading-wrap span{font-size:12px;color:var(--gray);}
 
+/* FOTO ON DEMAND */
+.btn-ver-foto{
+  width:100%;padding:9px;margin:8px 0 4px;
+  background:#F0FDF4;border:1.5px solid var(--green);
+  color:var(--green);border-radius:10px;font-size:13px;font-weight:700;
+  cursor:pointer;font-family:inherit;
+}
+.btn-ver-foto:active{opacity:0.8;}
+.foto-inline{width:100%;max-height:220px;object-fit:cover;border-radius:10px;margin-bottom:8px;display:none;}
+
 /* TOAST */
 .toast{
   position:fixed;bottom:24px;left:50%;
@@ -1041,7 +1051,7 @@ async function renderBacklog(append){
     const ord=document.getElementById('bl-sel-ord')?document.getElementById('bl-sel-ord').value:'asc';
     const rangeStart=blOffset;
     const rangeEnd=blOffset+BL_PAGE-1;
-    let url='/rest/v1/desvios?select=id,area,tipo,status,created,updated_at,letra_exec,nomes_exec,nome,obs,foto'
+    let url='/rest/v1/desvios?select=id,area,tipo,status,created,updated_at,letra_exec,nomes_exec,nome,obs'
       +'&order=created.'+ord;
     if(blFiltSt!=='todos') url+='&status=eq.'+blFiltSt;
     if(blFiltAr!=='todas'){
@@ -1164,6 +1174,11 @@ function dCardHTML(x, modo){
   var prox=x.status==='aberto'?'andamento':x.status==='andamento'?'concluido':null;
   var area=(x.area||'').replace('|',' · ');
   var btn=prox?('<button class="btn-atualizar btn-avancar-status" data-id="'+x.id+'" data-prox="'+prox+'">✏️ Atualizar status</button>'):'';
+  var fotoId='foto-'+x.id;
+  var fotoBtn=x.foto
+    ? '<button class="btn-ver-foto" onclick="toggleFoto(this,\''+x.foto+'\',\''+fotoId+'\')">📷 Ver foto do desvio</button>'
+      +'<img id="'+fotoId+'" class="foto-inline" src="">'
+    : '';
   return '<div class="dcard '+tc+'">'
     +'<div class="dcard-top">'
     +'<div style="flex:1;min-width:0;">'
@@ -1177,12 +1192,25 @@ function dCardHTML(x, modo){
     +'<span class="tipo-tag '+tc+'">'+tl+'</span>'
     +'</div>'
     +(x.obs?'<div class="dcard-obs">'+x.obs+'</div>':'')
-    +(x.foto?'<img class="dcard-foto" src="'+x.foto+'">':'')
+    +fotoBtn
     +'<div class="dcard-footer">'
     +'<span class="status '+x.status+'">'+sMap[x.status]+'</span>'
     +'</div>'
     +btn
     +'</div>';
+}
+
+function toggleFoto(btn, url, imgId){
+  var img = document.getElementById(imgId);
+  if(!img) return;
+  if(img.style.display === 'block'){
+    img.style.display = 'none';
+    btn.textContent = '📷 Ver foto do desvio';
+  } else {
+    if(!img.src || img.src === window.location.href) img.src = url;
+    img.style.display = 'block';
+    btn.textContent = '🔼 Ocultar foto';
+  }
 }
 
 document.addEventListener('DOMContentLoaded', function(){
