@@ -1043,15 +1043,21 @@ async function renderBacklog(){
   el.innerHTML='<div class="loading-wrap"><div class="spinner"></div><p>Carregando dados...</p><span>Buscando desvios no servidor</span></div>';
   try{
     const ord=document.getElementById('bl-sel-ord')?document.getElementById('bl-sel-ord').value:'asc';
+    // Filtra status no servidor (reduz volume). Área filtrada no JS para evitar bugs de encoding.
     let url='/rest/v1/desvios?select=id,area,tipo,status,created,updated_at,letra_exec,nomes_exec,nome,obs,foto&order=created.'+ord+'&limit=500';
     if(blFiltSt!=='todos') url+='&status=eq.'+blFiltSt;
-    if(blFiltAr!=='todas'){
-      if(!blFiltAr.includes('|')) url+='&area=like.'+blFiltAr+'%7C*';
-      else url+='&area=eq.'+blFiltAr;
-    }
     const res=await sbGet(url);
-    const d=await res.json();
+    let d=await res.json();
     if(!Array.isArray(d)) throw new Error(d.message||d.hint||JSON.stringify(d));
+    // Filtro de área no JavaScript — sem depender de encoding de URL
+    if(blFiltAr!=='todas'){
+      const areaBase=blFiltAr.includes('|')?null:blFiltAr;
+      d=d.filter(function(x){
+        if(!x.area) return false;
+        if(areaBase) return x.area===blFiltAr || x.area.startsWith(blFiltAr+'|');
+        return x.area===blFiltAr;
+      });
+    }
     el.innerHTML=d.length?d.map(function(x){return dCardHTML(x,'execucao');}).join(''):'<div class="empty"><div class="ico">✅</div><p>Nenhum desvio encontrado</p></div>';
     el.querySelectorAll('.btn-avancar-status').forEach(function(btn){
       btn.addEventListener('click',function(e){
@@ -1060,7 +1066,7 @@ async function renderBacklog(){
       });
     });
   }catch(e){
-    el.innerHTML='<div class="empty"><div class="ico">⚠️</div><p>Erro ao carregar</p></div>';
+    el.innerHTML='<div class="empty"><div class="ico">⚠️</div><p>Erro: '+e.message+'</p></div>';
   }
 }
 
