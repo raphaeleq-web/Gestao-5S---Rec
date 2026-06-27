@@ -529,7 +529,7 @@ function dFSt(s,el){dFiltSt=s;document.querySelectorAll('#d-f-st .f-btn').forEac
 function dFAr(a,el){dFiltAr=a;document.querySelectorAll('#d-f-ar .f-btn').forEach(b=>b.classList.remove('av'));el.classList.add('av');renderDLista();}
 async function renderDLista(){
   const el=document.getElementById('d-lista-out');
-  el.innerHTML='<div class="empty"><div class="ico">⏳</div><p>Carregando...</p></div>';
+  el.innerHTML='<div class="loading-wrap"><div class="spinner"></div><p>Carregando dados...</p><span>Buscando desvios no servidor</span></div>';
   try{
     let url='/rest/v1/desvios?order=created.desc&limit=100';
     if(dFiltSt!=='todos')url+=`&status=eq.${dFiltSt}`;
@@ -774,7 +774,7 @@ function cReset(){
 function cFAr(a,el){cFiltAr=a;document.querySelectorAll('#c-f-ar .f-btn').forEach(b=>b.classList.remove('ar'));el.classList.add('ar');renderCLista();}
 async function renderCLista(){
   const el=document.getElementById('c-lista-out');
-  el.innerHTML='<div class="empty"><div class="ico">⏳</div><p>Carregando...</p></div>';
+  el.innerHTML='<div class="loading-wrap"><div class="spinner"></div><p>Carregando dados...</p><span>Buscando desvios no servidor</span></div>';
   try{
     let url='/rest/v1/contribs?order=created.desc&limit=100';
     if(cFiltAr!=='todas')url+=`&area=eq.${cFiltAr}`;
@@ -1131,7 +1131,7 @@ function blFiltrar(){
 async function renderBacklog(){
   const el=document.getElementById('bl-out');
   if(!el) return;
-  el.innerHTML='<div class="empty"><div class="ico">⏳</div><p>Carregando...</p></div>';
+  el.innerHTML='<div class="loading-wrap"><div class="spinner"></div><p>Carregando dados...</p><span>Buscando desvios no servidor</span></div>';
   try{
     const ord=document.getElementById('bl-sel-ord')?document.getElementById('bl-sel-ord').value:'asc';
     let url='/rest/v1/desvios?select=*&order=created.'+ord+'&limit=200';
