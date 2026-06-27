@@ -721,7 +721,7 @@ async function renderPainel(){
     const dataFim  = document.getElementById('p-data-fim')?.value;
 
     let url = '/rest/v1/desvios?select=id,area,tipo,status,created,updated_at,letra_exec,nomes_exec&order=created.asc&limit=1000';
-    if(filtArea !== 'todas') url += `&area=like.${filtArea}|*`;
+    if(filtArea !== 'todas') url += '&area=like.'+filtArea+'%7C*';
 
     const res = await sbGet(url);
     let d = await res.json();
@@ -890,7 +890,7 @@ async function exportarPDF(){
   try{
     const filtArea = document.getElementById('p-filtro-area')?.value || 'todas';
     let url = '/rest/v1/desvios?select=id,area,tipo,status,created,updated_at,letra_exec,nomes_exec&order=created.asc&limit=1000';
-    if(filtArea !== 'todas') url += '&area=like.'+filtArea+'|*';
+    if(filtArea !== 'todas') url += '&area=like.'+filtArea+'%7C*';
     const res = await sbGet(url);
     const d = await res.json();
 
@@ -1046,8 +1046,8 @@ async function renderBacklog(){
     let url='/rest/v1/desvios?select=id,area,tipo,status,created,updated_at,letra_exec,nomes_exec,nome,obs,foto&order=created.'+ord+'&limit=500';
     if(blFiltSt!=='todos') url+='&status=eq.'+blFiltSt;
     if(blFiltAr!=='todas'){
-      if(!blFiltAr.includes('|')) url+='&area=like.'+blFiltAr+'|*';
-      else url+='&area=eq.'+encodeURIComponent(blFiltAr);
+      if(!blFiltAr.includes('|')) url+='&area=like.'+blFiltAr+'%7C*';
+      else url+='&area=eq.'+blFiltAr;
     }
     const res=await sbGet(url);
     const d=await res.json();
@@ -1186,7 +1186,7 @@ async function renderBacklog(){
     var ord=document.getElementById('bl-sel-ord')?document.getElementById('bl-sel-ord').value:'asc';
     var url='/rest/v1/desvios?select=id,area,tipo,status,created,updated_at,letra_exec,nomes_exec,nome,obs,foto&order=created.'+ord+'&limit=200';
     if(blFiltAr!=='todas'){
-      if(!blFiltAr.includes('|')) url+='&area=like.'+blFiltAr+'|*';
+      if(!blFiltAr.includes('|')) url+='&area=like.'+blFiltAr+'%7C*';
       else url+='&area=eq.'+blFiltAr;
     }
     if(blFiltSt!=='todos') url+='&status=eq.'+blFiltSt;
