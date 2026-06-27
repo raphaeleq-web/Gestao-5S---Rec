@@ -346,7 +346,7 @@ input[type=file]{display:none;}
     <h3 style="font-size:17px;font-weight:700;margin-bottom:16px;">Atualizar Status</h3>
 
     <div class="fg" style="margin-bottom:12px;">
-      <label style="font-size:11px;font-weight:700;color:var(--sz-gray);text-transform:uppercase;letter-spacing:0.4px;display:block;margin-bottom:5px;">Novo status</label>
+      <label style="font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:0.4px;display:block;margin-bottom:5px;">Novo status</label>
       <select id="modal-status" style="width:100%;padding:12px 14px;border:2px solid #E5E7EB;border-radius:10px;font-size:15px;-webkit-appearance:none;background:white;">
         <option value="">Selecione...</option>
         <option value="andamento">🟡 Em andamento</option>
@@ -355,7 +355,7 @@ input[type=file]{display:none;}
     </div>
 
     <div class="fg" style="margin-bottom:12px;">
-      <label style="font-size:11px;font-weight:700;color:var(--sz-gray);text-transform:uppercase;letter-spacing:0.4px;display:block;margin-bottom:5px;">Turma executante</label>
+      <label style="font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:0.4px;display:block;margin-bottom:5px;">Turma executante</label>
       <select id="modal-letra" style="width:100%;padding:12px 14px;border:2px solid #E5E7EB;border-radius:10px;font-size:15px;-webkit-appearance:none;background:white;">
         <option value="">Selecione...</option>
         <option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>Adm</option>
@@ -363,21 +363,21 @@ input[type=file]{display:none;}
     </div>
 
     <div class="fg" style="margin-bottom:12px;">
-      <label style="font-size:11px;font-weight:700;color:var(--sz-gray);text-transform:uppercase;letter-spacing:0.4px;display:block;margin-bottom:5px;">Executante(s) — opcional</label>
+      <label style="font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:0.4px;display:block;margin-bottom:5px;">Executante(s) — opcional</label>
       <input type="text" id="modal-nomes" placeholder="Nome(s) de quem executou..." style="width:100%;padding:12px 14px;border:2px solid #E5E7EB;border-radius:10px;font-size:15px;">
     </div>
 
     <div class="fg" style="margin-bottom:16px;">
-      <label style="font-size:11px;font-weight:700;color:var(--sz-gray);text-transform:uppercase;letter-spacing:0.4px;display:block;margin-bottom:5px;">Foto obrigatória</label>
-      <label for="modal-foto" style="display:flex;align-items:center;justify-content:center;gap:10px;background:var(--sz-green-bg);border:2px dashed var(--sz-green);border-radius:10px;padding:14px;cursor:pointer;font-size:14px;font-weight:600;color:var(--sz-green);">
+      <label style="font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:0.4px;display:block;margin-bottom:5px;">Foto obrigatória</label>
+      <label for="modal-foto" style="display:flex;align-items:center;justify-content:center;gap:10px;background:var(--green-bg);border:2px dashed var(--green);border-radius:10px;padding:14px;cursor:pointer;font-size:14px;font-weight:600;color:var(--green);">
         📷 Tirar foto / Galeria
         <input type="file" id="modal-foto" accept="image/*" style="display:none;" onchange="modalPreviewFoto(this)">
       </label>
       <img id="modal-foto-prev" style="display:none;width:100%;max-height:180px;object-fit:cover;border-radius:10px;margin-top:8px;">
     </div>
 
-    <button id="modal-btn-confirmar" class="btn btn-verde" onclick="confirmarAvancar()" style="margin-bottom:10px;">Confirmar</button>
-    <button class="btn btn-outline-verde" onclick="fecharModal()">Cancelar</button>
+    <button id="modal-btn-confirmar" class="btn btn-green" onclick="confirmarAvancar()" style="margin-bottom:10px;">Confirmar</button>
+    <button class="btn btn-outline" onclick="fecharModal()">Cancelar</button>
   </div>
 </div>
 
@@ -428,7 +428,7 @@ const SB_URL='https://uivzwjcqvupvxjueaojd.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVpdnp3amNxdnVwdnhqdWVhb2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MDkxNTYsImV4cCI6MjA5NzI4NTE1Nn0.4l_bzUXw1v-ngK7poJSezXe02BRHtcgU--stcLuV2vk';
 
 function sbH(){return {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'};}
-async function sbGet(path){return fetch(SB_URL+path,{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});}
+async function sbGet(path,hdrs){return fetch(SB_URL+path,{headers:Object.assign({'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY},hdrs||{})});}
 async function sbPost(path,body){return fetch(SB_URL+path,{method:'POST',headers:sbH(),body:JSON.stringify(body)});}
 async function sbPatch(path,body){return fetch(SB_URL+path,{method:'PATCH',headers:{...sbH(),'Prefer':'return=minimal'},body:JSON.stringify(body)});}
 async function uploadFoto(b64,prefix){
@@ -437,7 +437,7 @@ async function uploadFoto(b64,prefix){
   const name=prefix+'-'+Date.now()+'.'+ext;
   const up=await fetch(SB_URL+'/storage/v1/object/fotos/'+name,{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':blob.type},body:blob});
   if(up.ok) return SB_URL+'/storage/v1/object/public/fotos/'+name;
-  return b64; // fallback base64
+  throw new Error('Falha no upload da foto: '+await up.text());
 }
 
 let dArea='',dTipo='',dFoto='';
@@ -464,7 +464,7 @@ function cTab(el){
 /* DESVIO */
 function dSelectArea(a){
   dArea=a;
-  document.getElementById('d-badge-area').textContent=AREAS[a]||'—';
+  document.getElementById('d-badge-area').textContent=a||'—';
   document.getElementById('d-picker').style.display='none';
   document.getElementById('d-form').style.display='block';
 }
@@ -501,7 +501,7 @@ async function dRegistrar(){
   try{
     const fotoUrl=await uploadFoto(dFoto,'desvio');
     const id=Date.now().toString();
-    const res=await sbPost('/rest/v1/desvios',{id,area:dArea,tipo:dTipo,status:'aberto',nome,obs:obs||null,foto:fotoUrl});
+    const res=await sbPost('/rest/v1/desvios',{id,area:dArea,tipo:dTipo,status:'aberto',nome,obs:obs||null,foto_url:fotoUrl});
     if(!res.ok)throw new Error(await res.text());
     toast('Desvio inserido no backlog!','ok');dReset();
   }catch(e){toast('Erro: '+e.message,'err');}
@@ -512,7 +512,7 @@ function dReset(){
   const nomeSel=document.getElementById('d-nome-sel');
   if(nomeSel)nomeSel.value='';
   const nomeInp=document.getElementById('d-nome');
-  if(nomeInp)nomeInp.style.display='none';;
+  if(nomeInp)nomeInp.style.display='none';
   const prev=document.getElementById('d-foto-prev');
   if(prev){prev.style.display='none';prev.src='';}
   const ph=document.getElementById('d-foto-ph');
@@ -547,7 +547,7 @@ function dCardHTML(x, modo){
   const tl=x.tipo==='organizacao'?'📦 Org':'🧹 Limp';
   const prox=x.status==='aberto'?'andamento':x.status==='andamento'?'concluido':null;
   const btnLabel='✏️ Atualizar status';
-  const btnColor='var(--sz-green)';
+  const btnColor='var(--green)';
 
   const btnAtualizar = (modo==='execucao' && prox) ? `
     <button
@@ -563,15 +563,15 @@ function dCardHTML(x, modo){
         <div class="dcard-area">${x.area?x.area.replace('|',' · '):''}</div>
         ${modo!=='execucao'?`<div class="dcard-meta">${x.nome||''}</div>`:''}
         <div style="margin-top:4px;display:flex;flex-direction:column;gap:2px;">
-          <span style="font-size:12px;color:var(--sz-green);font-weight:600;">📅 Aberto: ${dtCriacao}</span>
-          ${dtUpdate?`<span style="font-size:12px;color:var(--amarelo);font-weight:600;">🔄 Atualizado: ${dtUpdate}</span>`:''}
-          ${x.letra_exec?`<span style="font-size:12px;color:var(--sz-gray);">Turma: <strong>${x.letra_exec}</strong>${x.nomes_exec?' · '+x.nomes_exec:''}</span>`:''}
+          <span style="font-size:12px;color:var(--green);font-weight:600;">📅 Aberto: ${dtCriacao}</span>
+          ${dtUpdate?`<span style="font-size:12px;color:var(--yellow);font-weight:600;">🔄 Atualizado: ${dtUpdate}</span>`:''}
+          ${x.letra_exec?`<span style="font-size:12px;color:var(--gray);">Turma: <strong>${x.letra_exec}</strong>${x.nomes_exec?' · '+x.nomes_exec:''}</span>`:''}
         </div>
       </div>
       <span class="tipo-tag ${tc}" style="flex-shrink:0;">${tl}</span>
     </div>
     ${x.obs?`<div class="dcard-obs">${x.obs}</div>`:''}
-    ${x.foto?`<img class="dcard-foto" src="${x.foto}">`:''}
+    ${x.foto_url?`<img class="dcard-foto" src="${x.foto_url}">`:''}
     <div class="dcard-footer" style="margin-top:8px;">
       <span class="status ${x.status}">${sMap[x.status]}</span>
     </div>
@@ -642,14 +642,13 @@ async function confirmarAvancar(){
   btn.disabled=true;btn.textContent='Enviando...';
   try{
     const fotoUrl=await uploadFoto(modalFotoB64,'status');
-    const payload={status:modalNovoStatus,foto:fotoUrl,updated_at:new Date().toISOString()};
+    const payload={status:modalNovoStatus,foto_url:fotoUrl,updated_at:new Date().toISOString()};
     if(letra) payload.letra_exec=letra;
     if(nomes) payload.nomes_exec=nomes;
     const res=await sbPatch('/rest/v1/desvios?id=eq.'+modalDesvioId,payload);
     if(!res.ok)throw new Error(await res.text());
     toast('Status atualizado!','ok');
     fecharModal();
-    renderBacklog();
   }catch(e){toast('Erro: '+e.message,'err');}
   finally{btn.disabled=false;btn.textContent='Confirmar';}
 }
@@ -674,19 +673,16 @@ async function avancar(id,ns){
   }
   const letra=document.getElementById('letra-av-'+id)?document.getElementById('letra-av-'+id).value:'';
   const nomes=document.getElementById('nomes-av-'+id)?document.getElementById('nomes-av-'+id).value.trim():'';
-  const btn=event.target;
-  btn.disabled=true;btn.textContent='Enviando...';
+  // btn via event.target removed — avancar() uses modal flow
   try{
     const fotoUrl=await uploadFoto(await toB64(fotoInp.files[0]),'status');
-    const payload={status:ns,foto:fotoUrl,updated_at:new Date().toISOString()};
+    const payload={status:ns,foto_url:fotoUrl,updated_at:new Date().toISOString()};
     if(letra) payload.letra_exec=letra;
     if(nomes) payload.nomes_exec=nomes;
     const res=await sbPatch('/rest/v1/desvios?id=eq.'+id,payload);
     if(!res.ok)throw new Error(await res.text());
     toast('Status atualizado!','ok');
-    renderBacklog();
   }catch(e){toast('Erro: '+e.message,'err');}
-  finally{btn.disabled=false;}
 }
 
 function toB64(file){
@@ -722,7 +718,7 @@ function cConfirmArea(){
 }
 function cSelectArea(a){
   cArea=a;
-  document.getElementById('c-badge-area').textContent=AREAS[a]||'—';
+  document.getElementById('c-badge-area').textContent=a||'—';
   document.getElementById('c-picker').style.display='none';
   document.getElementById('c-form').style.display='block';
 }
@@ -753,7 +749,7 @@ async function cRegistrar(){
   if(!cCat){toast('Selecione a categoria','err');return;}
   if(!desc){toast('Descreva a ação realizada','err');return;}
   if(!cFoto){toast('Tire uma foto da melhoria','err');return;}
-  const btn=document.querySelector('#c-reg .btn-roxo');
+  const btn=document.querySelector('#c-reg .btn-green');
   btn.disabled=true;btn.textContent='Enviando...';
   try{
     const fotoUrl=await uploadFoto(cFoto,'contrib');
@@ -804,9 +800,9 @@ async function renderPainel(){
     const dataFim  = document.getElementById('p-data-fim')?.value;
 
     let url = '/rest/v1/desvios?select=id,area,tipo,status,created,updated_at,letra_exec,nomes_exec&order=created.asc&limit=1000';
-    if(filtArea !== 'todas') url += '&area=like.'+filtArea+'|*';
+    if(filtArea !== 'todas') url += '&area=like.'+filtArea+'%7C*';
 
-    const res = await sbGet(url);
+    const res = await sbGet(url,{'Range':'0-999','Prefer':'count=none'});
     let d = await res.json();
 
     if (!Array.isArray(d)) {
@@ -842,7 +838,7 @@ async function renderPainel(){
       const conc  = d.filter(x => (x.area && x.area.startsWith(a+'|') || x.area===a) && (x.status==='concluido'||x.status==='tratado')).length;
       if(!total) return '';
       const pct = Math.round(conc/total*100);
-      const cor = pct>=80?'var(--sz-green)':pct>=50?'var(--amarelo)':'var(--vermelho)';
+      const cor = pct>=80?'var(--green)':pct>=50?'var(--yellow)':'var(--red)';
       return '<div class="bar-row">'
         +'<div class="bar-label"><span>'+a+'</span><span style="color:'+cor+';font-weight:700;">'+pct+'% ('+conc+'/'+total+')</span></div>'
         +'<div class="bar-bg"><div class="bar-fill" style="width:'+pct+'%;background:'+cor+';"></div></div>'
@@ -862,7 +858,7 @@ async function renderPainel(){
     const rankEl = document.getElementById('p-ranking-turmas');
     const sorted = Object.entries(turmas).sort((a,b)=>b[1]-a[1]);
     if(!sorted.length){
-      rankEl.innerHTML = '<p style="font-size:13px;color:var(--sz-gray);text-align:center;padding:8px;">Nenhuma atualização registrada</p>';
+      rankEl.innerHTML = '<p style="font-size:13px;color:var(--gray);text-align:center;padding:8px;">Nenhuma atualização registrada</p>';
     } else {
       const max = sorted[0][1];
       rankEl.innerHTML = sorted.map(function(t,i){
@@ -884,13 +880,13 @@ async function renderPainel(){
       const conc2 = d.filter(x => x.letra_exec === l && (x.status==='concluido'||x.status==='tratado')).length;
       if(!total) return '';
       const pct = Math.round(conc2/total*100);
-      const cor = pct>=80?'var(--sz-green)':pct>=50?'var(--amarelo)':'var(--vermelho)';
+      const cor = pct>=80?'var(--green)':pct>=50?'var(--yellow)':'var(--red)';
       return '<div class="bar-row">'
         +'<div class="bar-label"><span>Turma '+l+'</span><span style="color:'+cor+';font-weight:700;">'+pct+'% ('+conc2+'/'+total+')</span></div>'
         +'<div class="bar-bg"><div class="bar-fill" style="width:'+pct+'%;background:'+cor+';"></div></div>'
         +'</div>';
     }).filter(Boolean).join('');
-    concLetraEl.innerHTML = letraRows || '<p style="font-size:13px;color:var(--sz-gray);text-align:center;padding:8px;">Sem dados</p>';
+    concLetraEl.innerHTML = letraRows || '<p style="font-size:13px;color:var(--gray);text-align:center;padding:8px;">Sem dados</p>';
 
     // 7. Evolução temporal (últimos 14 dias ou período)
     renderEvolucao(d);
@@ -980,10 +976,11 @@ function onPeriodoChange(){
 async function exportarPDF(){
   try{
     const filtArea = document.getElementById('p-filtro-area')?.value || 'todas';
-    let url = '/rest/v1/desvios?select=id,area,tipo,status,created,updated_at,letra_exec,nomes_exec,nome,obs,foto&order=created.asc&limit=1000';
-    if(filtArea !== 'todas') url += '&area=like.'+filtArea+'|*';
+    let url = '/rest/v1/desvios?select=id,area,tipo,status,created,updated_at,letra_exec,nomes_exec,nome,obs,foto_url&order=created.asc&limit=1000';
+    if(filtArea !== 'todas') url += '&area=like.'+filtArea+'%7C*';
     const res = await sbGet(url);
     const d = await res.json();
+    if(!Array.isArray(d)) throw new Error(d.message||d.hint||JSON.stringify(d));
 
     const sMap = {aberto:'A iniciar', andamento:'Em andamento', concluido:'Concluido', tratado:'Concluido'};
     const agora = new Date().toLocaleString('pt-BR');
@@ -1134,14 +1131,15 @@ async function renderBacklog(){
   el.innerHTML='<div class="loading-wrap"><div class="spinner"></div><p>Carregando dados...</p><span>Buscando desvios no servidor</span></div>';
   try{
     const ord=document.getElementById('bl-sel-ord')?document.getElementById('bl-sel-ord').value:'asc';
-    let url='/rest/v1/desvios?select=*&order=created.'+ord+'&limit=200';
+    let url='/rest/v1/desvios?select=id,area,tipo,status,created,updated_at,letra_exec,nomes_exec,nome,obs,foto_url&order=created.'+ord+'&limit=200';
     if(blFiltAr!=='todas'){
-      if(!blFiltAr.includes('|')) url+='&area=like.'+blFiltAr+'|*';
+      if(!blFiltAr.includes('|')) url+='&area=like.'+blFiltAr+'%7C*';
       else url+='&area=eq.'+blFiltAr;
     }
     if(blFiltSt!=='todos') url+='&status=eq.'+blFiltSt;
-    const res=await sbGet(url);
+    const res=await sbGet(url,{'Range':'0-199','Prefer':'count=none'});
     const d=await res.json();
+    if(!Array.isArray(d)) throw new Error(d.message||d.hint||JSON.stringify(d));
     el.innerHTML=d.length?d.map(function(x){return dCardHTML(x,'execucao');}).join(''):'<div class="empty"><div class="ico">✅</div><p>Nenhum desvio encontrado</p></div>';
     el.querySelectorAll('.btn-avancar-status').forEach(function(btn){
       btn.addEventListener('click',function(e){
@@ -1171,9 +1169,9 @@ function gerarQR(){
     const div=document.createElement('div');
     div.style.cssText='background:white;border-radius:14px;padding:14px;text-align:center;box-shadow:0 1px 8px rgba(0,0,0,0.07);border-top:4px solid '+p.cor+';';
     div.innerHTML='<div style="font-size:13px;font-weight:700;color:'+p.cor+';margin-bottom:2px;">'+p.label+'</div>'
-      +'<div style="font-size:10px;color:var(--sz-gray);margin-bottom:10px;">'+p.sub+'</div>'
+      +'<div style="font-size:10px;color:var(--gray);margin-bottom:10px;">'+p.sub+'</div>'
       +'<div id="qr-wrap-'+i+'" style="display:flex;justify-content:center;margin-bottom:8px;"></div>'
-      +'<div style="font-size:9px;color:var(--sz-gray);word-break:break-all;">'+p.url+'</div>';
+      +'<div style="font-size:9px;color:var(--gray);word-break:break-all;">'+p.url+'</div>';
     out.appendChild(div);
     if(typeof QRCode!=='undefined'){
       setTimeout(function(){
