@@ -308,7 +308,7 @@ async function uploadFoto(b64,prefix){
   const name=prefix+'-'+Date.now()+'.'+ext;
   const up=await fetch(SB_URL+'/storage/v1/object/fotos/'+name,{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':blob.type},body:blob});
   if(up.ok) return SB_URL+'/storage/v1/object/public/fotos/'+name;
-  return b64; // fallback base64
+  throw new Error('Falha no upload da foto: '+await up.text());
 }
 
 let dArea='',dTipo='',dFoto='';
@@ -432,7 +432,7 @@ async function dRegistrar(){
   try{
     const fotoUrl=await uploadFoto(dFoto,'desvio');
     const id=Date.now().toString();
-    const res=await sbPost('/rest/v1/desvios',{id,area:dArea,tipo:dTipo,status:'aberto',nome,obs:obs||null,foto:fotoUrl});
+    const res=await sbPost('/rest/v1/desvios',{id,area:dArea,tipo:dTipo,status:'aberto',nome,obs:obs||null,foto_url:fotoUrl});
     if(!res.ok)throw new Error(await res.text());
     toast('Desvio inserido no backlog!','ok');dReset();
   }catch(e){toast('Erro: '+e.message,'err');}
@@ -558,7 +558,7 @@ async function confirmarAvancar(){
   btn.disabled=true;btn.textContent='Enviando...';
   try{
     const fotoUrl=await uploadFoto(modalFotoB64,'status');
-    const payload={status:modalNovoStatus,foto:fotoUrl,updated_at:new Date().toISOString()};
+    const payload={status:modalNovoStatus,foto_url:fotoUrl,updated_at:new Date().toISOString()};
     if(letra) payload.letra_exec=letra;
     if(nomes) payload.nomes_exec=nomes;
     const res=await sbPatch('/rest/v1/desvios?id=eq.'+modalDesvioId,payload);
@@ -593,7 +593,7 @@ async function avancar(id,ns){
   // avancar() is legacy — status updates now go through the modal (confirmarAvancar)
   try{
     const fotoUrl=await uploadFoto(await toB64(fotoInp.files[0]),'status');
-    const payload={status:ns,foto:fotoUrl,updated_at:new Date().toISOString()};
+    const payload={status:ns,foto_url:fotoUrl,updated_at:new Date().toISOString()};
     if(letra) payload.letra_exec=letra;
     if(nomes) payload.nomes_exec=nomes;
     const res=await sbPatch('/rest/v1/desvios?id=eq.'+id,payload);
@@ -718,7 +718,7 @@ async function renderPainel(){
     const dataIni  = document.getElementById('p-data-ini')?.value;
     const dataFim  = document.getElementById('p-data-fim')?.value;
 
-    let url = '/rest/v1/desvios?select=id,area,tipo,status,created,updated_at,letra_exec,nomes_exec&order=created.asc&limit=1000';
+    let url = '/rest/v1/desvios?select=id,area,tipo,status,created,updated_at,letra_exec,nomes_exec,foto_url&order=created.asc&limit=1000';
     if(filtArea !== 'todas') url += '&area=like.'+filtArea+'%7C*';
 
     const res = await sbGet(url, {'Range':'0-999','Prefer':'count=none'});
@@ -887,7 +887,7 @@ function onPeriodoChange(){
 async function exportarPDF(){
   try{
     const filtArea = document.getElementById('p-filtro-area')?.value || 'todas';
-    let url = '/rest/v1/desvios?select=id,area,tipo,status,created,updated_at,letra_exec,nomes_exec&order=created.asc&limit=1000';
+    let url = '/rest/v1/desvios?select=id,area,tipo,status,created,updated_at,letra_exec,nomes_exec,foto_url&order=created.asc&limit=1000';
     if(filtArea !== 'todas') url += '&area=like.'+filtArea+'%7C*';
     const res = await sbGet(url, {'Range':'0-999','Prefer':'count=none'});
     const d = await res.json();
@@ -1051,7 +1051,7 @@ async function renderBacklog(append){
     const ord=document.getElementById('bl-sel-ord')?document.getElementById('bl-sel-ord').value:'asc';
     const rangeStart=blOffset;
     const rangeEnd=blOffset+BL_PAGE-1;
-    let url='/rest/v1/desvios?select=id,area,tipo,status,created,updated_at,letra_exec,nomes_exec,nome,obs'
+    let url='/rest/v1/desvios?select=id,area,tipo,status,created,updated_at,letra_exec,nomes_exec,nome,obs,foto_url'
       +'&order=created.'+ord;
     if(blFiltSt!=='todos') url+='&status=eq.'+blFiltSt;
     if(blFiltAr!=='todas'){
@@ -1175,8 +1175,8 @@ function dCardHTML(x, modo){
   var area=(x.area||'').replace('|',' · ');
   var btn=prox?('<button class="btn-atualizar btn-avancar-status" data-id="'+x.id+'" data-prox="'+prox+'">✏️ Atualizar status</button>'):'';
   var fotoId='foto-'+x.id;
-  var fotoBtn=x.foto
-    ? '<button class="btn-ver-foto" onclick="toggleFoto(this,\''+x.foto+'\',\''+fotoId+'\')">📷 Ver foto do desvio</button>'
+  var fotoBtn=x.foto_url
+    ? '<button class="btn-ver-foto" onclick="toggleFoto(this,\''+x.foto_url+'\',\''+fotoId+'\')">📷 Ver foto do desvio</button>'
       +'<img id="'+fotoId+'" class="foto-inline" src="">'
     : '';
   return '<div class="dcard '+tc+'">'
