@@ -713,11 +713,15 @@ async function renderPainel(){
     const dataIni  = document.getElementById('p-data-ini')?.value;
     const dataFim  = document.getElementById('p-data-fim')?.value;
 
-    let url = '/rest/v1/desvios?select=*&order=created.asc&limit=1000';
+    let url = '/rest/v1/desvios?select=id,area,tipo,status,created,updated_at,letra_exec,nomes_exec&order=created.asc&limit=1000';
     if(filtArea !== 'todas') url += `&area=like.${filtArea}|*`;
 
     const res = await sbGet(url);
     let d = await res.json();
+
+    if (!Array.isArray(d)) {
+      throw new Error('Supabase: ' + (d.message || d.hint || d.error || JSON.stringify(d)));
+    }
 
     // Filtro por período
     const agora = new Date();
@@ -878,7 +882,7 @@ function onPeriodoChange(){
 async function exportarPDF(){
   try{
     const filtArea = document.getElementById('p-filtro-area')?.value || 'todas';
-    let url = '/rest/v1/desvios?select=*&order=created.asc&limit=1000';
+    let url = '/rest/v1/desvios?select=id,area,tipo,status,created,updated_at,letra_exec,nomes_exec&order=created.asc&limit=1000';
     if(filtArea !== 'todas') url += '&area=like.'+filtArea+'|*';
     const res = await sbGet(url);
     const d = await res.json();
@@ -1032,7 +1036,7 @@ async function renderBacklog(){
   el.innerHTML='<div class="empty"><div class="ico">⏳</div><p>Carregando...</p></div>';
   try{
     const ord=document.getElementById('bl-sel-ord')?document.getElementById('bl-sel-ord').value:'asc';
-    let url='/rest/v1/desvios?select=*&order=created.'+ord+'&limit=200';
+    let url='/rest/v1/desvios?select=id,area,tipo,status,created,updated_at,letra_exec,nomes_exec,nome,obs,foto&order=created.'+ord+'&limit=200';
     if(blFiltAr!=='todas'){
       if(!blFiltAr.includes('|')) url+='&area=like.'+blFiltAr+'|*';
       else url+='&area=eq.'+blFiltAr;
@@ -1172,7 +1176,7 @@ async function renderBacklog(){
   el.innerHTML='<div class="empty"><div class="ico">⏳</div><p>Carregando...</p></div>';
   try{
     var ord=document.getElementById('bl-sel-ord')?document.getElementById('bl-sel-ord').value:'asc';
-    var url='/rest/v1/desvios?select=*&order=created.'+ord+'&limit=200';
+    var url='/rest/v1/desvios?select=id,area,tipo,status,created,updated_at,letra_exec,nomes_exec,nome,obs,foto&order=created.'+ord+'&limit=200';
     if(blFiltAr!=='todas'){
       if(!blFiltAr.includes('|')) url+='&area=like.'+blFiltAr+'|*';
       else url+='&area=eq.'+blFiltAr;
