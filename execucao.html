@@ -427,8 +427,8 @@ async function dRegistrar(){
   if(!nome){toast('Informe seu nome','err');return;}
   if(!dTipo){toast('Selecione o tipo de desvio','err');return;}
   if(!dFoto){toast('Tire uma foto do desvio','err');return;}
-  const btn=document.querySelector('#d-reg .btn-verde');
-  btn.disabled=true;btn.textContent='Enviando...';
+  const btn=document.getElementById('btn-registrar')||document.querySelector('#d-reg .btn-verde')||document.querySelector('#d-reg .btn-green');
+  if(btn){btn.disabled=true;btn.textContent='Enviando...';}
   try{
     const fotoUrl=await uploadFoto(dFoto,'desvio');
     const id=Date.now().toString();
@@ -436,7 +436,7 @@ async function dRegistrar(){
     if(!res.ok)throw new Error(await res.text());
     toast('Desvio inserido no backlog!','ok');dReset();
   }catch(e){toast('Erro: '+e.message,'err');}
-  finally{btn.disabled=false;btn.textContent='Inserir no backlog';}
+  finally{if(btn){btn.disabled=false;btn.textContent='Inserir no backlog';}}
 }
 function dReset(){
   ['d-nome','d-obs'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
@@ -452,6 +452,7 @@ function dFSt(s,el){dFiltSt=s;document.querySelectorAll('#d-f-st .f-btn').forEac
 function dFAr(a,el){dFiltAr=a;document.querySelectorAll('#d-f-ar .f-btn').forEach(b=>b.classList.remove('av'));el.classList.add('av');renderDLista();}
 async function renderDLista(){
   const el=document.getElementById('d-lista-out');
+  if(!el) return;
   el.innerHTML='<div class="loading-wrap"><div class="spinner"></div><p>Carregando dados...</p><span>Buscando desvios no servidor</span></div>';
   try{
     let url='/rest/v1/desvios?order=created.desc&limit=100';
@@ -495,7 +496,7 @@ function dCardHTML(x, modo){
       <span class="tipo-tag ${tc}" style="flex-shrink:0;">${tl}</span>
     </div>
     ${x.obs?`<div class="dcard-obs">${x.obs}</div>`:''}
-    ${x.foto?`<img class="dcard-foto" src="${x.foto}" loading="lazy">`:''}
+    ${x.foto_url?`<img class="dcard-foto" src="${x.foto_url}" loading="lazy">`:''}
     <div class="dcard-footer" style="margin-top:8px;">
       <span class="status ${x.status}">${sMap[x.status]}</span>
     </div>
@@ -688,6 +689,7 @@ function cReset(){
 function cFAr(a,el){cFiltAr=a;document.querySelectorAll('#c-f-ar .f-btn').forEach(b=>b.classList.remove('ar'));el.classList.add('ar');renderCLista();}
 async function renderCLista(){
   const el=document.getElementById('c-lista-out');
+  if(!el) return;
   el.innerHTML='<div class="loading-wrap"><div class="spinner"></div><p>Carregando dados...</p><span>Buscando desvios no servidor</span></div>';
   try{
     let url='/rest/v1/contribs?order=created.desc&limit=100';
@@ -745,13 +747,14 @@ async function renderPainel(){
 
     // Stats principais
     const concluidos = d.filter(x => x.status==='concluido'||x.status==='tratado');
-    document.getElementById('p-d-tot').textContent = d.length;
-    document.getElementById('p-d-ab').textContent  = d.filter(x=>x.status==='aberto').length;
-    document.getElementById('p-d-and').textContent = d.filter(x=>x.status==='andamento').length;
-    document.getElementById('p-d-tr').textContent  = concluidos.length;
+    const _tot=document.getElementById('p-d-tot');if(_tot)_tot.textContent=d.length;
+    const _ab=document.getElementById('p-d-ab');if(_ab)_ab.textContent=d.filter(x=>x.status==='aberto').length;
+    const _and=document.getElementById('p-d-and');if(_and)_and.textContent=d.filter(x=>x.status==='andamento').length;
+    const _tr=document.getElementById('p-d-tr');if(_tr)_tr.textContent=concluidos.length;
 
     // 1. Taxa de conclusão por área
     const taxaEl = document.getElementById('p-taxa-areas');
+    if(!taxaEl) return;
     taxaEl.innerHTML = AREAS_LIST.map(a => {
       const total = d.filter(x => x.area && x.area.startsWith(a+'|') || x.area===a).length;
       const conc  = d.filter(x => (x.area && x.area.startsWith(a+'|') || x.area===a) && (x.status==='concluido'||x.status==='tratado')).length;
@@ -769,7 +772,7 @@ async function renderPainel(){
       .filter(x => x.updated_at)
       .map(x => (new Date(x.updated_at) - new Date(x.created)) / (1000*60*60*24));
     const tempoMedio = tempos.length ? (tempos.reduce((a,b)=>a+b,0)/tempos.length).toFixed(1) : '—';
-    document.getElementById('p-tempo-val').textContent = tempoMedio;
+    const _tv=document.getElementById('p-tempo-val');if(_tv)_tv.textContent=tempoMedio;
 
     // 4. Ranking de turmas
     const turmas = {};
@@ -1055,7 +1058,7 @@ async function renderBacklog(append){
       +'&order=created.'+ord;
     if(blFiltSt!=='todos') url+='&status=eq.'+blFiltSt;
     if(blFiltAr!=='todas'){
-      if(blFiltAr.includes('|')) url+='&area=eq.'+blFiltAr;
+      if(blFiltAr.includes('|')) url+='&area=eq.'+encodeURIComponent(blFiltAr);
       else url+='&area=like.'+blFiltAr+'%7C*';
     }
     const res=await sbGet(url,{'Range':rangeStart+'-'+rangeEnd,'Prefer':'count=none'});
