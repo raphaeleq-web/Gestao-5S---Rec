@@ -484,7 +484,7 @@ function dCardHTML(x, modo){
       <span class="tipo-tag ${tc}" style="flex-shrink:0;">${tl}</span>
     </div>
     ${x.obs?`<div class="dcard-obs">${x.obs}</div>`:''}
-    ${x.foto?`<img class="dcard-foto" src="${x.foto}">`:''}
+    ${(x.foto&&modo!=='execucao')?`<img class="dcard-foto" src="${x.foto}" loading="lazy">`:(x.foto?'<div style="font-size:12px;color:var(--gray);padding:6px 0;">📷 Foto disponível</div>':'')}
     <div class="dcard-footer" style="margin-top:8px;">
       <span class="status ${x.status}">${sMap[x.status]}</span>
     </div>
@@ -1044,7 +1044,7 @@ async function renderBacklog(){
   try{
     const ord=document.getElementById('bl-sel-ord')?document.getElementById('bl-sel-ord').value:'asc';
     // Filtra status no servidor (reduz volume). Área filtrada no JS para evitar bugs de encoding.
-    let url='/rest/v1/desvios?select=id,area,tipo,status,created,updated_at,letra_exec,nomes_exec,nome,obs,foto&order=created.'+ord+'&limit=500';
+    let url='/rest/v1/desvios?select=id,area,tipo,status,created,updated_at,letra_exec,nomes_exec,nome,obs&order=created.'+ord+'&limit=500';
     if(blFiltSt!=='todos') url+='&status=eq.'+blFiltSt;
     const res=await sbGet(url);
     let d=await res.json();
