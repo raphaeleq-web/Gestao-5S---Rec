@@ -164,9 +164,49 @@ input[type=file]{display:none;}
 
 /* ── EVOLUÇÃO ── */
 #p-chart-wrap{overflow-x:auto;}
+
+/* ── SENHA ── */
+#senha-gate{
+  position:fixed;inset:0;background:var(--green);
+  display:flex;align-items:center;justify-content:center;
+  z-index:9999;flex-direction:column;padding:32px;
+}
+#senha-gate .gate-box{
+  background:white;border-radius:20px;padding:32px 24px;
+  width:100%;max-width:320px;text-align:center;
+  box-shadow:0 8px 32px rgba(0,0,0,0.2);
+}
+#senha-gate .gate-logo{font-size:40px;margin-bottom:8px;}
+#senha-gate h2{font-size:18px;font-weight:800;color:var(--green);margin-bottom:4px;}
+#senha-gate p{font-size:13px;color:var(--gray);margin-bottom:20px;}
+#senha-gate input{
+  width:100%;padding:14px;border:2px solid #E5E7EB;border-radius:12px;
+  font-size:16px;text-align:center;letter-spacing:4px;font-family:inherit;
+  margin-bottom:12px;color:var(--black);
+}
+#senha-gate input:focus{outline:none;border-color:var(--green);}
+#senha-gate input.err{border-color:var(--red);animation:shake 0.3s;}
+#senha-gate .btn-entrar{
+  width:100%;padding:14px;background:var(--green);color:white;
+  border:none;border-radius:12px;font-size:16px;font-weight:700;
+  cursor:pointer;font-family:inherit;
+}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 </style>
 </head>
 <body>
+
+<!-- ════ SENHA GATE ════ -->
+<div id="senha-gate">
+  <div class="gate-box">
+    <div class="gate-logo">🔒</div>
+    <h2>Gestão de 5S</h2>
+    <p>Recuperação Química · Suzano Jacareí</p>
+    <input type="password" id="senha-inp" placeholder="Digite a senha" onkeydown="if(event.key==='Enter')verificarSenha()">
+    <button class="btn-entrar" onclick="verificarSenha()">Entrar</button>
+  </div>
+</div>
+
 
 <!-- HEADER -->
 <div class="app-header">
@@ -1215,6 +1255,27 @@ document.addEventListener('DOMContentLoaded', function(){
   if(iniEl) iniEl.value = fmt(ini);
   if(fimEl) fimEl.value = fmt(hoje);
 });
+
+function verificarSenha(){
+  const inp = document.getElementById('senha-inp');
+  if(!inp) return;
+  if(inp.value === 'Goodwin'){
+    document.getElementById('senha-gate').style.display = 'none';
+    sessionStorage.setItem('gestao_auth','1');
+  } else {
+    inp.classList.add('err');
+    inp.value = '';
+    inp.placeholder = 'Senha incorreta';
+    setTimeout(function(){ inp.classList.remove('err'); inp.placeholder = 'Digite a senha'; }, 1000);
+  }
+}
+// Auto-check session on load
+(function(){
+  if(sessionStorage.getItem('gestao_auth')==='1'){
+    var gate = document.getElementById('senha-gate');
+    if(gate) gate.style.display = 'none';
+  }
+})();
 
 let tT;
 function toast(msg,type=''){
